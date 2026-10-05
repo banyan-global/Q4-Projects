@@ -378,6 +378,8 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 .kst b{display:block;font-size:26px;font-weight:900;line-height:1.1}
 .kst span{display:block;font-size:12.5px;font-weight:700;color:var(--txt-3);margin-top:4px}
 @media (max-width:520px){.ksts{grid-template-columns:repeat(2,minmax(0,1fr))}.gauge.mini .gv b{font-size:38px}}
+.stalec{border-color:var(--rose)}
+.stalec .ch h3{color:var(--rose)}
 </style>
 </head>
 <body>
@@ -480,6 +482,8 @@ function inRange(it,a,b){return it.date>=a&&it.date<=b}
 function inQ4(s){return typeof s==="string"&&/^2026-1[0-2]-\d{2}$/.test(s)}
 /* الدورة: حالتها من عمود «الإنجاز» في الشيت، وإن كان فارغاً تُحسب من تاريخها */
 function isDone(it){return it.kind==="c"?(it.cstatus?it.cstatus===ST.done:it.date<todayIso()):it.status==="done"}
+/* دورة فات تاريخها وحالتها في الشيت لم تصبح «تم الإنجاز» */
+function isStale(it){return it.kind==="c"&&!!it.cstatus&&it.cstatus!==ST.done&&it.date<todayIso()}
 function sorted(list){return list.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:a.kind!==b.kind?(a.kind==="c"?-1:1):(a.ord||0)-(b.ord||0)})}
 function inMonth(m){return items.filter(function(t){return parts(t.date).m===m})}
 function kc(list,k){return list.filter(function(t){return t.kind===k}).length}
@@ -496,6 +500,7 @@ function build(){
 function abbr(n){return String(n||"").trim().replace(/^(ال)?دكتورة?\s+/,"د. ").replace(/^(ال)?مهندسة?\s+/,"م. ").replace(/^(ال)?[أا]ستاذة?\s+/,"أ. ").replace(/^(ال)?شيخ\s+/,"ش. ")}
 function owners(t){return [t.a1].concat(String(t.a2||"").split(/[،,]/)).map(abbr).filter(Boolean)}
 function pill(it){
+  if(isStale(it))return '<span class="chip r">بحاجة تحديث</span>';
   if(it.kind==="c"&&it.cstatus){return '<span class="chip '+(STC[STKEY[it.cstatus]]||"m")+'">'+esc(it.cstatus)+'</span>'}
   if(it.kind==="c"){var td=todayIso();return it.date<td?'<span class="chip g">نُفّذت</span>':it.date===td?'<span class="chip a">اليوم</span>':'<span class="chip c">قادمة</span>'}
   return '<span class="chip '+STC[it.status]+'">'+ST[it.status]+'</span>';
@@ -534,6 +539,8 @@ function renderDash(){
     +'<div class="card glow total"><div class="big num">'+cs.length+'</div><h3>دورة تدريبية في الربع الرابع 2026</h3>'
     +(partners.length?'<p>بالشراكة مع: <b>'+partners.map(function(p){return esc(p[0])}).join("، ")+'</b></p>':'<p>لا يوجد شريك مسجّل في الشيت بعد.</p>')
     +'<div class="chips num"><span class="chip c">'+plural(groupCount(cs,"program").length,"برنامج","برامج")+'</span><span class="chip g">'+plural(countries.length,"دولة","دول")+'</span><span class="chip a">'+plural(partners.length,"شريك","شركاء")+'</span><span class="chip m">'+plural(ts.length,"مهمة","مهام")+'</span></div></div></div>';
+  var stale=cs.filter(isStale);
+  if(stale.length)h+='<div class="card stalec"><div class="ch"><h3>⚠ دورات انتهى موعدها ولم تُحدَّث حالتها</h3><span class="tag num">'+plural(stale.length,"دورة","دورات")+'</span></div><p class="sub" style="margin:-10px 0 14px;font-size:14px">حدّث عمود «الإنجاز» لهذه الدورات في ورقة «مهام التدريب»، وتختفي من هنا تلقائياً.</p>'+listHtml(stale,"")+'</div>';
   h+=secHead("","مؤشرات المهام العامة",plural(ts.length,"مهمة","مهام")+" عامة مضافة");
   var mx=Math.max(tc("done"),tc("doing"),tc("todo"),tc("stuck"),1);
   function bc(k,n,l){return '<div class="bcol '+k+'"><b class="num">'+n+'</b><i style="height:'+Math.round(n*150/mx)+'px"></i><span>'+l+'</span></div>'}
@@ -555,7 +562,7 @@ function renderDash(){
 function dayPanel(ds,list,td){var moName=mName(parts(ds).m);
   var p=parts(ds), cs=list.filter(function(x){return x.kind==="c"}), ts=list.filter(function(x){return x.kind==="t"});
   var h='<div class="dayp'+(ds===td?" today":"")+(list.length?"":" none")+'"><header><span class="dn num">'+p.d+'</span><b>'+wday(ds)+'</b><span class="dm num">'+p.d+" "+moName+'</span>'+(ds===td?'<em>اليوم</em>':'')+'<span class="tag num">'+countLabel(list)+'</span></header>';
-  if(cs.length)h+='<div class="tblw"><table class="tb"><thead><tr><th>الدورة</th><th>البرنامج</th><th>الدولة</th><th>الشريك</th><th>المتدربون</th><th>نوع التدريب</th><th>الإنجاز</th></tr></thead><tbody>'+cs.map(function(c){return '<tr data-open="'+esc(c.id)+'" tabindex="0"><td class="tt">'+esc(c.title)+'</td><td>'+esc(c.program||"—")+'</td><td>'+esc(c.country||"—")+'</td><td>'+esc(c.partner||"—")+'</td><td>'+esc(c.trainees||"—")+'</td><td>'+(c.mode?'<span class="chip '+(c.mode==="حضوري"?"g":"c")+'">'+esc(c.mode)+'</span>':"—")+'</td><td>'+pill(c)+'</td></tr>'}).join("")+'</tbody></table></div>';
+  if(cs.length)h+='<div class="tblw"><table class="tb"><thead><tr><th>الدورة</th><th>البرنامج</th><th>الدولة</th><th>الشريك</th><th>المتدربون</th><th>نوع التدريب</th><th>الإنجاز</th></tr></thead><tbody>'+cs.map(function(c){return '<tr data-open="'+esc(c.id)+'" tabindex="0"><td class="tt">'+esc(c.title)+'</td><td>'+esc(c.program||"—")+'</td><td>'+esc(c.country||"—")+'</td><td>'+esc(c.partner||"—")+'</td><td>'+esc(c.trainees||"—")+'</td><td>'+(c.mode?'<span class="chip '+(c.mode==="حضوري"?"g":"c")+'">'+esc(c.mode)+'</span>':"—")+'</td><td>'+(isStale(c)?'<span class="chip m">'+esc(c.cstatus)+'</span> ':'')+pill(c)+'</td></tr>'}).join("")+'</tbody></table></div>';
   if(ts.length)h+='<div class="tblw"><table class="tb"><thead><tr><th>المهمة</th><th>التفصيل</th><th>الدولة</th><th>الشريك</th><th>المسؤول</th><th>الحالة</th></tr></thead><tbody>'+ts.map(function(t){return '<tr data-open="'+esc(t.id)+'" tabindex="0"><td class="tt">'+esc(t.title)+'</td><td class="dt">'+esc(t.details||"—")+'</td><td>'+esc(t.country||"—")+'</td><td>'+esc(t.partner||"—")+'</td><td>'+esc([t.a1,t.a2].filter(Boolean).join("، ")||"—")+'</td><td>'+pill(t)+'</td></tr>'}).join("")+'</tbody></table></div>';
   return h+'</div>';
 }
@@ -568,7 +575,7 @@ function scopeKpis(list,scope,pre){
   return '<div class="card kpi-s"><div class="ch"><h3>🎯 مؤشرات الإنجاز</h3><span class="tag">'+scope+'</span></div><div class="kgrid">'
     +'<div class="gauge mini">'+ring(pct(cs),96,10,RC[0][0],RC[0][1],"الدورات",pre+"c")+'<div class="gv num"><b>'+csDone+'</b><span>دورة تم إنجازها من <i>'+cs.length+'</i></span></div></div>'
     +'<div class="gauge mini">'+ring(pct(ts),96,10,RC[1][0],RC[1][1],"المهام",pre+"t")+'<div class="gv num"><b style="color:var(--cyan)">'+tsDone+'</b><span>مهمة منجزة من <i>'+ts.length+'</i></span></div></div>'
-    +'<div class="ksts">'+st(cs.length-csDone,"دورات لم تُنجز","cyan")+st(open,"مهام مفتوحة","amber")+st(groupCount(cs,"program").length,"برامج","gold-2")+st(partners.length,"شركاء","green")+'</div>'
+    +'<div class="ksts">'+st(cs.length-csDone,"دورات لم تُنجز","cyan")+st(open,"مهام مفتوحة","amber")+st(cs.filter(isStale).length,"بحاجة تحديث","rose")+st(partners.length,"شركاء","green")+'</div>'
     +'</div></div>';
 }
 function renderBrowse(){
@@ -689,6 +696,7 @@ function renderModal(){
   var h='<div class="acts">'+kindTag(t)+pill(t)+'</div><h3>'+esc(t.title)+'</h3><div class="meta">'+mi("التاريخ",longDate(t.date))+mi("اليوم",wday(t.date));
   if(t.kind==="c"){
     h+=mi("البرنامج",t.program)+mi("الدولة",t.country)+mi("الشريك",t.partner)+mi("المتدربون",t.trainees)+mi("نوع التدريب",t.mode)+mi("الإنجاز",t.cstatus)+'</div>';
+    if(isStale(t))h+='<div class="det" style="border-color:var(--rose);color:var(--rose);font-weight:700">انتهى موعد هذه الدورة وحالتها في الشيت ما زالت «'+esc(t.cstatus)+'». حدّث عمود «الإنجاز» في ورقة «مهام التدريب».</div>';
     h+='<div class="det">بيانات الدورة تأتي من ورقة «مهام التدريب» مباشرة، وتعديلها يكون من الشيت.</div>';
     h+='<div class="acts"><button class="btn" data-act="close" style="margin-inline-start:auto">إغلاق</button></div>';
   }else{
