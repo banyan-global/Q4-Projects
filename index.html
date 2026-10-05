@@ -364,6 +364,20 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 .mi{flex-direction:row;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;font-weight:500;font-size:15px;color:var(--txt);cursor:pointer}
 .mi:hover{background:var(--tint-gold)}
 .mi input{width:17px;height:17px;padding:0;flex:0 0 auto;accent-color:#c9a86a}
+.kpi-s{padding:22px 26px}
+.kpi-s .ch{margin-bottom:14px}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px 28px;align-items:center}
+.gauge.mini{gap:18px;padding:0;justify-content:flex-start;flex-wrap:nowrap}
+.gauge.mini+.gauge.mini{border-top:0}
+.gauge.mini .ring .rv b{font-size:24px}
+.gauge.mini .ring .rv span{font-size:12px}
+.gauge.mini .gv b{font-size:46px;letter-spacing:-1.5px}
+.gauge.mini .gv span{font-size:15px;margin-top:4px}
+.ksts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.kst{background:var(--tint);border:1px solid var(--line-soft);border-radius:14px;padding:12px 6px;text-align:center}
+.kst b{display:block;font-size:26px;font-weight:900;line-height:1.1}
+.kst span{display:block;font-size:12.5px;font-weight:700;color:var(--txt-3);margin-top:4px}
+@media (max-width:520px){.ksts{grid-template-columns:repeat(2,minmax(0,1fr))}.gauge.mini .gv b{font-size:38px}}
 </style>
 </head>
 <body>
@@ -543,6 +557,18 @@ function dayPanel(ds,list,td){var moName=mName(parts(ds).m);
   if(ts.length)h+='<div class="tblw"><table class="tb"><thead><tr><th>المهمة</th><th>التفصيل</th><th>الدولة</th><th>الشريك</th><th>المسؤول</th><th>الحالة</th></tr></thead><tbody>'+ts.map(function(t){return '<tr data-open="'+esc(t.id)+'" tabindex="0"><td class="tt">'+esc(t.title)+'</td><td class="dt">'+esc(t.details||"—")+'</td><td>'+esc(t.country||"—")+'</td><td>'+esc(t.partner||"—")+'</td><td>'+esc([t.a1,t.a2].filter(Boolean).join("، ")||"—")+'</td><td>'+pill(t)+'</td></tr>'}).join("")+'</tbody></table></div>';
   return h+'</div>';
 }
+/* مؤشرات إنجاز مختصرة لنطاق محدد (شهر أو أسبوع) */
+function scopeKpis(list,scope,pre){
+  var cs=list.filter(function(x){return x.kind==="c"}), ts=list.filter(function(x){return x.kind==="t"});
+  var csDone=cs.filter(isDone).length, tsDone=ts.filter(isDone).length, open=ts.length-tsDone;
+  var partners=groupCount(cs.filter(function(x){return x.partner}),"partner");
+  function st(n,l,c){return '<div class="kst"><b class="num" style="color:var(--'+c+')">'+n+'</b><span>'+l+'</span></div>'}
+  return '<div class="card kpi-s"><div class="ch"><h3>🎯 مؤشرات الإنجاز</h3><span class="tag">'+scope+'</span></div><div class="kgrid">'
+    +'<div class="gauge mini">'+ring(pct(cs),96,10,RC[0][0],RC[0][1],"الدورات",pre+"c")+'<div class="gv num"><b>'+csDone+'</b><span>دورة نُفّذت من <i>'+cs.length+'</i></span></div></div>'
+    +'<div class="gauge mini">'+ring(pct(ts),96,10,RC[1][0],RC[1][1],"المهام",pre+"t")+'<div class="gv num"><b style="color:var(--cyan)">'+tsDone+'</b><span>مهمة منجزة من <i>'+ts.length+'</i></span></div></div>'
+    +'<div class="ksts">'+st(cs.length-csDone,"دورات قادمة","cyan")+st(open,"مهام مفتوحة","amber")+st(groupCount(cs,"program").length,"برامج","gold-2")+st(partners.length,"شركاء","green")+'</div>'
+    +'</div></div>';
+}
 function renderBrowse(){
   var td=todayIso(), el=$("v-browse"), h;
   if(!selMonth){
@@ -560,6 +586,8 @@ function renderBrowse(){
   weeks.forEach(function(w,i){var wl=all.filter(function(t){return inRange(t,w.start,w.end)});
     h+='<button data-week="'+(i+1)+'" aria-pressed="'+(selWeek===i+1)+'">الأسبوع '+WN[i]+'<small class="num">'+rangeLabel(w.start,w.end)+" — "+countLabel(wl)+'</small></button>'});
   h+='</div>';
+  var scopeList=wk?all.filter(function(t){return inRange(t,wk.start,wk.end)}):list;
+  if(loaded)h+=scopeKpis(scopeList,wk?"الأسبوع "+WN[selWeek-1]+"، "+rangeLabel(wk.start,wk.end):"شهر "+mo.name,"sk");
   if(!wk){
     h+='<div class="card"><div class="ch"><h3>▦ قائمة مهام '+mo.name+'</h3><span class="tag num">'+countLabel(list)+'</span></div>';
     if(!list.length)h+='<div class="empty">لا توجد دورات ولا مهام في هذا الشهر.</div>';
