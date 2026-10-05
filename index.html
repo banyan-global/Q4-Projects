@@ -399,7 +399,7 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
           </div>
           <div class="three">
             <label for="fCountry">الدولة<select id="fCountry"></select><input id="fCountryO" placeholder="اكتب الدولة" hidden></label>
-            <label for="fPartner">الشريك<select id="fPartner"></select><input id="fPartnerO" placeholder="اكتب الشريك" hidden></label>
+            <label for="fPartner">الشريك<input id="fPartner" maxlength="120" placeholder="اكتب اسم الشريك" autocomplete="off"></label>
           </div>
           <label for="fReq">مقدم الطلب<select id="fReq"></select></label>
           <div class="lab"><span>المسؤولون <span class="sub">يمكن اختيار أكثر من واحد</span></span>
@@ -586,10 +586,10 @@ function ownersSum(){var o=getOwners(),s=$("fOwnersSum");s.textContent=o.length?
 function uniq(key){var o={},l=[];items.forEach(function(x){var v=x[key];if(v&&!o[v]){o[v]=1;l.push(v)}});return l.sort()}
 function fillPlace(c,p){
   $("fCountry").innerHTML=opts(uniq("country"),c||"","بدون")+'<option value="__o">أخرى…</option>';
-  $("fPartner").innerHTML=opts(uniq("partner"),p||"","بدون")+'<option value="__o">أخرى…</option>';
-  $("fCountryO").hidden=true;$("fPartnerO").hidden=true;$("fCountryO").value="";$("fPartnerO").value="";
+  $("fPartner").value=p||"";
+  $("fCountryO").hidden=true;$("fCountryO").value="";
 }
-function placeVal(id){var v=$(id).value;return v==="__o"?$(id+"O").value.trim():v}
+function placeVal(id){var v=$(id).value;return v==="__o"?$(id+"O").value.trim():v.trim()}
 function fillDays(sel){var m=+$("fMonth").value,mo=MONTHS.filter(function(x){return x.m===m})[0],h="";for(var d=1;d<=mo.days;d++)h+='<option value="'+d+'"'+(d===sel?' selected':'')+'>'+d+" — "+wday(iso(m,d))+'</option>';$("fDay").innerHTML=h}
 function formDate(){return iso(+$("fMonth").value,+$("fDay").value)}
 function setDate(s){var p=parts(s);if(p.y!==2026||p.m<10){p={m:10,d:1}}$("fMonth").value=p.m;fillDays(p.d)}
@@ -708,7 +708,7 @@ document.addEventListener("keydown",function(e){
   if(e.key==="Escape"&&openId)closeModal();
   if(e.key==="Enter"&&e.target.matches&&e.target.matches("tr[data-open]"))openItem(e.target.dataset.open);
 });
-["fCountry","fPartner"].forEach(function(id){$(id).addEventListener("change",function(){var o=$(id+"O");o.hidden=this.value!=="__o";if(!o.hidden)o.focus()})});
+["fCountry"].forEach(function(id){$(id).addEventListener("change",function(){var o=$(id+"O");o.hidden=this.value!=="__o";if(!o.hidden)o.focus()})});
 $("fOwnersList").addEventListener("change",ownersSum);
 document.addEventListener("click",function(e){var d=$("fOwners");if(d.open&&!d.contains(e.target))d.open=false});
 $("fMonth").addEventListener("change",function(){fillDays(Math.min(+$("fDay").value||1,28))});
