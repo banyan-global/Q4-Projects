@@ -540,10 +540,10 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
   <p>الدورات التدريبية والمهام لأكتوبر ونوفمبر وديسمبر، يوماً بيوم.</p>
 </header>
 <div class="nav-shell"><nav class="nav" aria-label="التنقل">
+  <button data-go="entry"><span class="i">✦</span>إدخال المهام</button>
   <button data-go="browse"><span class="i">◷</span>استعراض المهام</button>
   <button data-go="dash"><span class="i">▦</span>مؤشرات الإنجاز</button>
   <button data-go="list"><span class="i">☰</span>قائمة المهام</button>
-  <button data-go="entry"><span class="i">✦</span>إدخال المهام</button>
 </nav></div>
 <div class="sync" id="sync" role="status"></div>
 
@@ -551,7 +551,7 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
   <section class="view" id="v-browse"></section>
   <section class="view" id="v-dash" hidden></section>
   <section class="view" id="v-list" hidden>
-    <div class="sec-head"><span class="sn num">03</span><h2>قائمة المهام</h2><small>كل الدورات والمهام مرتبة بالتاريخ والوقت</small><span class="line"></span></div>
+    <div class="sec-head"><span class="sn num">04</span><h2>قائمة المهام</h2><small>كل الدورات والمهام مرتبة بالتاريخ والوقت</small><span class="line"></span></div>
     <div class="fbar">
       <div class="srch"><span class="si" aria-hidden="true">⌕</span><input id="lq" type="search" placeholder="بحث…" aria-label="بحث"></div>
       <select class="fsel" id="lKind" aria-label="النوع" data-f="kind"><option value="">كل الأنواع</option><option value="c">الدورات</option><option value="t">المهام</option></select>
@@ -565,7 +565,7 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
     <div id="listOut"></div>
   </section>
   <section class="view" id="v-entry" hidden>
-    <div class="sec-head"><span class="sn num">04</span><h2>إدخال المهام</h2><small>المهام تُحفظ في ورقة «المهام العامة»، والدورات تُقرأ من ورقة «مهام التدريب»</small><span class="line"></span></div>
+    <div class="sec-head"><span class="sn num">01</span><h2>إدخال المهام</h2><small>المهام تُحفظ في ورقة «المهام العامة»، والدورات تُقرأ من ورقة «مهام التدريب»</small><span class="line"></span></div>
     <div class="entry">
       <div class="card glow">
         <div class="ch"><h3><span class="ic" aria-hidden="true">✎</span><span id="formTitle">مهمة جديدة</span></h3></div>
@@ -697,7 +697,7 @@ function renderDash(){
   var today=all.filter(function(t){return t.date===td}), wkA=weekStart(td), wkB=addDays(wkA,6);
   var next=all.filter(function(t){return inRange(t,wkA,wkB)});
   var open=ts.filter(function(t){return t.status!=="done"});
-  var h=secHead("02","مؤشرات الإنجاز",wday(td)+"، "+longDate(td),'<button class="btn gold" data-go="entry">+ إضافة مهمة</button>');
+  var h=secHead("03","مؤشرات الإنجاز",wday(td)+"، "+longDate(td),'<button class="btn gold" data-go="entry">+ إضافة مهمة</button>');
   if(!loaded){$("v-dash").innerHTML=h+'<div class="empty">جارٍ التحميل من الشيت…</div>';return}
   if(!all.length){$("v-dash").innerHTML=h+'<div class="card"><div class="empty">لا توجد دورات ولا مهام في الربع الرابع بعد.</div></div>';return}
   var csDone=cs.filter(isDone).length, tsDone=ts.filter(isDone).length;
@@ -748,7 +748,7 @@ function scopeKpis(list,scope,pre){
 function renderBrowse(){
   var td=todayIso(), el=$("v-browse"), h;
   if(!selMonth){
-    h=secHead("01","استعراض المهام","اختر شهراً لعرض أسابيعه ودوراته ومهامه",'<button class="btn" data-go="dash">▦ مؤشرات الإنجاز</button>');
+    h=secHead("02","استعراض المهام","اختر شهراً لعرض أسابيعه ودوراته ومهامه",'<button class="btn" data-go="dash">▦ مؤشرات الإنجاز</button>');
     if(!loaded)h+='<div class="notice" style="margin-top:0"><span>جارٍ التحميل من الشيت…</span></div>';
     h+='<div class="months">'+MONTHS.map(function(mo,i){return monthCard(mo,td,i,"rb")}).join("")+'</div>';
     el.innerHTML=h;return;
@@ -1021,7 +1021,7 @@ $("f").addEventListener("submit",function(e){
 applyTheme(theme());
 initForm();resetForm();
 var h0=(location.hash||"").replace("#","");
-go(h0==="dash"||h0==="entry"||h0==="list"?h0:"browse");
+go(h0==="dash"||h0==="browse"||h0==="list"?h0:"entry");
 renderAll();renderSync();
 var cached=API_URL?lsGet("q4cache"):null;if(cached&&cached.ok)apply(cached);
 pull();
