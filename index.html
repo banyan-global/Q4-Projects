@@ -526,7 +526,13 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 .stalec .ch h3,:root[data-theme="light"] .stalec .ch h3{color:var(--rose)}
 .stalec .ic,:root[data-theme="light"] .stalec .ic{background:var(--rose);color:#fff;box-shadow:0 8px 18px color-mix(in srgb,var(--rose) 30%,transparent)}
 .stalec .ch .tag{background:var(--tint);border-color:var(--line-soft);color:var(--txt-2)}
-@media (max-width:520px){.ch{margin:0 0 16px;padding:0 0 13px}.ch h3{font-size:17.5px;gap:10px}.ic{width:34px;height:34px;border-radius:11px;font-size:16px}}
+.ch,.kpi-s .ch{padding:11px 14px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(270deg,rgba(216,183,106,.16),rgba(216,183,106,.06))}
+.ch::after{display:none}
+:root[data-theme="light"] .ch{background:linear-gradient(270deg,#f6ecd4,#fbf5e6);border:1px solid rgba(201,168,106,.55)}
+:root[data-theme="light"] .ic{background:linear-gradient(135deg,#e6cf9a,#c9a86a);color:#16294a;box-shadow:0 6px 14px rgba(201,168,106,.30)}
+.stalec .ch,:root[data-theme="light"] .stalec .ch{background:color-mix(in srgb,var(--rose) 9%,transparent);border:1px solid color-mix(in srgb,var(--rose) 35%,transparent)}
+.stalec .ic,:root[data-theme="light"] .stalec .ic{background:var(--rose);color:#fff}
+@media (max-width:520px){.ch{margin:0 0 16px;padding:9px 11px}.ch h3{font-size:17.5px;gap:10px}.ic{width:34px;height:34px;border-radius:11px;font-size:16px}}
 </style>
 </head>
 <body>
