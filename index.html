@@ -499,6 +499,15 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 :root[data-theme="light"] .dd.field .ddb,:root[data-theme="light"] .dd.field .ddb.on{background:#fff;color:#15233c}
 .dd.field .ddm{min-width:100%;max-height:260px}
 .dd.field .ddo{direction:rtl}
+
+/* كل الفلاتر في سطر واحد مع بحث أقصر */
+.fbar{flex-wrap:wrap;gap:6px}
+.fbar .srch{flex:1 1 150px;min-width:130px;max-width:260px}
+.fbar .dd{flex:1 1 auto}
+.fbar .ddb{padding:9px 11px;font-size:13.5px;gap:8px}
+.fbar .ddm{min-width:max(100%,200px)}
+.fbar .lnk{margin-inline-start:2px}
+@media (max-width:620px){.fbar .srch{max-width:none;flex-basis:100%}.fbar .dd{flex:1 1 30%}}
 </style>
 </head>
 <body>
@@ -529,13 +538,10 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
       <select class="fsel" id="lKind" aria-label="النوع" data-f="kind"><option value="">كل الأنواع</option><option value="c">الدورات</option><option value="t">المهام</option></select>
       <select class="fsel" id="lPeriod" aria-label="الفترة" data-f="period"><option value="">كل الفترات</option><option value="today">اليوم</option><option value="week">هذا الأسبوع</option><option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option></select>
       <select class="fsel" id="lStatus" aria-label="الحالة" data-f="status"><option value="">كل الحالات</option><option>لم تبدأ</option><option>قيد التنفيذ</option><option>تم الإنجاز</option><option>متعثرة</option><option value="__stale">بحاجة تحديث</option></select>
-      <button type="button" class="fmore" id="lMoreBtn" aria-expanded="false">المزيد<span class="mcount num" id="lMoreCount" hidden></span></button>
+      <select class="fsel" id="lOwner" aria-label="المسؤول"></select>
+      <select class="fsel" id="lProgram" aria-label="البرنامج"></select>
+      <select class="fsel" id="lPartner" aria-label="الشريك"></select>
       <button type="button" class="lnk" id="lClear" hidden>مسح</button>
-      <div class="fextra" id="lExtra" hidden>
-        <select class="fsel" id="lOwner" aria-label="المسؤول"></select>
-        <select class="fsel" id="lProgram" aria-label="البرنامج"></select>
-        <select class="fsel" id="lPartner" aria-label="الشريك"></select>
-      </div>
     </div>
     <div id="listOut"></div>
   </section>
@@ -795,7 +801,7 @@ function renderList(){
     return true;
   });
   var extra=[ow,pg,pr].filter(Boolean).length, active=extra+(q?1:0)+(flt.kind?1:0)+(flt.period?1:0)+(flt.status?1:0);
-  $("lMoreCount").hidden=!extra;$("lMoreCount").textContent=extra;$("lClear").hidden=!active;
+  $("lClear").hidden=!active;
   var cs=kc(list,"c"),ts=kc(list,"t"),dn=list.filter(isDone).length,sl=list.filter(isStale).length,p=pct(list);
   function st(n,l,c){return '<span class="ls"><b class="num" style="color:var(--'+c+')">'+n+'</b> '+l+'</span>'}
   var h='<div class="lstrip"><span class="ls tot"><b class="num">'+list.length+'</b> نتيجة'+(active?' <span class="sub num">من '+items.length+'</span>':'')+'</span>'+st(cs,"دورات","cyan")+st(ts,"مهام","gold-2")+st(dn,"منجزة","green")+st(list.length-dn,"غير منجزة","amber")+(sl?st(sl,"بحاجة تحديث","rose"):'')
@@ -965,7 +971,6 @@ document.addEventListener("keydown",function(e){
   if(e.key==="ArrowDown"||e.key==="ArrowUp"){var o=Array.prototype.slice.call(dd.querySelectorAll(".ddo"));if(dd.lastChild.hidden)return;e.preventDefault();var i=o.indexOf(document.activeElement);i=e.key==="ArrowDown"?Math.min(o.length-1,i+1):Math.max(0,i-1);o[i].focus()}
 });
 $("fStart").addEventListener("change",function(){var v=this.value;if(v&&!$("fEnd").value){var p=v.split(":"),h=+p[0]+1;if(h<24)setTime("fEnd",pad(h)+":"+p[1])}});
-$("lMoreBtn").addEventListener("click",function(){var x=$("lExtra");x.hidden=!x.hidden;this.setAttribute("aria-expanded",String(!x.hidden))});
 $("lClear").addEventListener("click",function(){["lq","lKind","lPeriod","lStatus","lOwner","lProgram","lPartner"].forEach(function(id){$(id).value=""});renderList()});
 $("fOwnersList").addEventListener("change",ownersSum);
 document.addEventListener("click",function(e){var d=$("fOwners");if(d.open&&!d.contains(e.target))d.open=false});
