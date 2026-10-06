@@ -508,6 +508,25 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 .fbar .ddm{min-width:max(100%,200px)}
 .fbar .lnk{margin-inline-start:2px}
 @media (max-width:620px){.fbar .srch{max-width:none;flex-basis:100%}.fbar .dd{flex:1 1 30%}}
+
+/* ---- عناوين البطاقات: أيقونة في مربع، عنوان عريض، وخط ذهبي قصير تحته ---- */
+.ch{margin:0 0 20px;padding:0 0 16px;background:none;border-bottom:1px solid var(--line-soft);position:relative;align-items:center}
+.ch::after{content:"";position:absolute;bottom:-2px;inset-inline-start:0;width:72px;height:3px;border-radius:3px;background:linear-gradient(270deg,var(--gold-deep),var(--gold-2))}
+.ch h3{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:900;letter-spacing:-.2px;color:var(--txt);line-height:1.3}
+.ic{flex:0 0 auto;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:18px;line-height:1;background:linear-gradient(135deg,var(--gold-2),var(--gold-deep));color:#0b0f17;box-shadow:0 8px 18px rgba(216,183,106,.28)}
+.kpi-s .ch{margin:0 0 16px;padding:0 0 14px}
+:root[data-theme="light"] .ch{background:none;border-bottom:1px solid rgba(22,41,74,.10)}
+:root[data-theme="light"] .ch::after{background:linear-gradient(270deg,#c9a86a,#e6cf9a)}
+:root[data-theme="light"] .ch h3{color:#16294a}
+:root[data-theme="light"] .ic{background:linear-gradient(135deg,#21395f,#16294a);color:#f3dca6;box-shadow:0 8px 18px rgba(22,41,74,.22)}
+:root[data-theme="light"] .ch .tag{background:var(--tint);border-color:var(--line-soft);color:var(--txt-2)}
+:root[data-theme="light"] .ch .sub{color:var(--txt-3)}
+.stalec .ch,:root[data-theme="light"] .stalec .ch{background:none;border-bottom-color:color-mix(in srgb,var(--rose) 35%,transparent)}
+.stalec .ch::after,:root[data-theme="light"] .stalec .ch::after{background:var(--rose)}
+.stalec .ch h3,:root[data-theme="light"] .stalec .ch h3{color:var(--rose)}
+.stalec .ic,:root[data-theme="light"] .stalec .ic{background:var(--rose);color:#fff;box-shadow:0 8px 18px color-mix(in srgb,var(--rose) 30%,transparent)}
+.stalec .ch .tag{background:var(--tint);border-color:var(--line-soft);color:var(--txt-2)}
+@media (max-width:520px){.ch{margin:0 0 16px;padding:0 0 13px}.ch h3{font-size:17.5px;gap:10px}.ic{width:34px;height:34px;border-radius:11px;font-size:16px}}
 </style>
 </head>
 <body>
@@ -549,7 +568,7 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
     <div class="sec-head"><span class="sn num">04</span><h2>إدخال المهام</h2><small>المهام تُحفظ في ورقة «المهام العامة»، والدورات تُقرأ من ورقة «مهام التدريب»</small><span class="line"></span></div>
     <div class="entry">
       <div class="card glow">
-        <div class="ch"><h3 id="formTitle">مهمة جديدة</h3></div>
+        <div class="ch"><h3><span class="ic" aria-hidden="true">✎</span><span id="formTitle">مهمة جديدة</span></h3></div>
         <form id="f" novalidate>
           <label for="fTitle">المهمة<input id="fTitle" maxlength="200" placeholder="مثال: رفع تقرير المقاولين"></label>
           <div class="two">
@@ -575,7 +594,7 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
           <div class="msg" id="fMsg" role="status"></div>
         </form>
       </div>
-      <div class="card"><div class="ch"><h3>المهام المضافة <span class="sub">الأحدث أولاً</span></h3><span class="tag num" id="allCount"></span></div><div class="list" id="allList"></div></div>
+      <div class="card"><div class="ch"><h3><span class="ic" aria-hidden="true">☰</span>المهام المضافة <span class="sub">الأحدث أولاً</span></h3><span class="tag num" id="allCount"></span></div><div class="list" id="allList"></div></div>
     </div>
   </section>
 </main>
@@ -756,7 +775,7 @@ function renderBrowse(){
     for(var d=0;d<7;d++){var ds=addDays(wk.start,d);if(!inQ4(ds))continue;h+=dayPanel(ds,all.filter(function(t){return t.date===ds}),td)}
     h+='</div>';
   }
-  el.innerHTML=h;
+  el.innerHTML=h;decorate();
 }
 
 /* ---------- قائمة المهام (صفحة مستقلة بفلاتر ومؤشرات) ---------- */
@@ -810,7 +829,7 @@ function renderList(){
   else if(!list.length)h+='<div class="card"><div class="empty">لا توجد نتائج بهذه الفلاتر.</div></div>';
   else{var lh="",lm=0;list.forEach(function(it){var mm=parts(it.date).m;if(mm!==lm){if(lm)lh+='</div>';lh+='<div class="grp num">'+mName(mm)+" 2026 — "+countLabel(list.filter(function(x){return parts(x.date).m===mm}))+'</div><div class="list">';lm=mm}lh+=row(it)});
     h+='<div class="card">'+lh+'</div></div>'}
-  $("listOut").innerHTML=h;
+  $("listOut").innerHTML=h;decorate();
 }
 
 /* ---------- الإدخال ---------- */
@@ -921,7 +940,14 @@ function renderModal(){
 }
 function closeModal(){openId=null;confirmDel=false;modalErr="";$("ov").hidden=true}
 
-function renderAll(){renderDash();renderBrowse();renderList();renderEntry();if(openId)renderModal()}
+/* يضع الرمز الذي يسبق عنوان البطاقة داخل مربع أيقونة */
+function decorate(){Array.prototype.forEach.call(document.querySelectorAll(".ch h3"),function(h){
+  var n=h.firstChild;if(!n||n.nodeType!==3)return;
+  var m=n.nodeValue.match(/^\s*([^\s\u0600-\u06FFA-Za-z0-9]+)\s+/);if(!m)return;
+  var sp=document.createElement("span");sp.className="ic";sp.setAttribute("aria-hidden","true");sp.textContent=m[1];
+  n.nodeValue=n.nodeValue.slice(m[0].length);h.insertBefore(sp,n);
+})}
+function renderAll(){renderDash();renderBrowse();renderList();renderEntry();decorate();if(openId)renderModal()}
 function go(v){
   view=v;["dash","browse","list","entry"].forEach(function(k){$("v-"+k).hidden=k!==v});
   document.body.classList.toggle("compact",!(v==="browse"&&!selMonth));
