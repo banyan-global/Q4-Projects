@@ -373,6 +373,17 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 .sum.c{--sc:var(--cyan)}.sum.g{--sc:var(--green)}.sum.a{--sc:var(--amber)}.sum.m{--sc:var(--gold-2)}
 :root[data-theme="light"] .sum.m{--sc:#16294a}
 @media (max-width:520px){.sums{grid-template-columns:repeat(2,minmax(0,1fr))}.sum b{font-size:44px}}
+.top2>.cy{display:flex;flex-direction:column}
+.top2>.cy>.gauge{flex:1;align-items:center;align-content:center;gap:40px}
+.top2>.cy .ring .rv b{font-size:52px}.top2>.cy .ring .rv span{font-size:17px}
+.top2>.cy .gv b{font-size:104px}
+.plab{font-size:14px;font-weight:800;color:var(--txt-3);margin:4px 0 8px}
+.pts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.pt{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:6px 8px 6px 14px;padding-inline:14px 7px;border-radius:12px;border:1px solid var(--line);background:var(--tint-gold);font-size:14.5px;font-weight:700;color:var(--txt)}
+.pt>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pt b{flex:0 0 auto;min-width:26px;text-align:center;padding:2px 7px;border-radius:8px;background:var(--gold-deep);color:#fff;font-size:13px;font-weight:800}
+.pt.more{padding:6px 14px;color:var(--txt-2);background:var(--tint);border-color:var(--line-soft)}
+@media (max-width:520px){.top2>.cy .ring svg{width:150px;height:150px}.top2>.cy .ring .rv b{font-size:36px}.top2>.cy .gv b{font-size:64px}.top2>.cy>.gauge{gap:18px}}
 .mother{display:flex;flex-direction:column;gap:6px;align-items:stretch;padding:6px 0 2px;margin-top:6px;border-top:1px solid var(--line-soft)}.mother input{flex:1;min-width:0;padding:9px 12px;font-size:14.5px}.mother .btn{padding:9px 14px;font-size:13.5px;flex:0 0 auto}
 .mi input{width:17px;height:17px;padding:0;flex:0 0 auto;accent-color:#c9a86a}
 .kpi-s{padding:22px 26px}
@@ -721,9 +732,9 @@ function renderDash(){
   var partners=groupCount(cs.filter(function(x){return x.partner}),"partner"), countries=groupCount(cs.filter(function(x){return x.country}),"country");
   function tc(s){return ts.filter(function(t){return t.status===s}).length}
   h+='<div class="top2"><div class="card glow cy"><div class="ch"><h3>🎯 مؤشرات الدورات</h3><span class="tag">المنجز مقابل المخطط</span></div>'
-    +'<div class="gauge">'+ring(pct(cs),150,15,RC[0][0],RC[0][1],"منجز","rg1")+'<div class="gv num"><b>'+csDone+'</b><span>دورة تم إنجازها من <i>'+cs.length+'</i></span><span>'+today.filter(function(x){return x.kind==="c"}).length+' اليوم، و'+next.filter(function(x){return x.kind==="c"}).length+' هذا الأسبوع</span></div></div></div>'
+    +'<div class="gauge">'+ring(pct(cs),210,20,RC[0][0],RC[0][1],"منجز","rg1")+'<div class="gv num"><b>'+csDone+'</b><span>دورة تم إنجازها من <i>'+cs.length+'</i></span><span>'+today.filter(function(x){return x.kind==="c"}).length+' اليوم، و'+next.filter(function(x){return x.kind==="c"}).length+' هذا الأسبوع</span></div></div></div>'
     +'<div class="card glow total"><div class="big num">'+cs.length+'</div><h3>دورة تدريبية في الربع الرابع 2026</h3>'
-    +(partners.length?'<p>بالشراكة مع: <b>'+partners.map(function(p){return esc(p[0])}).join("، ")+'</b></p>':'<p>لا يوجد شريك مسجّل في الشيت بعد.</p>')
+    +(partners.length?'<div class="plab">بالشراكة مع</div><div class="pts">'+partners.slice(0,6).map(function(p){return '<span class="pt"><span>'+esc(p[0])+'</span><b class="num">'+p[1]+'</b></span>'}).join("")+(partners.length>6?'<span class="pt more num">+'+(partners.length-6)+' آخرين</span>':'')+'</div>':'<p>لا يوجد شريك مسجّل في الشيت بعد.</p>')
     +'<div class="sums num">'+[["c","◈",groupCount(cs,"program").length,"البرامج"],["g","◎",countries.length,"الدول"],["a","❖",partners.length,"الشركاء"],["m","✦",ts.length,"المهام العامة"]].map(function(x){return '<div class="sum '+x[0]+'"><span class="si" aria-hidden="true">'+x[1]+'</span><b>'+x[2]+'</b><span class="sl">'+x[3]+'</span></div>'}).join("")+'</div></div></div>';
   var stale=cs.filter(isStale);
   if(stale.length)h+='<div class="card stalec"><div class="ch"><h3>⚠ دورات انتهى موعدها ولم تُحدَّث حالتها</h3><span class="tag num">'+plural(stale.length,"دورة","دورات")+'</span></div><p class="sub" style="margin:-10px 0 14px;font-size:14px">حدّث عمود «الإنجاز» لهذه الدورات في ورقة «مهام التدريب»، وتختفي من هنا تلقائياً.</p>'+listHtml(stale,"")+'</div>';
