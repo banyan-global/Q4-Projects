@@ -706,6 +706,7 @@ function kindTag(it){return it.kind==="c"?'<span class="kt kc">دورة</span>':
 function ring(p,size,sw,c1,c2,label,id){var r=(size-sw)/2,c=2*Math.PI*r;return '<span class="ring"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" style="stroke:var(--track)" stroke-width="'+sw+'"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="url(#'+id+')" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+(c*p/100).toFixed(1)+' '+c.toFixed(1)+'"'+(p?'':' stroke-opacity="0"')+'/></svg><span class="rv num"><b>'+p+'%</b><span>'+label+'</span></span></span>'}
 function secHead(n,title,sb,extra){return '<div class="sec-head">'+(n?'<span class="sn num">'+n+'</span>':'')+'<h2>'+title+'</h2>'+(sb?'<small class="num">'+sb+'</small>':'')+'<span class="line"></span>'+(extra||'')+'</div>'}
 function row(it){var p=parts(it.date),s=sub(it);return '<button class="row" data-open="'+esc(it.id)+'"><span class="date num"><b>'+p.d+'</b><span>'+wday(it.date)+'</span></span><span><span class="t">'+kindTag(it)+(timeLabel(it)?'<span class="tm num">'+timeLabel(it)+'</span>':'')+esc(it.title)+'</span>'+(s?'<span class="d">'+esc(s)+'</span>':'')+'</span>'+pill(it)+'</button>'}
+function pend(l){return l.filter(function(x){return !isDone(x)})}
 function listHtml(list,emptyText){return list.length?'<div class="list">'+list.map(row).join("")+'</div>':'<div class="empty">'+emptyText+'</div>'}
 var RC_DARK=[["#f3dca6","#c9a86a"],["#5fd9e6","#3cc0d4"],["#5fe0a0","#27a35e"]], RC_LIGHT=[["#d9b866","#8a6c2e"],["#19b3c4","#0b7886"],["#2fbf71","#146c3c"]], RC=RC_LIGHT;
 function theme(){return document.documentElement.getAttribute("data-theme")==="dark"?"dark":"light"}
@@ -746,7 +747,7 @@ function renderDash(){
   h+=secHead("","ملخص الدورات");
   h+='<div class="grid3">'+barsCard("▦ حسب البرنامج","",groupCount(cs,"program"))+barsCard("✦ حسب الشريك","",groupCount(cs,"partner"))+barsCard("◈ حسب الدولة","",groupCount(cs,"country"))+barsCard("◷ حسب نوع التدريب","",groupCount(cs,"mode"))+barsCard("✦ حسب المتدربين","",groupCount(cs,"trainees"))+barsCard("▦ حسب الإنجاز","",groupCount(cs.map(function(c){return {s:c.cstatus||(isDone(c)?ST.done:ST.todo)}}),"s"))+'</div>';
   h+=secHead("","تقويم المهام","اليوم وهذا الأسبوع (من السبت إلى الجمعة)");
-  h+='<div class="grid2"><div class="card"><div class="ch"><h3>✦ اليوم</h3><span class="tag">'+wday(td)+'</span></div>'+listHtml(today,"لا دورات ولا مهام بتاريخ اليوم.")+'</div><div class="card"><div class="ch"><h3>◈ هذا الأسبوع</h3><span class="tag num">'+rangeLabel(wkA,wkB)+'</span></div>'+listHtml(next,"لا دورات ولا مهام هذا الأسبوع.")+'</div></div>';
+  h+='<div class="grid2"><div class="card"><div class="ch"><h3>✦ اليوم</h3><span class="tag">'+wday(td)+'</span></div>'+listHtml(pend(today),"لا دورات ولا مهام تحتاج متابعة اليوم.")+'</div><div class="card"><div class="ch"><h3>◈ هذا الأسبوع</h3><span class="tag num">'+rangeLabel(wkA,wkB)+'</span></div>'+listHtml(pend(next),"لا دورات ولا مهام تحتاج متابعة هذا الأسبوع.")+'</div></div>';
   h+='<div class="card"><div class="ch"><h3>◷ مهام مفتوحة تحتاج متابعة</h3><span class="tag num">'+plural(open.length,"مهمة","مهام")+'</span></div>'+listHtml(open,"لا توجد مهام مفتوحة.")+'</div>';
   h+='<div style="text-align:center"><button class="btn gold" data-go="list">☰ عرض قائمة المهام كاملة مع الفلاتر</button></div>';
   $("v-dash").innerHTML=h;
@@ -780,20 +781,20 @@ function renderBrowse(){
     h+='<div class="months">'+MONTHS.map(function(mo,i){return monthCard(mo,td,i,"rb")}).join("")+'</div>';
     el.innerHTML=h;return;
   }
-  var mo=MONTHS.filter(function(x){return x.m===selMonth})[0], list=sorted(inMonth(mo.m)), weeks=monthWeeks(mo);
+  var mo=MONTHS.filter(function(x){return x.m===selMonth})[0], full=sorted(inMonth(mo.m)), list=pend(full), weeks=monthWeeks(mo);
   if(selWeek>weeks.length)selWeek=0;
-  var all=sorted(items), wk=selWeek?weeks[selWeek-1]:null;
+  var allF=sorted(items), all=pend(allF), wk=selWeek?weeks[selWeek-1]:null;
   h='<div class="crumbs"><button data-month="0">الربع الرابع</button><span>‹</span>'+(wk?'<button data-week="0">'+mo.name+'</button><span>‹</span><span>الأسبوع '+WN[selWeek-1]+'</span>':'<span>'+mo.name+'</span>')+'</div>';
   h+=secHead(mo.m,mo.name+" 2026"+(wk?" — الأسبوع "+WN[selWeek-1]:""),wk?"من السبت إلى الجمعة، "+rangeLabel(wk.start,wk.end):countLabel(list));
   h+='<div class="weeks"><button data-week="0" aria-pressed="'+(selWeek===0)+'">كل الشهر<small class="num">'+countLabel(list)+'</small></button>';
   weeks.forEach(function(w,i){var wl=all.filter(function(t){return inRange(t,w.start,w.end)});
     h+='<button data-week="'+(i+1)+'" aria-pressed="'+(selWeek===i+1)+'">الأسبوع '+WN[i]+'<small class="num">'+rangeLabel(w.start,w.end)+" — "+countLabel(wl)+'</small></button>'});
   h+='</div>';
-  var scopeList=wk?all.filter(function(t){return inRange(t,wk.start,wk.end)}):list;
+  var scopeList=wk?allF.filter(function(t){return inRange(t,wk.start,wk.end)}):full;
   if(loaded)h+=scopeKpis(scopeList,wk?"الأسبوع "+WN[selWeek-1]+"، "+rangeLabel(wk.start,wk.end):"شهر "+mo.name,"sk");
   if(!wk){
     h+='<div class="card"><div class="ch"><h3>▦ قائمة مهام '+mo.name+'</h3><span class="tag num">'+countLabel(list)+'</span></div>';
-    if(!list.length)h+='<div class="empty">لا توجد دورات ولا مهام في هذا الشهر.</div>';
+    if(!list.length)h+='<div class="empty">'+(full.length?'كل دورات ومهام هذا الشهر منجزة. المنجزة تظهر في «قائمة المهام».':'لا توجد دورات ولا مهام في هذا الشهر.')+'</div>';
     weeks.forEach(function(w,i){var wl=list.filter(function(t){return inRange(t,w.start,w.end)});if(!wl.length)return;
       h+='<div class="grp num">الأسبوع '+WN[i]+" — "+rangeLabel(w.start,w.end)+'</div><div class="list">'+wl.map(row).join("")+'</div>'});
     h+='</div>';
@@ -903,10 +904,10 @@ function say(t,err){var m=$("fMsg");m.textContent=t;m.className="msg"+(err?" err
 function startEdit(t){editId=t.rid;$("fTitle").value=t.title;$("fDetails").value=t.details||"";setTime("fStart",t.start);setTime("fEnd",t.end);clrO();fillPeople(t.owners,t.req);fillPlace(t.country,t.partner);$("fStatus").value=t.status;setDate(t.date);
   $("formTitle").textContent="تعديل المهمة";$("fSave").textContent="حفظ التعديل";$("fCancel").hidden=false;say("");go("entry");$("fTitle").focus()}
 function renderEntry(){
-  var all=sorted(items.filter(function(x){return x.kind==="t"})).reverse(), h="", last="";
-  $("allCount").textContent=plural(all.length,"مهمة","مهام");
+  var all=sorted(pend(items.filter(function(x){return x.kind==="t"}))).reverse(), h="", last="";
+  $("allCount").textContent=plural(all.length,"مهمة مفتوحة","مهام مفتوحة");
   $("codeWrap").hidden=!needsCode;
-  if(!all.length)h='<div class="empty">'+(loaded?"لا توجد مهام مضافة بعد. أضف أول مهمة من النموذج.":"جارٍ التحميل…")+'</div>';
+  if(!all.length)h='<div class="empty">'+(loaded?"لا توجد مهام مفتوحة. المهام المنجزة تظهر في «قائمة المهام».":"جارٍ التحميل…")+'</div>';
   all.forEach(function(t){if(t.date!==last){h+='<div class="grp num">'+wday(t.date)+"، "+longDate(t.date)+'</div>';last=t.date}h+=row(t)});
   $("allList").innerHTML=h;
 }
