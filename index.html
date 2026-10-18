@@ -696,6 +696,7 @@ var SNAPSHOT=[{"id": "s-1", "init": "مهام التدريب", "date": "2026-10-
 var MONTHS=[{m:10,name:"أكتوبر",days:31},{m:11,name:"نوفمبر",days:30},{m:12,name:"ديسمبر",days:31}];
 var WD=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
 var WN=["الأول","الثاني","الثالث","الرابع","الخامس","السادس"];
+var courseOwner="أ. أبوبكر بافضل";
 var CATS=["التدريب والدورات", "المشاريع والبرامج الخارجية", "الشؤون الأكاديمية والاختبارات", "حلقات القرآن والمتابعة التعليمية", "المناهج والحقائب التدريبية", "التصميم والهوية والشهادات", "التقنية والأنظمة والمنصات", "التواصل والتنسيق", "الاجتماعات واللقاءات", "الوفود والفعاليات والضيافة", "الشؤون الإدارية والمالية", "الخدمات والتشغيل والصيانة", "التقارير والتوثيق والإحصاءات", "الاستشارات", "أخرى"];
 var ST={todo:"لم تبدأ",doing:"قيد التنفيذ",done:"تم الإنجاز",stuck:"متعثرة"};
 var STC={todo:"m",doing:"a",done:"g",stuck:"r"};
@@ -747,7 +748,10 @@ function build(){
   var seq=0;
   items=courses.filter(function(c){return inQ4(c.date)&&c.title}).map(function(c){return {kind:"c",id:"c:"+c.id,date:c.date,title:c.title,program:c.program||"",country:c.country||"",partner:c.partner||"",trainees:c.trainees||"",mode:c.mode||"",cstatus:String(c.status||"").replace(/\s+/g," ").trim(),init:c.init||"",week:c.week||"",ord:++seq}})
    .concat(tasks.filter(function(t){return inQ4(t.date)&&t.title}).map(function(t){return {kind:"t",id:"t:"+t.id,rid:t.id,date:t.date,endDate:(inQ4(t.endDate)&&t.endDate>=t.date?t.endDate:t.date),title:t.title,start:tm(t.start),end:tm(t.end),country:t.country||"",partner:t.partner||"",req:abbr(t.req),owners:owners(t),a1:owners(t).join("، "),a2:"",status:ST[t.status]?t.status:(STKEY[t.status]||"todo"),details:t.details||"",cat:t.cat||"",doneDate:t.doneDate||"",ord:++seq}}));
-  items.forEach(function(it){if(isLate(it)){it.late=true;it.status="stuck"}});
+  items.forEach(function(it){
+    if(it.kind==="c"){it.owners=courseOwner?[courseOwner]:[];it.a1=courseOwner;return}
+    if(it.status==="todo"&&(it.date+" "+(it.start||"00:00"))<=nowR()){it.status="doing";it.started=true}
+    if(isLate(it)){it.late=true;it.status="stuck"}});
 }
 function abbr(n){return String(n||"").trim().replace(/^(ال)?دكتورة?\s+/,"د. ").replace(/^(ال)?مهندسة?\s+/,"م. ").replace(/^(ال)?[أا]ستاذة?\s+/,"أ. ").replace(/^(ال)?شيخ\s+/,"ش. ")}
 function owners(t){return String([t.a1,t.a2].filter(Boolean).join("،")).split(/[،,]/).map(abbr).filter(Boolean)}
@@ -986,7 +990,7 @@ function renderEntry(){$("codeWrap").hidden=!needsCode}
 
 /* ---------- المزامنة مع الشيت ---------- */
 function apply(d){
-  courses=d.courses||[];tasks=d.tasks||[];
+  courses=d.courses||[];courseOwner=d.courseOwner||courseOwner;tasks=d.tasks||[];
   if(d.staff)staff=d.staff;if(d.reqs)reqs=d.reqs;if(d.cats&&d.cats.length)CATS=d.cats;fillCat($("fCat").value);needsCode=!!d.needsCode;
   fillPeople(getOwners(),$("fReq").value);build();if(!openEditing())fillPlace(placeVal("fCountry"),placeVal("fPartner"));
   loaded=true;build();renderAll();
@@ -1002,7 +1006,7 @@ function pull(){
   busy=true;renderSync();
   return fetch(API_URL+(API_URL.indexOf("?")<0?"?":"&")+"t="+Date.now(),{redirect:"follow"}).then(function(r){return r.json()}).then(function(d){
     if(!d||!d.ok)throw new Error("bad");
-    lastSync=new Date();syncErr="";lsSet("q4cache",d);if(!openEditing())apply(d);else{courses=d.courses||[];tasks=d.tasks||[];build();renderDash();renderBrowse();renderList();renderEntry()}
+    lastSync=new Date();syncErr="";lsSet("q4cache",d);if(!openEditing())apply(d);else{courses=d.courses||[];courseOwner=d.courseOwner||courseOwner;tasks=d.tasks||[];build();renderDash();renderBrowse();renderList();renderEntry()}
   }).catch(function(){
     syncErr="تعذّر الاتصال بالشيت.";
     if(!loaded){var c=lsGet("q4cache");apply(c||{courses:SNAPSHOT,tasks:[]})}
@@ -1031,7 +1035,7 @@ function renderModal(){
   if(!t){$("ov").hidden=true;openId=null;return}
   var h='<div class="acts">'+kindTag(t)+pill(t)+'</div><h3>'+esc(t.title)+'</h3><div class="meta">'+(t.kind==="t"?mi("البداية",wday(t.date)+"، "+longDate(t.date)+(t.start?" — "+t12(t.start):""))+mi("النهاية",wday(t.endDate||t.date)+"، "+longDate(t.endDate||t.date)+(t.end?" — "+t12(t.end):"")):mi("التاريخ",longDate(t.date))+mi("اليوم",wday(t.date)));
   if(t.kind==="c"){
-    h+=mi("البرنامج",t.program)+mi("الدولة",t.country)+mi("الشريك",t.partner)+mi("المتدربون",t.trainees)+mi("نوع التدريب",t.mode)+mi("الإنجاز",t.cstatus)+'</div>';
+    h+=mi("المسؤول",t.a1)+mi("البرنامج",t.program)+mi("الدولة",t.country)+mi("الشريك",t.partner)+mi("المتدربون",t.trainees)+mi("نوع التدريب",t.mode)+mi("الإنجاز",t.cstatus)+'</div>';
     if(isStale(t))h+='<div class="det" style="border-color:var(--rose);color:var(--rose);font-weight:700">انتهى موعد هذه الدورة وحالتها في الشيت ما زالت «'+esc(t.cstatus)+'». حدّث عمود «الإنجاز» في ورقة «مهام التدريب».</div>';
     h+='<div class="det">بيانات الدورة تأتي من ورقة «مهام التدريب» مباشرة، وتعديلها يكون من الشيت.</div>';
     h+='<div class="acts"><button class="btn" data-act="close" style="margin-inline-start:auto">إغلاق</button></div>';
@@ -1073,6 +1077,7 @@ document.addEventListener("click",function(e){
   if(b.dataset.week!==undefined){selWeek=+b.dataset.week;renderBrowse();return}
   if(b.dataset.open){openItem(b.dataset.open);return}
   var t=items.filter(function(x){return x.id===openId})[0];
+  if(b.dataset.st&&t&&b.dataset.st==="todo"&&(t.date+" "+(t.start||"00:00"))<=nowR()){modalErr="بدأ وقت هذه المهمة، فحالتها «قيد التنفيذ» تلقائياً. لتأجيلها عدّل تاريخ البداية من «تعديل».";renderModal();return}
   if(b.dataset.st&&t&&t.late&&(b.dataset.st==="todo"||b.dataset.st==="doing")){modalErr="تجاوزت هذه المهمة وقتها، فتبقى «متعثرة». عدّل التاريخ أو وقت الانتهاء من «تعديل»، أو اختر «تم الإنجاز».";renderModal();return}
   if(b.dataset.st&&t){modalErr="";var up={id:t.rid,status:b.dataset.st};if(b.dataset.st==="done")up.doneDate=todayIso();send("update",up).catch(function(er){modalErr=er.msg;renderModal()});return}
   if(b.dataset.act){var a=b.dataset.act;
