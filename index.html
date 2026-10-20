@@ -410,7 +410,19 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 .cst b{font-size:15px;font-weight:900}
 .cst.ck b{color:var(--cyan)}.cst.tk b{color:#b08d4c}.cst.sk b{color:var(--rose)}
 .calnote{font-size:12.5px;font-weight:700;color:var(--gold-2);margin:-6px 0 10px}
-.calg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.calhd,.cwk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.calg{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.cwk{position:relative;--gp:6px;--cw:calc((100% - 6 * var(--gp)) / 7);--lh:24px}
+.cwk .ccs{margin-top:calc(var(--lanes) * var(--lh))}
+.cev{--x0:calc(var(--c0) * (var(--cw) + var(--gp)));--w0:calc(var(--sp) * var(--cw) + (var(--sp) - 1) * var(--gp));position:absolute;top:calc(36px + var(--ln) * var(--lh));inset-inline-start:calc(var(--x0) + 4px);width:calc(var(--w0) - 8px);height:20px;display:flex;align-items:center;gap:6px;padding:0 9px;border:0;border-radius:6px;font:inherit;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(90deg,var(--cc),color-mix(in srgb,var(--cc) 80%,#000));cursor:pointer;z-index:2;box-shadow:0 3px 8px color-mix(in srgb,var(--cc) 30%,transparent);min-width:0}
+.cev.tk{--cc:#b08d4c}.cev.s-stuck{--cc:var(--rose)}.cev.s-done{opacity:.5}
+.cev .cn{flex:1;min-width:0;text-align:start;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cev .cr{flex:0 0 auto;font-size:10.5px;opacity:.85}
+.cev.cs{border-start-start-radius:0;border-end-start-radius:0;inset-inline-start:var(--x0);width:calc(var(--w0) - 4px)}
+.cev.ce{border-start-end-radius:0;border-end-end-radius:0;width:calc(var(--w0) - 4px)}
+.cev.cs.ce{width:var(--w0)}
+.cev:hover{filter:brightness(1.08)}
+.cc .cg{flex:0 0 auto;font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:999px;background:color-mix(in srgb,var(--cc) 18%,transparent);color:var(--cc)}
 .cwd{padding:10px 4px;text-align:center;font-size:13px;font-weight:800;color:#f3dca6;background:#16294a;border-radius:10px;letter-spacing:.2px}
 .cwd.fri{background:#21395f}
 .cwd .short{display:none}
@@ -443,7 +455,7 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 .clg .ck{background:#0b7886}.clg .tk{background:#b08d4c}.clg .sk{background:var(--rose)}.clg .dk{background:var(--txt-3);opacity:.5}
 .fab{position:fixed;left:24px;bottom:24px;width:60px;height:60px;border-radius:50%;border:0;background:linear-gradient(160deg,#d8b76a,#8a6c2e);color:#fff;font-size:32px;line-height:1;display:grid;place-items:center;box-shadow:0 14px 30px rgba(138,108,46,.4);cursor:pointer;z-index:60;transition:transform .18s}
 .fab:hover{transform:translateY(-3px) rotate(90deg)}
-@media (max-width:640px){.calc{padding:14px 8px}.calh{justify-content:center}.calt{text-align:center}.calt h3{font-size:22px}.calside{justify-content:center;width:100%}.calg{gap:3px}.cwd{font-size:11px;padding:7px 1px;border-radius:7px}.cwd .full{display:none}.cwd .short{display:inline}.cd{min-height:84px;padding:4px 3px;gap:3px;border-radius:8px}.cdh{flex-direction:column;align-items:flex-start;gap:2px}.cdh b{font-size:13px}.cdh em{display:none}.cdh .hd{margin:0;font-size:9.5px;height:16px;min-width:18px;padding:0 4px}.cc{font-size:10.5px;padding:3px 4px;gap:3px;border-radius:6px}.cc i,.cc .ct{display:none}.cmore{font-size:10px;padding:0 2px}.fab{width:52px;height:52px;font-size:28px;left:16px;bottom:16px}}
+@media (max-width:640px){.calc{padding:14px 8px}.calh{justify-content:center}.calt{text-align:center}.calt h3{font-size:22px}.calside{justify-content:center;width:100%}.calg{gap:3px}.cwd{font-size:11px;padding:7px 1px;border-radius:7px}.cwd .full{display:none}.cwd .short{display:inline}.cd{min-height:84px;padding:4px 3px;gap:3px;border-radius:8px}.cdh{flex-direction:column;align-items:flex-start;gap:2px}.cdh b{font-size:13px}.cdh em{display:none}.cdh .hd{margin:0;font-size:9.5px;height:16px;min-width:18px;padding:0 4px}.cc{font-size:10.5px;padding:3px 4px;gap:3px;border-radius:6px}.cc i,.cc .ct{display:none}.cmore{font-size:10px;padding:0 2px}.cmore .mo{display:none}.calhd,.cwk{gap:3px}.calg{gap:3px}.cwk{--gp:3px;--lh:17px}.cev{top:calc(40px + var(--ln) * var(--lh));height:14px;font-size:9.5px;padding:0 4px;border-radius:4px}.cev .cr{display:none}.cc .cg{display:none}.fab{width:52px;height:52px;font-size:28px;left:16px;bottom:16px}}
 
 .when{border:1px solid var(--line);border-radius:16px;padding:12px 14px 14px;margin:0;background:var(--tint-gold);min-width:0}
 .when.end{background:var(--tint)}
@@ -963,13 +975,27 @@ function renderCal(){
     +'<div class="calside">'+(curM>=10&&curM<=12&&curM!==calM?'<button type="button" class="btn sm" data-cm-today="1">اليوم</button>':'')
     +'<div class="cstats">'+sn(kc(inM,"c"),"دورة","ck")+sn(kc(inM,"t"),"مهمة","tk")+sn(inM.filter(function(x){return stKey(x)==="stuck"}).length,"متعثرة","sk")+'</div></div></div>';
   if(active)h+='<div class="calnote">معروض حسب الفلاتر المختارة</div>';
-  h+='<div class="calg">'+["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"].map(function(w,i){return '<div class="cwd'+(i===6?" fri":"")+'"><span class="full">'+w+'</span><span class="short">'+"سحنثرخج"[i]+'</span></div>'}).join("");
-  var d=weekStart(first), end=addDays(weekStart(last),6), col=0;
-  for(;d<=end;d=addDays(d,1),col++){
-    var out=parts(d).m!==calM, di=out?[]:list.filter(function(x){return covers(x,d)}), MX=3, isT=d===td;
-    h+='<div class="cd'+(out?" out":"")+(isT?" today":"")+(col%7===6?" fri":"")+(di.length?" has":"")+'" data-day="'+d+'"'+(out?'':' tabindex="0" role="button" aria-label="'+wday(d)+" "+longDate(d)+"، "+countLabel(di)+'"')+'>'
-      +'<div class="cdh"><b class="num">'+parts(d).d+'</b>'+(isT?'<em>اليوم</em>':'')+'<span class="hd num">'+esc(hijri(d,{day:"numeric"}))+'</span></div>';
-    if(di.length){h+='<div class="ccs">'+di.slice(0,MX).map(function(x){var k=stKey(x);return '<button type="button" class="cc '+(x.kind==="c"?"ck":"tk")+' s-'+k+'" data-open="'+esc(x.id)+'" title="'+esc(x.title)+'"><i aria-hidden="true"></i>'+(x.kind==="t"&&x.start&&!multi(x)?'<span class="ct num">'+x.start+'</span>':'')+'<span class="cn">'+esc(x.title)+'</span></button>'}).join("")+(di.length>MX?'<span class="cmore num">+'+(di.length-MX)+' أخرى</span>':'')+'</div>'}
+  h+='<div class="calhd">'+["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"].map(function(w,i){return '<div class="cwd'+(i===6?" fri":"")+'"><span class="full">'+w+'</span><span class="short">'+"سحنثرخج"[i]+'</span></div>'}).join("")+'</div><div class="calg">';
+  var MXL=2, MX=3;
+  function chip(x){var k=stKey(x);return '<button type="button" class="cc '+(x.kind==="c"?"ck":"tk")+' s-'+k+'" data-open="'+esc(x.id)+'" title="'+esc(x.title+(x.kind==="c"&&x.trainees?" ("+x.trainees+(x.mode?"، "+x.mode:"")+")":""))+'"><i aria-hidden="true"></i>'+(x.kind==="t"&&x.start?'<span class="ct num">'+x.start+'</span>':'')+'<span class="cn">'+esc(x.title)+'</span>'+(x.kind==="c"&&x.trainees?'<span class="cg">'+esc(x.trainees)+'</span>':'')+'</button>'}
+  for(var ws=weekStart(first);ws<=last;ws=addDays(ws,7)){
+    var we=addDays(ws,6), a=ws<first?first:ws, z=we>last?last:we;
+    /* المهام الممتدة على أكثر من يوم: شريط واحد يمتد عبر أيامها بدل تكرارها في كل يوم */
+    var segs=list.filter(function(x){return multi(x)&&inRange(x,a,z)}).map(function(x){var s0=x.date>a?x.date:a,e0=x.endDate<z?x.endDate:z;return {x:x,s:s0,e:e0,c0:Math.round((new Date(s0)-new Date(ws))/864e5),sp:Math.round((new Date(e0)-new Date(s0))/864e5)+1,cs:x.date<s0,ce:x.endDate>e0}}).sort(function(p,q){return p.c0-q.c0||q.sp-p.sp});
+    var lanes=[], hidden={};
+    segs.forEach(function(g){for(var L=0;L<MXL;L++){if(!lanes[L]||lanes[L]<g.c0){lanes[L]=g.c0+g.sp-1;g.lane=L;return}}g.lane=-1;for(var c=g.c0;c<g.c0+g.sp;c++)hidden[c]=(hidden[c]||0)+1});
+    var nl=Math.min(MXL,lanes.length);
+    h+='<div class="cwk" style="--lanes:'+nl+'">';
+    for(var c=0;c<7;c++){
+      var d=addDays(ws,c), out=parts(d).m!==calM, isT=d===td, all=out?[]:list.filter(function(x){return covers(x,d)}), di=all.filter(function(x){return !multi(x)});
+      var extra=(hidden[c]||0)+Math.max(0,di.length-MX);
+      h+='<div class="cd'+(out?" out":"")+(isT?" today":"")+(c===6?" fri":"")+(all.length?" has":"")+'" data-day="'+d+'"'+(out?'':' tabindex="0" role="button" aria-label="'+wday(d)+" "+longDate(d)+"، "+countLabel(all)+'"')+'>'
+        +'<div class="cdh"><b class="num">'+parts(d).d+'</b>'+(isT?'<em>اليوم</em>':'')+'<span class="hd num">'+esc(hijri(d,{day:"numeric"}))+'</span></div>';
+      if(di.length||extra){h+='<div class="ccs">'+di.slice(0,MX).map(chip).join("")+(extra?'<span class="cmore num">+'+extra+'<span class="mo"> أخرى</span></span>':'')+'</div>'}
+      h+='</div>';
+    }
+    segs.filter(function(g){return g.lane>=0}).forEach(function(g){var k=stKey(g.x);
+      h+='<button type="button" class="cev tk s-'+k+(g.cs?" cs":"")+(g.ce?" ce":"")+'" data-open="'+esc(g.x.id)+'" style="--c0:'+g.c0+';--sp:'+g.sp+';--ln:'+g.lane+'" title="'+esc(g.x.title)+' ('+sd(g.x.date)+' – '+sd(g.x.endDate)+')"><span class="cn">'+esc(g.x.title)+'</span><span class="cr num">'+sd(g.x.date)+' ← '+sd(g.x.endDate)+'</span></button>'});
     h+='</div>';
   }
   h+='</div><div class="clg"><span><i class="ck"></i>دورة تدريبية</span><span><i class="tk"></i>مهمة</span><span><i class="sk"></i>متعثرة</span><span><i class="dk"></i>منجزة</span></div></div>';
@@ -1178,7 +1204,7 @@ function renderAll(){renderDash();renderCal();renderBrowse();renderList();render
 function go(v){
   view=v;["dash","cal","browse","list","entry"].forEach(function(k){$("v-"+k).hidden=k!==v});
   document.body.classList.toggle("compact",!(v==="browse"&&!selMonth));
-  Array.prototype.forEach.call(document.querySelectorAll(".nav button"),function(b){if(b.dataset.go===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  Array.prototype.forEach.call(document.querySelectorAll(".nav button"),function(b){if(b.dataset.go===v){b.setAttribute("aria-current","page");try{var nv=b.parentNode;if(nv.scrollWidth>nv.clientWidth)nv.scrollLeft+=b.getBoundingClientRect().left-nv.getBoundingClientRect().left-(nv.clientWidth-b.offsetWidth)/2}catch(x){}}else b.removeAttribute("aria-current")});
   try{history.replaceState(null,"","#"+v)}catch(e){}
   window.scrollTo(0,0);
 }
