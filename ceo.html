@@ -67,6 +67,7 @@ button:disabled{cursor:not-allowed}
 .nav .add{color:#16294a;background:linear-gradient(135deg,#f3dca6,#e3c485);box-shadow:0 8px 18px rgba(201,168,106,.35);font-weight:900}
 .nav .add i{font-style:normal;width:24px;height:24px;border-radius:8px;background:#16294a;color:#f3dca6;display:grid;place-items:center;font-size:17px;line-height:1;text-align:center}
 .nav .add:hover{color:#16294a;transform:translateY(-1px)}
+.sync .fpill{padding:4px 12px;font-size:12.5px;border-color:var(--line-soft)}
 .sync{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--txt-3);margin:2px 0 4px;min-height:22px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
 .dot.off{background:var(--amber)}.dot.err{background:var(--rose)}
@@ -323,6 +324,7 @@ textarea.inp{min-height:88px;resize:vertical;line-height:1.7}
 .seg button:hover{border-color:var(--line)}
 .seg button.t[aria-pressed="true"]{background:color-mix(in srgb,var(--tc) 16%,var(--panel));color:var(--txt);border-color:var(--tc);box-shadow:inset 0 0 0 1px var(--tc)}
 .seg button.q[aria-pressed="true"]{background:var(--sel-bg);color:var(--sel-fg);border-color:transparent}
+.q4note{font-size:13px;font-weight:700;color:var(--cyan);background:color-mix(in srgb,var(--cyan) 7%,transparent);border:1px solid color-mix(in srgb,var(--cyan) 30%,transparent);border-radius:12px;padding:8px 12px;margin:-4px 0 14px}
 .q4box{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 14px;border-radius:16px;border:1px solid color-mix(in srgb,var(--cyan) 35%,transparent);background:color-mix(in srgb,var(--cyan) 6%,var(--panel))}
 .q4t{flex:1 1 240px;display:flex;flex-direction:column;gap:2px}
 .q4t b{font-size:14px;font-weight:900}
@@ -494,6 +496,7 @@ var TYPES=["اجتماع","مهمة","موعد","زيارة","سفر","مناس�
 var TYPE_IC={"اجتماع":"◆","مهمة":"✦","موعد":"◷","زيارة":"⌂","سفر":"✈","مناسبة":"★","متابعة":"↻"};
 var PRIOS=[{v:"عادية",cls:"c-norm"},{v:"مهمة",cls:"c-high"},{v:"عاجلة",cls:"c-urg"}];
 var STATUSES=["لم تبدأ","قيد التنفيذ","تم الإنجاز","متعثرة","ملغاة"];
+var Q4_STATUSES=["لم تبدأ","قيد التنفيذ","تم الإنجاز","متعثرة"];
 var SCLS={"لم تبدأ":"b-todo","قيد التنفيذ":"b-doing","تم الإنجاز":"b-done","متعثرة":"b-stuck","ملغاة":"b-cancel"};
 var SDOT={"لم تبدأ":"c-todo","قيد التنفيذ":"c-doing","تم الإنجاز":"c-done","متعثرة":"c-stuck","ملغاة":"c-cancel"};
 var LEADS=[["0","بدون تذكير مسبق","🔕"],["30","قبل 30 دقيقة","⏱"],["60","قبل ساعة","⏰"],["180","قبل 3 ساعات","⏰"],["1440","قبل يوم","📅"],["2880","قبل يومين","📅"]];
@@ -712,8 +715,10 @@ function renderSync(){
   else if(syncErr)h='<span class="dot err"></span><span>'+esc(syncErr)+'</span> <button class="lnk" id="retry" type="button">إعادة المحاولة</button>';
   else if(lastSync)h='<span class="dot"></span><span>متصل · آخر تحديث <span class="num">'+pad(lastSync.getHours())+":"+pad(lastSync.getMinutes())+'</span></span>';
   else h='<span class="dot off"></span><span>جارٍ التحميل…</span>';
+  h+=' <button type="button" class="fpill" id="q4Top" aria-pressed="'+showQ4+'" title="إظهار أو إخفاء مهام موقع الربع الرابع المطلوبة من الدكتور"><span class="sw"></span>عرض مهام الربع الرابع</button>';
   el.innerHTML=h;
   if($("retry"))$("retry").onclick=function(){syncErr="";renderSync();pull()};
+  $("q4Top").onclick=function(){setShowQ4(!showQ4)};
 }
 
 /* ---------- العرض ---------- */
@@ -786,12 +791,13 @@ function initFilters(){
   q.addEventListener("input",function(){clearTimeout(tm);tm=setTimeout(function(){F.q=q.value.trim();$("fqx").hidden=!F.q;rCal()},160)});
   $("fqx").onclick=function(){q.value="";F.q="";this.hidden=true;rCal();q.focus()};
   $("ffQ4").setAttribute("aria-pressed",showQ4);
-  $("ffQ4").onclick=function(){showQ4=!showQ4;this.setAttribute("aria-pressed",showQ4);lsSet("ceoq4",showQ4);render()};
+  $("ffQ4").onclick=function(){setShowQ4(!showQ4)};
   $("fClear").onclick=function(){F={q:"",type:"",owner:"",status:""};q.value="";$("fqx").hidden=true;ffType.set("",1);ffOwner.set("",1);ffStatus.set("",1);rCal()};
   document.querySelectorAll("[data-mode]").forEach(function(b){b.onclick=function(){setMode(b.getAttribute("data-mode"))}});
   $("pPrev").onclick=function(){page(-1)};$("pNext").onclick=function(){page(1)};
   $("pToday").onclick=function(){monthCur=null;weekCur=null;rCal()};
 }
+function setShowQ4(v){showQ4=!!v;$("ffQ4").setAttribute("aria-pressed",showQ4);lsSet("ceoq4",showQ4);render();toast(showQ4?"تظهر مهام الربع الرابع في التقويم":"أُخفيت مهام الربع الرابع")}
 function setMode(m){calMode=m;ssSet("ceomode",m);rCal()}
 function page(n){if(calMode==="month"){var c=monthCur||new Date();monthCur=new Date(c.getFullYear(),c.getMonth()+n,1)}else{weekCur=addD(weekCur||wkStart(new Date()),7*n)}rCal()}
 function hl(s){s=esc(s);if(!F.q)return s;var q=esc(F.q).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");return s.replace(new RegExp(q,"gi"),function(x){return "<mark>"+x+"</mark>"})}
@@ -869,14 +875,25 @@ function openDetail(id){
   var h='<div class="mh"><span class="ic">'+(ro?"↗":(TYPE_IC[it.type]||"✦"))+'</span><h3>'+esc(it.title)+'</h3></div><div class="dbadges">'+bd+'</div><dl class="dl">';
   rows.forEach(function(r){if(r[1])h+='<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>'});
   h+='</dl>';
-  if(ro)h+='<p class="sub" style="font-size:13px">هذه المهمة مسجلة في موقع مهام الربع الرابع، وتُعدّل من هناك.</p>';
+  if(ro){
+    h+='<p class="q4note">↗ مهمة من موقع مهام الربع الرابع، وأي تعديل هنا يُحفظ هناك مباشرة.</p>';
+    h+='<div class="lab" style="margin-bottom:8px">تحديث سريع للحالة</div><div class="seg" style="margin-bottom:16px">'+Q4_STATUSES.map(function(s){return '<button type="button" class="q" data-q4s="'+s+'" aria-pressed="'+(it.status===s)+'">'+s+'</button>'}).join("")+'</div>';
+    h+='<div class="acts"><button class="btn gold" type="button" id="dEdit">✎ تعديل</button></div><div class="msg" id="dMsg" role="status"></div>';
+  }
   else{
     h+='<div class="lab" style="margin-bottom:8px">تحديث سريع للحالة</div><div class="seg" style="margin-bottom:16px">'+STATUSES.map(function(s){return '<button type="button" class="q" data-qs="'+s+'" aria-pressed="'+(it.status===s)+'">'+s+'</button>'}).join("")+'</div>';
     h+='<div class="acts"><button class="btn gold" type="button" id="dEdit">✎ تعديل</button>'+(it.owners.length?'<button class="btn" type="button" id="dResend">✉ إعادة إرسال الإشعار</button>':"")+'<button class="btn danger" type="button" id="dDel">حذف</button></div><div class="msg" id="dMsg" role="status"></div>';
   }
   openModal(h);
-  if(ro)return;
   $("dEdit").onclick=function(){openForm(it)};
+  if(ro){
+    document.querySelectorAll("[data-q4s]").forEach(function(b){b.onclick=function(){
+      var s=b.getAttribute("data-q4s");if(s===it.status)return;
+      msg("dMsg","جارٍ التحديث في موقع الربع الرابع…");busy=true;
+      call("q4status",{qid:it.qid,status:s}).then(function(d){busy=false;apply(d);openDetail(it.id);toast("تم تحديث الحالة في موقع الربع الرابع")}).catch(function(e){busy=false;msg("dMsg",e.message,1)});
+    }});
+    return;
+  }
   document.querySelectorAll("[data-qs]").forEach(function(b){b.onclick=function(){
     var s=b.getAttribute("data-qs");if(s===it.status)return;
     msg("dMsg","جارٍ التحديث…");busy=true;
@@ -898,16 +915,17 @@ function toast(t){var el=$("toast");el.textContent=t;el.hidden=false;clearTimeou
 
 /* ---------- نموذج الإضافة والتعديل ---------- */
 function openForm(it,preDate){
+  var q4m=!!(it&&it.src==="q4");
   var ed=!!it;it=it||{type:"اجتماع",priority:"عادية",status:"لم تبدأ",sd:preDate||todayS(),ed:"",st:"",et:"",owners:[],lead:"60",cat:"",q4:false};
-  var h='<div class="mh"><span class="ic">✎</span><h3>'+(ed?"تعديل المهمة":"مهمة أو موعد جديد")+'</h3></div><form id="ff" novalidate>';
+  var h='<div class="mh"><span class="ic">✎</span><h3>'+(q4m?"تعديل مهمة الربع الرابع":ed?"تعديل المهمة":"مهمة أو موعد جديد")+'</h3></div>'+(q4m?'<p class="q4note">↗ التعديل يُحفظ مباشرة في موقع مهام الربع الرابع (ورقة «المهام العامة»).</p>':'')+'<form id="ff" novalidate>';
   h+='<label class="lab"><span>العنوان <span class="req">*</span></span><input class="inp" type="text" id="fT" maxlength="200" value="'+esc(it.title||"")+'" placeholder="مثال: اجتماع مجلس الإدارة"></label>';
-  h+='<div class="lab"><span>النوع</span><div class="seg" id="fType">'+TYPES.map(function(x){return '<button type="button" class="t t-'+x+'" data-v="'+x+'" aria-pressed="'+(it.type===x)+'">'+TYPE_IC[x]+" "+x+'</button>'}).join("")+'</div></div>';
+  if(!q4m)h+='<div class="lab"><span>النوع</span><div class="seg" id="fType">'+TYPES.map(function(x){return '<button type="button" class="t t-'+x+'" data-v="'+x+'" aria-pressed="'+(it.type===x)+'">'+TYPE_IC[x]+" "+x+'</button>'}).join("")+'</div></div>';
   h+='<div class="lab"><span>تصنيف المهمة</span><div id="fCat"></div></div>';
   h+='<div class="fs"><div class="lg"><i>▶</i>الموعد</div><div class="g3"><div class="lab"><span>تاريخ البدء <span class="req">*</span></span><div id="fSD"></div></div><div class="lab"><span>من</span><div id="fST"></div></div><div class="lab"><span>إلى <span class="dur" id="fDur"></span></span><div id="fET"></div></div></div>';
-  h+='<div class="g2"><div class="lab"><span>تاريخ الانتهاء <span class="sub">إذا امتد لأكثر من يوم</span></span><div id="fED"></div></div><div class="lab"><span>التذكير المسبق</span><div id="fLead"></div></div></div></div>';
-  h+='<div class="g3"><label class="lab"><span>المكان <span class="sub">اختياري</span></span><input class="inp" type="text" id="fPl" maxlength="150" value="'+esc(it.place||"")+'" placeholder="مقر الشركة، عن بعد، الرياض…"></label><div class="lab"><span>الأولوية</span><div id="fPr"></div></div><div class="lab"><span>الحالة</span><div id="fSt"></div></div></div>';
+  h+='<div class="g2"><div class="lab"><span>تاريخ الانتهاء <span class="sub">إذا امتد لأكثر من يوم</span></span><div id="fED"></div></div>'+(q4m?'':'<div class="lab"><span>التذكير المسبق</span><div id="fLead"></div></div>')+'</div></div>';
+  h+='<div class="'+(q4m?"g2":"g3")+'"><label class="lab"><span>'+(q4m?"الدولة":"المكان")+' <span class="sub">اختياري</span></span><input class="inp" type="text" id="fPl" maxlength="150" value="'+esc(it.place||"")+'" placeholder="'+(q4m?"السعودية، إندونيسيا…":"مقر الشركة، عن بعد، الرياض…")+'"></label>'+(q4m?'':'<div class="lab"><span>الأولوية</span><div id="fPr"></div></div>')+'<div class="lab"><span>الحالة</span><div id="fSt"></div></div></div>';
   h+='<div class="lab"><span>المسؤولون <span class="sub">يصلهم إيميل فور الحفظ</span></span><div id="fOw"></div></div>';
-  h+='<div class="q4box"><div class="q4t"><b>تظهر في موقع مهام الربع الرابع؟</b><small>في الحالتين يصل المسؤولين إيميل الإسناد والتذكيرات اليومية والأسبوعية والتذكير المسبق.</small></div><div class="seg2 q4seg" id="fQ4"><button type="button" data-v="1" aria-pressed="'+(!!it.q4)+'">↗ نعم، تظهر</button><button type="button" data-v="0" aria-pressed="'+(!it.q4)+'">🔒 لا، خاصة بالتقويم</button></div></div>';
+  if(!q4m)h+='<div class="q4box"><div class="q4t"><b>تظهر في موقع مهام الربع الرابع؟</b><small>في الحالتين يصل المسؤولين إيميل الإسناد والتذكيرات اليومية والأسبوعية والتذكير المسبق.</small></div><div class="seg2 q4seg" id="fQ4"><button type="button" data-v="1" aria-pressed="'+(!!it.q4)+'">↗ نعم، تظهر</button><button type="button" data-v="0" aria-pressed="'+(!it.q4)+'">🔒 لا، خاصة بالتقويم</button></div></div>';
   h+='<label class="lab"><span>التفاصيل والتوجيهات <span class="sub">تظهر في الإيميل</span></span><textarea class="inp" id="fN" maxlength="2000" placeholder="المطلوب، المرفقات، ملاحظات للمسؤولين…">'+esc(it.notes||"")+'</textarea></label>';
   h+='<label class="notify"><input type="checkbox" id="fNt" checked><span class="sw"></span><span>إرسال إيميل للمسؤولين '+(ed?"بالتعديلات":"بالإسناد")+'<small>من نفس بريد نظام المهام وبنفس القالب</small></span></label>';
   h+='<div class="acts"><button class="btn gold" type="submit" id="fSave">'+(ed?"حفظ التعديلات":"حفظ وإرسال")+'</button><button class="btn" type="button" id="fCancel">إلغاء</button></div><div class="msg" id="fMsg" role="status"></div></form>';
@@ -927,18 +945,18 @@ function openForm(it,preDate){
   S.et=DD("fET",{cls:"time",title:"وقت النهاية",value:it.et,items:function(){return timeItems({end:true,start:S.st.value})},
     paint:function(v){return '<i class="oi">◷</i><span class="ddl'+(v?"":" ph")+'">'+(v?esc(t12(v)):"—")+'</span>'},onChange:dur});
   S.et.disable(!it.st);
-  S.lead=DD("fLead",{title:"التذكير المسبق",value:String(it.lead||"0"),items:LEADS.map(function(l){return {v:l[0],l:l[1],ic:l[2]}})});
+  if(!q4m)S.lead=DD("fLead",{title:"التذكير المسبق",value:String(it.lead||"0"),items:LEADS.map(function(l){return {v:l[0],l:l[1],ic:l[2]}})});
   S.cat=DD("fCat",{cls:"cat",title:"تصنيف المهمة",value:it.cat||"",ph:"اختر التصنيف",ic:"▤",items:function(){return CATS.map(function(c){return {v:c,l:c,ic:CAT_IC[c]||"✦"}})}});
   S.ow=DD("fOw",{cls:"multi",title:"المسؤولون",multi:true,search:true,value:it.owners,ph:"اختر المسؤولين",ic:"👥",
     items:function(){var n=sortNames(staff.map(function(s){return s.name||s}).filter(Boolean));it.owners.forEach(function(o){if(n.indexOf(o)<0)n.push(o)});return n.map(function(x){return {v:x,l:x,g:nameGroup(x)}})}});
-  S.pr=DD("fPr",{cls:"pr",title:"الأولوية",value:it.priority,items:PRIOS.map(function(p){return {v:p.v,l:p.v,ic:"●",icCls:"dot "+p.cls}})});
-  S.status=DD("fSt",{cls:"st",title:"الحالة",value:it.status,items:STATUSES.map(function(s){return {v:s,l:s,ic:"●",icCls:"dot "+SDOT[s]}})});
+  if(!q4m)S.pr=DD("fPr",{cls:"pr",title:"الأولوية",value:it.priority,items:PRIOS.map(function(p){return {v:p.v,l:p.v,ic:"●",icCls:"dot "+p.cls}})});
+  S.status=DD("fSt",{cls:"st",title:"الحالة",value:it.status,items:(q4m?Q4_STATUSES:STATUSES).map(function(s){return {v:s,l:s,ic:"●",icCls:"dot "+SDOT[s]}})});
   dur();
 
   $("fCancel").onclick=closeModal;
   $("ff").onsubmit=function(ev){
     ev.preventDefault();
-    var o={id:ed?it.id:"",title:$("fT").value.trim(),type:type,sd:S.sd.value,ed:S.ed.value||"",st:S.st.value,et:S.et.value,lead:S.lead.value,place:$("fPl").value.trim(),cat:S.cat.value,owners:S.ow.value.slice(),priority:S.pr.value,status:S.status.value,notes:$("fN").value.trim(),q4:q4};
+    var o={id:ed?it.id:"",qid:it.qid||"",title:$("fT").value.trim(),type:type,sd:S.sd.value,ed:S.ed.value||"",st:S.st.value,et:S.et.value,lead:q4m?"0":S.lead.value,place:$("fPl").value.trim(),cat:S.cat.value,owners:S.ow.value.slice(),priority:q4m?"عادية":S.pr.value,status:S.status.value,notes:$("fN").value.trim(),q4:q4};
     if(!o.title){msg("fMsg","اكتب عنوان المهمة.",1);$("fT").focus();return}
     if(!o.sd){msg("fMsg","اختر تاريخ البدء.",1);return}
     if(o.ed&&o.ed<o.sd){msg("fMsg","تاريخ الانتهاء قبل تاريخ البدء.",1);return}
@@ -947,9 +965,9 @@ function openForm(it,preDate){
     if(!o.st)o.et="";
     var notify=$("fNt").checked;
     $("fSave").disabled=true;msg("fMsg",notify&&o.owners.length?"جارٍ الحفظ وإرسال الإيميلات…":"جارٍ الحفظ…");busy=true;
-    call(ed?"update":"add",{item:o,notify:notify}).then(function(d){
+    call(q4m?"q4update":ed?"update":"add",{item:o,notify:notify}).then(function(d){
       busy=false;apply(d);closeModal();
-      var n=d.sent||0;toast((ed?"حُفظت التعديلات":"أُضيفت المهمة")+(n?" وأُرسل إيميل إلى "+n+" "+plural(n,"مسؤول","مسؤولَين","مسؤولين"):""));
+      var n=d.sent||0;toast((q4m?"حُفظت التعديلات في موقع الربع الرابع":ed?"حُفظت التعديلات":"أُضيفت المهمة")+(n?" وأُرسل إيميل إلى "+n+" "+plural(n,"مسؤول","مسؤولَين","مسؤولين"):""));
     }).catch(function(e){busy=false;$("fSave").disabled=false;msg("fMsg",e.message||"تعذر الحفظ",1)});
   };
   setTimeout(function(){if(!ed&&!isMobile())$("fT").focus()},60);
@@ -1001,13 +1019,15 @@ function demoCall(action,x){
       {id:"d7",title:"رفع ميزانية الربع القادم",type:"مهمة",sd:D(-3),ed:D(-2),st:"",et:"",place:"",owners:["د. مبارك آل زنان"],priority:"عاجلة",status:"قيد التنفيذ",cat:"الشؤون الإدارية والمالية",notes:"",lead:"0"},
       {id:"d8",title:"لقاء مع شريك تمكين التعليم",type:"موعد",sd:D(-5),ed:D(-5),st:"11:00",et:"12:00",place:"",owners:["أ. علي الغامدي"],priority:"عادية",status:"تم الإنجاز",cat:"التواصل والتنسيق",notes:"",lead:"60"},
       {id:"d9",title:"اجتماع فريق نمذجة المدارس",type:"اجتماع",sd:D(9),ed:D(9),st:"20:00",et:"22:00",place:"",owners:["أ. يحيى القرشي","أ. علي الغامدي"],priority:"عادية",status:"لم تبدأ",cat:"الاجتماعات واللقاءات",notes:"",lead:"60"}
-    ],linked:[{id:"q1",title:"التحقق من وضع المؤسسة في نظام SABH",sd:D(-10),ed:D(2),st:"08:00",et:"17:00",owners:[],status:"قيد التنفيذ",place:"",cat:""},{id:"q2",title:"تحديث بيانات المؤسسة",sd:D(1),ed:D(1),st:"",et:"",owners:["م. أسامة جنيدي"],status:"لم تبدأ",place:"",cat:""}]};
+    ],linked:[{id:"q1",qid:"d710964e",title:"التحقق من وضع المؤسسة في نظام SABH",sd:D(-10),ed:D(2),st:"08:00",et:"17:00",owners:[],status:"قيد التنفيذ",place:"",cat:""},{id:"q2",qid:"ccd32bba",title:"تحديث بيانات المؤسسة",sd:D(1),ed:D(1),st:"",et:"",owners:["م. أسامة جنيدي"],status:"لم تبدأ",place:"",cat:""}]};
   }
   var sent=0;
   if(action==="add"){x.item.id="d"+Date.now();db.items.push(x.item);sent=x.notify?x.item.owners.length:0}
   if(action==="update"){db.items=db.items.map(function(i){return i.id===x.item.id?x.item:i});sent=x.notify?x.item.owners.length:0}
   if(action==="status")db.items.forEach(function(i){if(i.id===x.id)i.status=x.status});
   if(action==="delete")db.items=db.items.filter(function(i){return i.id!==x.id});
+  if(action==="q4update")db.linked=db.linked.map(function(i){return i.qid===x.item.qid?Object.assign({},i,x.item,{id:i.id}):i});
+  if(action==="q4status")db.linked.forEach(function(i){if(i.qid===x.qid)i.status=x.status});
   if(action==="resend")sent=(find(x.id)||{owners:[]}).owners.length;
   return new Promise(function(r){setTimeout(function(){r({ok:true,ceo:true,items:JSON.parse(JSON.stringify(db.items)),linked:JSON.parse(JSON.stringify(db.linked)),staff:staff,sent:sent})},200)});
 }
