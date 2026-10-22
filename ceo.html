@@ -146,6 +146,8 @@ button:disabled{cursor:not-allowed}
 .dds{position:sticky;top:-8px;z-index:1;background:var(--panel);padding:2px 0 8px;margin-top:-2px}
 .dds input{width:100%;border:1px solid var(--line-soft);background:var(--tint);border-radius:11px;padding:8px 12px;font-size:14px}
 .dds input:focus{outline:none;border-color:#c9a86a}
+.ddpre{padding:0 0 8px;margin:0 0 8px;border-bottom:1px dashed var(--line)}
+.pill-o.all{background:#c9a86a;color:#16294a;border-color:#c9a86a}
 .ddf{position:sticky;bottom:-8px;background:var(--panel);display:flex;gap:8px;justify-content:flex-end;padding:8px 2px 2px;margin-top:6px;border-top:1px solid var(--line-soft)}
 .ddnone{padding:14px;text-align:center;color:var(--txt-3);font-size:13px}
 
@@ -585,10 +587,13 @@ function DD(host,cfg){
 }
 function ddItems(st){var c=st.cfg.items;return typeof c==="function"?c():(c||[])}
 function ddFind(st,v){return ddItems(st).filter(function(i){return String(i.v)===String(v)})[0]}
+function ddAll(st){var its=ddItems(st);return its.length>1&&its.every(function(i){return st.value.indexOf(i.v)>=0})}
+function ddPreSync(st){var m=st.menu,n=m.querySelector('[data-p="none"]'),a=m.querySelector('[data-p="all"]');if(n)n.setAttribute("aria-selected",!st.value.length);if(a)a.setAttribute("aria-selected",ddAll(st))}
 function oiHtml(i){return i.ic?'<i class="oi'+(i.icCls?" "+i.icCls:"")+'">'+i.ic+'</i>':""}
 function paintDD(st){
   var c=st.cfg,h;
   if(c.paint)h=c.paint(st.value,st);
+  else if(c.multi&&c.presets&&ddAll(st))h='<span class="pill-o all">👥 '+esc(c.presets.all||"الكل")+' <span class="num">('+st.value.length+')</span></span>';
   else if(c.multi)h=st.value.length?st.value.map(function(v){return '<span class="pill-o">'+esc(v)+'</span>'}).join(""):(c.ic?'<i class="oi ph">'+c.ic+'</i>':"")+'<span class="ddl ph">'+esc(c.ph||"اختر")+'</span>';
   else{var it=ddFind(st,st.value);h=it&&(it.v!==""||!c.ph)?oiHtml(it)+'<span class="ddl">'+esc(it.bl||it.l)+(it.bsub?'<small>'+esc(it.bsub)+'</small>':"")+'</span>':(c.ic?'<i class="oi ph">'+c.ic+'</i>':"")+'<span class="ddl ph">'+esc(c.ph||"اختر")+'</span>'}
   st.btn.innerHTML=h;
@@ -599,6 +604,11 @@ function buildDD(st){
   if(c.build){m.innerHTML=h+'<div class="ddc"></div>';c.build(m.lastChild,st);return}
   if(c.search)h+='<div class="dds"><input type="search" placeholder="بحث…" aria-label="بحث في القائمة" autocomplete="off"></div>';
   var its=ddItems(st),groups=[],gi={};
+  if(c.multi&&c.presets){
+    h+='<div class="ddset ddpre"><button type="button" class="ddo ddp" data-p="none" aria-selected="'+!st.value.length+'"><i class="oi">⊘</i><span class="ot">'+esc(c.presets.none||"بدون")+'<small>'+esc(c.presets.noneSub||"")+'</small></span></button>';
+    if(its.length>1)h+='<button type="button" class="ddo ddp" data-p="all" aria-selected="'+ddAll(st)+'"><i class="oi">👥</i><span class="ot">'+esc(c.presets.all||"الكل")+'<small><span class="num">'+its.length+'</span> '+esc(c.presets.allSub||"")+'</small></span></button>';
+    h+='</div>';
+  }
   its.forEach(function(i){var g=i.g||"";if(!(g in gi)){gi[g]=groups.length;groups.push({g:g,a:[]})}groups[gi[g]].a.push(i)});
   groups.forEach(function(G){
     h+='<div class="ddgw">'+(G.g?'<div class="ddg">'+esc(G.g)+'</div>':"")+'<div class="ddset">';
@@ -611,15 +621,21 @@ function buildDD(st){
   if(!its.length)h+='<div class="ddnone">لا توجد خيارات بعد.</div>';
   if(c.multi)h+='<div class="ddf"><button type="button" class="btn sm" data-clear>مسح الكل</button><button type="button" class="btn gold sm" data-done>تم</button></div>';
   m.innerHTML=h;
-  m.querySelectorAll(".ddo").forEach(function(b){b.onclick=function(){
+  m.querySelectorAll(".ddp").forEach(function(b){b.onclick=function(){
+    if(b.getAttribute("data-p")==="none"){st.set([]);closeDD();st.btn.focus();return}
+    st.set(ddAll(st)?[]:its.map(function(i){return i.v}));
+    m.querySelectorAll(".ddgw .ddo").forEach(function(o){o.setAttribute("aria-selected",st.value.indexOf(o.getAttribute("data-v"))>=0)});ddPreSync(st);
+  }});
+  m.querySelectorAll(".ddo:not(.ddp)").forEach(function(b){b.onclick=function(){
     var v=b.getAttribute("data-v");
-    if(c.multi){var a=st.value.slice(),k=a.indexOf(v);if(k<0)a.push(v);else a.splice(k,1);st.value=a;b.setAttribute("aria-selected",k<0);paintDD(st);if(c.onChange)c.onChange(a)}
+    if(c.multi){var a=st.value.slice(),k=a.indexOf(v);if(k<0)a.push(v);else a.splice(k,1);st.value=a;b.setAttribute("aria-selected",k<0);paintDD(st);ddPreSync(st);if(c.onChange)c.onChange(a)}
     else{st.set(v);closeDD();st.btn.focus()}
   }});
   var si=m.querySelector(".dds input");
   if(si)si.oninput=function(){var q=si.value.trim();m.querySelectorAll(".ddgw").forEach(function(g){var any=false;g.querySelectorAll(".ddo").forEach(function(o){var hit=!q||o.textContent.indexOf(q)>=0;o.hidden=!hit;if(hit)any=true});g.hidden=!any})};
   var dn=m.querySelector("[data-done]");if(dn)dn.onclick=function(){closeDD()};
   var cl=m.querySelector("[data-clear]");if(cl)cl.onclick=function(){st.set([]);buildDD(st)};
+  if(si)si.addEventListener("input",function(){var pr=m.querySelector(".ddpre");if(pr)pr.hidden=!!si.value.trim()});
 }
 function showDD(st){
   closeDD();openDD=st;buildDD(st);
@@ -950,7 +966,8 @@ function openForm(it,preDate){
   S.et.disable(!it.st);
   if(!q4m)S.lead=DD("fLead",{title:"التذكير المسبق",value:String(it.lead||"0"),items:LEADS.map(function(l){return {v:l[0],l:l[1],ic:l[2]}})});
   S.cat=DD("fCat",{cls:"cat",title:"تصنيف المهمة",value:it.cat||"",ph:"اختر التصنيف",ic:"▤",items:function(){return CATS.map(function(c){return {v:c,l:c,ic:CAT_IC[c]||"✦"}})}});
-  S.ow=DD("fOw",{cls:"multi",title:"المسؤولون",multi:true,search:true,value:it.owners,ph:"اختر المسؤولين",ic:"👥",
+  S.ow=DD("fOw",{cls:"multi",title:"المسؤولون",multi:true,search:true,value:it.owners,ph:"بدون مسؤولين",ic:"👥",
+    presets:{none:"بدون",noneSub:"لا يُسند لأحد ولا يُرسل بريد",all:"كل الموظفين",allSub:"موظفاً — يصل الإيميل للجميع"},
     items:function(){var n=sortNames(staff.map(function(s){return s.name||s}).filter(Boolean));it.owners.forEach(function(o){if(n.indexOf(o)<0)n.push(o)});return n.map(function(x){return {v:x,l:x,g:nameGroup(x)}})}});
   if(!q4m)S.pr=DD("fPr",{cls:"pr",title:"الأولوية",value:it.priority,items:PRIOS.map(function(p){return {v:p.v,l:p.v,ic:"●",icCls:"dot "+p.cls}})});
   S.status=DD("fSt",{cls:"st",title:"الحالة",value:it.status,items:(q4m?Q4_STATUSES:STATUSES).map(function(s){return {v:s,l:s,ic:"●",icCls:"dot "+SDOT[s]}})});
