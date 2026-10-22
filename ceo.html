@@ -499,7 +499,8 @@ var DEMO=!API_URL||/[?&]demo\b/.test(location.search);
 
 var TYPES=["اجتماع","مهمة","موعد","زيارة","سفر","مناسبة","متابعة"];
 var TYPE_IC={"اجتماع":"◆","مهمة":"✦","موعد":"◷","زيارة":"⌂","سفر":"✈","مناسبة":"★","متابعة":"↻"};
-var PRIOS=[{v:"عادية",cls:"c-norm"},{v:"مهمة",cls:"c-high"},{v:"عاجلة",cls:"c-urg"}];
+var PRIOS=[{v:"اعتيادية",cls:"c-norm"},{v:"ذات أهمية",cls:"c-high"},{v:"عاجلة جداً",cls:"c-urg"}];
+var PRIO_OLD={"عادية":"اعتيادية","مهمة":"ذات أهمية","عاجلة":"عاجلة جداً"};
 var STATUSES=["لم تبدأ","قيد التنفيذ","تم الإنجاز","متعثرة","ملغاة"];
 var Q4_STATUSES=["لم تبدأ","قيد التنفيذ","تم الإنجاز","متعثرة"];
 var SCLS={"لم تبدأ":"b-todo","قيد التنفيذ":"b-doing","تم الإنجاز":"b-done","متعثرة":"b-stuck","ملغاة":"b-cancel"};
@@ -720,7 +721,7 @@ function apply(d){
   if(!DEMO)lsSet("ceocache",{items:items,linked:linked,staff:staff});
   render();
 }
-function norm(x){x.owners=Array.isArray(x.owners)?x.owners:String(x.owners||"").split(/[،,]\s*/).filter(Boolean);return x}
+function norm(x){if(PRIO_OLD[x.priority])x.priority=PRIO_OLD[x.priority];x.owners=Array.isArray(x.owners)?x.owners:String(x.owners||"").split(/[،,]\s*/).filter(Boolean);return x}
 function pull(){
   if(busy)return Promise.resolve();
   return call("list").then(apply).catch(function(e){
@@ -762,7 +763,7 @@ function evCard(it,opts){
   var b="";
   if(isLate(it))b+='<span class="badge b-late">متأخرة</span> ';
   else if(it.status!=="لم تبدأ")b+='<span class="badge '+(SCLS[it.status]||"b-todo")+'">'+esc(it.status)+'</span> ';
-  if(it.priority==="عاجلة")b+='<span class="badge b-urgent">عاجلة</span> ';
+  if(it.priority===PRIOS[2].v)b+='<span class="badge b-urgent">'+PRIOS[2].v+'</span> ';
   if(it.q4&&it.src!=="q4")b+='<span class="badge b-pub">↗ في الربع الرابع</span> ';
   return '<button type="button" class="'+cls+'" data-id="'+esc(it.id)+'"><span class="tm">'+tm+'</span><span class="bd"><span class="tt">'+esc(it.title)+'</span> '+b+'<span class="mt">'+meta+'</span></span></button>';
 }
@@ -885,7 +886,7 @@ function openDetail(id){
   var ro=it.src==="q4";
   var bd='<span class="badge '+(isLate(it)?"b-late":(SCLS[it.status]||"b-todo"))+'">'+(isLate(it)?"متأخرة · ":"")+esc(it.status)+'</span>';
   if(!ro)bd+='<span class="badge" style="color:var(--txt-2);border-color:var(--line-soft)">'+(TYPE_IC[it.type]||"")+' '+esc(it.type)+'</span>';
-  if(it.priority&&it.priority!=="عادية")bd+='<span class="badge '+(it.priority==="عاجلة"?"b-urgent":"b-high")+'">'+esc(it.priority)+'</span>';
+  if(it.priority&&it.priority!==PRIOS[0].v)bd+='<span class="badge '+(it.priority===PRIOS[2].v?"b-urgent":"b-high")+'">'+esc(it.priority)+'</span>';
   if(ro)bd+='<span class="badge b-q4">من نظام مهام الربع الرابع</span>';
   var when=dLong(it.sd)+(it.ed&&it.ed!==it.sd?" حتى "+dLong(it.ed):"");
   var rows=[["الموعد",when],["الوقت",timeRange(it)],["الهجري",hijri(it.sd)],["المكان",it.place],["التصنيف",it.cat?(CAT_IC[it.cat]||"")+" "+it.cat:""],["المسؤولون",ownersTxt(it)],["التفاصيل",it.notes]];
@@ -935,7 +936,7 @@ function toast(t){var el=$("toast");el.textContent=t;el.hidden=false;clearTimeou
 /* ---------- نموذج الإضافة والتعديل ---------- */
 function openForm(it,preDate){
   var q4m=!!(it&&it.src==="q4");
-  var ed=!!it;it=it||{type:"اجتماع",priority:"عادية",status:"لم تبدأ",sd:preDate||todayS(),ed:"",st:"",et:"",owners:[],lead:"60",cat:"",q4:false};
+  var ed=!!it;it=it||{type:"اجتماع",priority:PRIOS[0].v,status:"لم تبدأ",sd:preDate||todayS(),ed:"",st:"",et:"",owners:[],lead:"60",cat:"",q4:false};
   var h='<div class="mh"><span class="ic">✎</span><h3>'+(q4m?"تعديل مهمة الربع الرابع":ed?"تعديل المهمة":"مهمة أو موعد جديد")+'</h3></div>'+(q4m?'<p class="q4note">↗ التعديل يُحفظ مباشرة في موقع مهام الربع الرابع (ورقة «المهام العامة»).</p>':'')+'<form id="ff" novalidate>';
   h+='<label class="lab"><span>العنوان <span class="req">*</span></span><input class="inp" type="text" id="fT" maxlength="200" value="'+esc(it.title||"")+'" placeholder="مثال: اجتماع مجلس الإدارة"></label>';
   if(!q4m)h+='<div class="lab"><span>النوع</span><div class="seg" id="fType">'+TYPES.map(function(x){return '<button type="button" class="t t-'+x+'" data-v="'+x+'" aria-pressed="'+(it.type===x)+'">'+TYPE_IC[x]+" "+x+'</button>'}).join("")+'</div></div>';
@@ -976,7 +977,7 @@ function openForm(it,preDate){
   $("fCancel").onclick=closeModal;
   $("ff").onsubmit=function(ev){
     ev.preventDefault();
-    var o={id:ed?it.id:"",qid:it.qid||"",title:$("fT").value.trim(),type:type,sd:S.sd.value,ed:S.ed.value||"",st:S.st.value,et:S.et.value,lead:q4m?"0":S.lead.value,place:$("fPl").value.trim(),cat:S.cat.value,owners:S.ow.value.slice(),priority:q4m?"عادية":S.pr.value,status:S.status.value,notes:$("fN").value.trim(),q4:q4};
+    var o={id:ed?it.id:"",qid:it.qid||"",title:$("fT").value.trim(),type:type,sd:S.sd.value,ed:S.ed.value||"",st:S.st.value,et:S.et.value,lead:q4m?"0":S.lead.value,place:$("fPl").value.trim(),cat:S.cat.value,owners:S.ow.value.slice(),priority:q4m?PRIOS[0].v:S.pr.value,status:S.status.value,notes:$("fN").value.trim(),q4:q4};
     if(!o.title){msg("fMsg","اكتب عنوان المهمة.",1);$("fT").focus();return}
     if(!o.sd){msg("fMsg","اختر تاريخ البدء.",1);return}
     if(o.ed&&o.ed<o.sd){msg("fMsg","تاريخ الانتهاء قبل تاريخ البدء.",1);return}
@@ -1030,15 +1031,15 @@ function demoCall(action,x){
     var t=new Date(),D=function(n){return ds(addD(t,n))};
     staff=[{name:"د. مبارك آل زنان"},{name:"د. الزبير فضل"},{name:"م. أسامة جنيدي"},{name:"أ. أبوبكر بافضل"},{name:"أ. يحيى القرشي"},{name:"أ. إبراهيم الزهراني"},{name:"أ. عثمان سيف"},{name:"أ. علي الغامدي"},{name:"أ. أمينة عبدالوهاب"},{name:"أ. رحاب سعد"}];
     db=window.__demo={items:[
-      {id:"d1",title:"اجتماع مجلس الإدارة الشهري",type:"اجتماع",sd:D(0),ed:D(0),st:"09:00",et:"10:30",place:"قاعة الاجتماعات - المقر الرئيسي",owners:["د. مبارك آل زنان","د. الزبير فضل"],priority:"مهمة",status:"لم تبدأ",cat:"الاجتماعات واللقاءات",notes:"مراجعة مؤشرات الربع الرابع واعتماد خطة 2027.",lead:"60",q4:true},
-      {id:"d2",title:"مراجعة تقرير مشاريع إثيوبيا",type:"مهمة",sd:D(0),ed:D(0),st:"12:00",et:"13:00",place:"",owners:["م. أسامة جنيدي"],priority:"عاجلة",status:"قيد التنفيذ",cat:"التقارير والتوثيق والإحصاءات",notes:"",lead:"30"},
-      {id:"d3",title:"استقبال وفد جامعة كينيا",type:"زيارة",sd:D(1),ed:D(1),st:"16:00",et:"18:00",place:"جدة",owners:["أ. يحيى القرشي","أ. إبراهيم الزهراني","أ. عثمان سيف"],priority:"مهمة",status:"لم تبدأ",cat:"الوفود والفعاليات والضيافة",notes:"تجهيز الضيافة وعرض تعريفي عن المجموعة.",lead:"1440",q4:true},
-      {id:"d4",title:"متابعة اعتماد الحقائب التدريبية",type:"متابعة",sd:D(2),ed:D(2),st:"10:00",et:"10:30",place:"عن بعد",owners:["أ. أبوبكر بافضل","أ. أمينة عبدالوهاب"],priority:"عادية",status:"لم تبدأ",cat:"المناهج والحقائب التدريبية",notes:"",lead:"60"},
-      {id:"d5",title:"رحلة عمل إلى إندونيسيا",type:"سفر",sd:D(5),ed:D(8),st:"",et:"",place:"جاكرتا",owners:["د. الزبير فضل"],priority:"مهمة",status:"لم تبدأ",cat:"المشاريع والبرامج الخارجية",notes:"",lead:"1440"},
-      {id:"d6",title:"إطلاق هوية برنامج 2027",type:"مناسبة",sd:D(4),ed:D(4),st:"19:30",et:"21:00",place:"",owners:["أ. رحاب سعد"],priority:"عادية",status:"لم تبدأ",cat:"التصميم والهوية والشهادات",notes:"",lead:"180"},
-      {id:"d7",title:"رفع ميزانية الربع القادم",type:"مهمة",sd:D(-3),ed:D(-2),st:"",et:"",place:"",owners:["د. مبارك آل زنان"],priority:"عاجلة",status:"قيد التنفيذ",cat:"الشؤون الإدارية والمالية",notes:"",lead:"0"},
-      {id:"d8",title:"لقاء مع شريك تمكين التعليم",type:"موعد",sd:D(-5),ed:D(-5),st:"11:00",et:"12:00",place:"",owners:["أ. علي الغامدي"],priority:"عادية",status:"تم الإنجاز",cat:"التواصل والتنسيق",notes:"",lead:"60"},
-      {id:"d9",title:"اجتماع فريق نمذجة المدارس",type:"اجتماع",sd:D(9),ed:D(9),st:"20:00",et:"22:00",place:"",owners:["أ. يحيى القرشي","أ. علي الغامدي"],priority:"عادية",status:"لم تبدأ",cat:"الاجتماعات واللقاءات",notes:"",lead:"60"}
+      {id:"d1",title:"اجتماع مجلس الإدارة الشهري",type:"اجتماع",sd:D(0),ed:D(0),st:"09:00",et:"10:30",place:"قاعة الاجتماعات - المقر الرئيسي",owners:["د. مبارك آل زنان","د. الزبير فضل"],priority:"ذات أهمية",status:"لم تبدأ",cat:"الاجتماعات واللقاءات",notes:"مراجعة مؤشرات الربع الرابع واعتماد خطة 2027.",lead:"60",q4:true},
+      {id:"d2",title:"مراجعة تقرير مشاريع إثيوبيا",type:"مهمة",sd:D(0),ed:D(0),st:"12:00",et:"13:00",place:"",owners:["م. أسامة جنيدي"],priority:"عاجلة جداً",status:"قيد التنفيذ",cat:"التقارير والتوثيق والإحصاءات",notes:"",lead:"30"},
+      {id:"d3",title:"استقبال وفد جامعة كينيا",type:"زيارة",sd:D(1),ed:D(1),st:"16:00",et:"18:00",place:"جدة",owners:["أ. يحيى القرشي","أ. إبراهيم الزهراني","أ. عثمان سيف"],priority:"ذات أهمية",status:"لم تبدأ",cat:"الوفود والفعاليات والضيافة",notes:"تجهيز الضيافة وعرض تعريفي عن المجموعة.",lead:"1440",q4:true},
+      {id:"d4",title:"متابعة اعتماد الحقائب التدريبية",type:"متابعة",sd:D(2),ed:D(2),st:"10:00",et:"10:30",place:"عن بعد",owners:["أ. أبوبكر بافضل","أ. أمينة عبدالوهاب"],priority:"اعتيادية",status:"لم تبدأ",cat:"المناهج والحقائب التدريبية",notes:"",lead:"60"},
+      {id:"d5",title:"رحلة عمل إلى إندونيسيا",type:"سفر",sd:D(5),ed:D(8),st:"",et:"",place:"جاكرتا",owners:["د. الزبير فضل"],priority:"ذات أهمية",status:"لم تبدأ",cat:"المشاريع والبرامج الخارجية",notes:"",lead:"1440"},
+      {id:"d6",title:"إطلاق هوية برنامج 2027",type:"مناسبة",sd:D(4),ed:D(4),st:"19:30",et:"21:00",place:"",owners:["أ. رحاب سعد"],priority:"اعتيادية",status:"لم تبدأ",cat:"التصميم والهوية والشهادات",notes:"",lead:"180"},
+      {id:"d7",title:"رفع ميزانية الربع القادم",type:"مهمة",sd:D(-3),ed:D(-2),st:"",et:"",place:"",owners:["د. مبارك آل زنان"],priority:"عاجلة جداً",status:"قيد التنفيذ",cat:"الشؤون الإدارية والمالية",notes:"",lead:"0"},
+      {id:"d8",title:"لقاء مع شريك تمكين التعليم",type:"موعد",sd:D(-5),ed:D(-5),st:"11:00",et:"12:00",place:"",owners:["أ. علي الغامدي"],priority:"اعتيادية",status:"تم الإنجاز",cat:"التواصل والتنسيق",notes:"",lead:"60"},
+      {id:"d9",title:"اجتماع فريق نمذجة المدارس",type:"اجتماع",sd:D(9),ed:D(9),st:"20:00",et:"22:00",place:"",owners:["أ. يحيى القرشي","أ. علي الغامدي"],priority:"اعتيادية",status:"لم تبدأ",cat:"الاجتماعات واللقاءات",notes:"",lead:"60"}
     ],linked:[{id:"q1",qid:"d710964e",title:"التحقق من وضع المؤسسة في نظام SABH",sd:D(-10),ed:D(2),st:"08:00",et:"17:00",owners:[],status:"قيد التنفيذ",place:"",cat:""},{id:"q2",qid:"ccd32bba",title:"تحديث بيانات المؤسسة",sd:D(1),ed:D(1),st:"",et:"",owners:["م. أسامة جنيدي"],status:"لم تبدأ",place:"",cat:""}]};
   }
   var sent=0;
