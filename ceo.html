@@ -337,9 +337,26 @@ textarea.inp{min-height:88px;resize:vertical;line-height:1.7}
 .q4seg{flex:none}
 .q4seg button{white-space:nowrap}
 .q4seg button[data-v="1"][aria-pressed="true"]{background:var(--cyan);color:#fff}
-.q4box.vbox{border-color:color-mix(in srgb,var(--gold) 45%,transparent);background:color-mix(in srgb,var(--gold) 7%,var(--panel));margin-bottom:14px}
-.vbox .q4seg button[data-v="1"][aria-pressed="true"]{background:var(--sel-bg);color:var(--sel-fg)}
-.vbox .q4seg button[data-v="0"][aria-pressed="true"]{background:var(--gold-2);color:#fff}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 14px}
+@media (max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{position:relative;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:14px;border:1px solid var(--line-soft);background:var(--tint);cursor:pointer;transition:border-color .15s,background .15s;min-width:0}
+.opt:hover{border-color:var(--line)}
+.opt .oi{width:30px;height:30px;font-size:14px}
+.opt .ot{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.4}
+.opt .ot b{font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:6px}
+.opt .ot small{font-size:12px;font-weight:600;color:var(--txt-3)}
+.opt.vis.on{border-color:color-mix(in srgb,var(--gold) 45%,transparent);background:color-mix(in srgb,var(--gold) 7%,var(--panel))}
+.opt.q4o.on{border-color:color-mix(in srgb,var(--cyan) 40%,transparent);background:color-mix(in srgb,var(--cyan) 6%,var(--panel))}
+.opt.q4o.on .ot small{color:var(--cyan)}
+.osw{flex:none;width:40px;height:23px;border-radius:999px;background:var(--line-soft);position:relative;transition:.2s}
+.osw::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.25);transition:.2s}
+.osw[aria-checked="true"]::after{inset-inline-start:20px}
+.vis .osw[aria-checked="true"]{background:#c9a86a}
+.q4o .osw[aria-checked="true"]{background:var(--cyan)}
+.osw:focus-visible,.tip:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.tip{position:static;flex:none;width:17px;height:17px;border-radius:50%;border:1px solid var(--line);color:var(--txt-3);font:italic 800 11px/1 Georgia,serif;display:inline-grid;place-items:center;cursor:help}
+.tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);inset-inline:6px;padding:9px 12px;border-radius:12px;background:var(--sel-bg);color:var(--sel-fg);font-family:var(--font);font-size:12px;font-weight:600;line-height:1.75;font-style:normal;text-align:start;white-space:normal;box-shadow:0 12px 28px rgba(10,20,40,.25);opacity:0;visibility:hidden;transform:translateY(4px);transition:.15s;z-index:30;pointer-events:none}
+.tip:hover::after,.tip:focus-visible::after,.tip.on::after{opacity:1;visibility:visible;transform:none}
 .b-pub{color:var(--cyan);border-color:color-mix(in srgb,var(--cyan) 45%,transparent);background:color-mix(in srgb,var(--cyan) 7%,transparent)}
 .notify{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--tint);border:1px solid var(--line-soft);font-size:14px;font-weight:700;cursor:pointer;position:relative}
 .notify input{position:absolute;opacity:0;pointer-events:none}
@@ -938,6 +955,12 @@ function msg(id,t,err,ok){var el=$(id);if(!el)return;el.textContent=t||"";el.cla
 function toast(t){var el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(function(){el.hidden=true},3600)}
 
 /* ---------- نموذج الإضافة والتعديل ---------- */
+function optSw(id,on,cb){
+  var r=$(id);if(!r)return;var b=r.querySelector(".osw"),st=r.querySelector(".ost");
+  var paint=function(){b.setAttribute("aria-checked",on);st.textContent=on?b.getAttribute("data-on"):b.getAttribute("data-off");r.classList.toggle("on",on)};
+  r.onclick=function(e){if(e.target.closest(".tip"))return;on=!on;paint();cb(on)};paint();
+}
+document.addEventListener("click",function(e){var t=e.target.closest(".tip");document.querySelectorAll(".tip.on").forEach(function(x){if(x!==t)x.classList.remove("on")});if(t)t.classList.toggle("on")});
 function openForm(it,preDate){
   var q4m=!!(it&&it.src==="q4");
   var ed=!!it;it=it||{type:"اجتماع",priority:PRIOS[0].v,status:"لم تبدأ",sd:preDate||todayS(),ed:"",st:"",et:"",owners:[],lead:"60",cat:"",q4:false};
@@ -949,16 +972,17 @@ function openForm(it,preDate){
   h+='<div class="g2"><div class="lab"><span>تاريخ الانتهاء <span class="sub">إذا امتد لأكثر من يوم</span></span><div id="fED"></div></div>'+(q4m?'':'<div class="lab"><span>التذكير المسبق</span><div id="fLead"></div></div>')+'</div></div>';
   h+='<div class="'+(q4m?"g2":"g3")+'"><label class="lab"><span>'+(q4m?"الدولة":"المكان")+' <span class="sub">اختياري</span></span><input class="inp" type="text" id="fPl" maxlength="150" value="'+esc(it.place||"")+'" placeholder="'+(q4m?"السعودية، إندونيسيا…":"مقر الشركة، عن بعد، الرياض…")+'"></label>'+(q4m?'':'<div class="lab"><span>الأولوية</span><div id="fPr"></div></div>')+'<div class="lab"><span>الحالة</span><div id="fSt"></div></div></div>';
   h+='<div class="lab"><span>المسؤولون <span class="sub">يصلهم إيميل فور الحفظ</span></span><div id="fOw"></div></div>';
-  if(!q4m)h+='<div class="q4box vbox"><div class="q4t"><b>إظهار أسماء المسؤولين لبعضهم؟</b><small>عند الإخفاء يصل كل مسؤول إيميل لا يظهر فيه إلا اسمه، كأنه المكلّف وحده. وتبقى الأسماء كلها ظاهرة لك هنا.</small></div><div class="seg2 q4seg" id="fVis"><button type="button" data-v="1" aria-pressed="'+(it.showOwners!==false)+'">👥 نعم، تظهر للجميع</button><button type="button" data-v="0" aria-pressed="'+(it.showOwners===false)+'">👤 لا، كلٌّ يرى اسمه فقط</button></div></div>';
-  if(!q4m)h+='<div class="q4box"><div class="q4t"><b>تظهر في موقع مهام الربع الرابع؟</b><small>في الحالتين يصل المسؤولين إيميل الإسناد والتذكيرات اليومية والأسبوعية والتذكير المسبق.</small></div><div class="seg2 q4seg" id="fQ4"><button type="button" data-v="1" aria-pressed="'+(!!it.q4)+'">↗ نعم، تظهر</button><button type="button" data-v="0" aria-pressed="'+(!it.q4)+'">🔒 لا، خاصة بالتقويم</button></div></div>';
+  if(!q4m)h+='<div class="opts">'+
+    '<div class="opt vis" id="fVis"><i class="oi">👥</i><span class="ot"><b>إظهار الأسماء للجميع <button type="button" class="tip" aria-label="معلومة" data-tip="عند الإيقاف يصل كل مسؤول إيميل لا يظهر فيه إلا اسمه، كأنه المكلّف وحده. وتبقى الأسماء كلها ظاهرة لك هنا.">i</button></b><small class="ost"></small></span><button type="button" class="osw" role="switch" aria-label="إظهار أسماء المسؤولين للجميع" data-on="يرى كل مسؤول زملاءه" data-off="كلٌّ يرى اسمه فقط"></button></div>'+
+    '<div class="opt q4o" id="fQ4"><i class="oi">↗</i><span class="ot"><b>في موقع الربع الرابع <button type="button" class="tip" aria-label="معلومة" data-tip="في الحالتين يصل المسؤولين إيميل الإسناد والتذكيرات اليومية والأسبوعية والتذكير المسبق.">i</button></b><small class="ost"></small></span><button type="button" class="osw" role="switch" aria-label="إظهار المهمة في موقع مهام الربع الرابع" data-on="تظهر في الموقع" data-off="خاصة بالتقويم فقط"></button></div>'+
+    '</div>';
   h+='<label class="lab"><span>التفاصيل والتوجيهات <span class="sub">تظهر في الإيميل</span></span><textarea class="inp" id="fN" maxlength="2000" placeholder="المطلوب، المرفقات، ملاحظات للمسؤولين…">'+esc(it.notes||"")+'</textarea></label>';
   h+='<label class="notify"><input type="checkbox" id="fNt" checked><span class="sw"></span><span>إرسال إيميل للمسؤولين '+(ed?"بالتعديلات":"بالإسناد")+'<small>من نفس بريد نظام المهام وبنفس القالب</small></span></label>';
   h+='<div class="acts"><button class="btn gold" type="submit" id="fSave">'+(ed?"حفظ التعديلات":"حفظ وإرسال")+'</button><button class="btn" type="button" id="fCancel">إلغاء</button></div><div class="msg" id="fMsg" role="status"></div></form>';
   openModal(h);
 
   var type=it.type,S={},q4=!!it.q4,vis=it.showOwners!==false;
-  document.querySelectorAll("#fVis button").forEach(function(b){b.onclick=function(){vis=b.getAttribute("data-v")==="1";document.querySelectorAll("#fVis button").forEach(function(x){x.setAttribute("aria-pressed",x===b)})}});
-  document.querySelectorAll("#fQ4 button").forEach(function(b){b.onclick=function(){q4=b.getAttribute("data-v")==="1";document.querySelectorAll("#fQ4 button").forEach(function(x){x.setAttribute("aria-pressed",x===b)})}});
+  optSw("fVis",vis,function(v){vis=v});optSw("fQ4",q4,function(v){q4=v});
   document.querySelectorAll("#fType button").forEach(function(b){b.onclick=function(){type=b.getAttribute("data-v");document.querySelectorAll("#fType button").forEach(function(x){x.setAttribute("aria-pressed",x===b)})}});
   function dur(){var s=S.st.value,e=S.et.value;$("fDur").textContent=s&&e&&(!S.ed.value||S.ed.value===S.sd.value)&&mins(e)>mins(s)?"· "+durTxt(mins(e)-mins(s)):""}
   S.sd=DP("fSD",{title:"تاريخ البدء",value:it.sd,ph:"اختر التاريخ",onChange:function(v){if(S.ed.value&&S.ed.value<=v)S.ed.set("",1);dur()}});
