@@ -337,6 +337,9 @@ textarea.inp{min-height:88px;resize:vertical;line-height:1.7}
 .q4seg{flex:none}
 .q4seg button{white-space:nowrap}
 .q4seg button[data-v="1"][aria-pressed="true"]{background:var(--cyan);color:#fff}
+.q4box.vbox{border-color:color-mix(in srgb,var(--gold) 45%,transparent);background:color-mix(in srgb,var(--gold) 7%,var(--panel));margin-bottom:14px}
+.vbox .q4seg button[data-v="1"][aria-pressed="true"]{background:var(--sel-bg);color:var(--sel-fg)}
+.vbox .q4seg button[data-v="0"][aria-pressed="true"]{background:var(--gold-2);color:#fff}
 .b-pub{color:var(--cyan);border-color:color-mix(in srgb,var(--cyan) 45%,transparent);background:color-mix(in srgb,var(--cyan) 7%,transparent)}
 .notify{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--tint);border:1px solid var(--line-soft);font-size:14px;font-weight:700;cursor:pointer;position:relative}
 .notify input{position:absolute;opacity:0;pointer-events:none}
@@ -890,6 +893,7 @@ function openDetail(id){
   if(ro)bd+='<span class="badge b-q4">من نظام مهام الربع الرابع</span>';
   var when=dLong(it.sd)+(it.ed&&it.ed!==it.sd?" حتى "+dLong(it.ed):"");
   var rows=[["الموعد",when],["الوقت",timeRange(it)],["الهجري",hijri(it.sd)],["المكان",it.place],["التصنيف",it.cat?(CAT_IC[it.cat]||"")+" "+it.cat:""],["المسؤولون",ownersTxt(it)],["التفاصيل",it.notes]];
+  if(!ro&&it.showOwners===false&&it.owners.length)rows.push(["الإظهار","كل مسؤول يرى اسمه فقط في الإيميلات"]);
   if(!ro)rows.push(["الربع الرابع",it.q4?"تظهر في موقع مهام الربع الرابع":"خاصة بالتقويم فقط"]);
   if(!ro&&+it.lead)rows.push(["التذكير",(LEADS.filter(function(l){return l[0]===String(it.lead)})[0]||["",""])[1]]);
   var h='<div class="mh"><span class="ic">'+(ro?"↗":(TYPE_IC[it.type]||"✦"))+'</span><h3>'+esc(it.title)+'</h3></div><div class="dbadges">'+bd+'</div><dl class="dl">';
@@ -945,13 +949,15 @@ function openForm(it,preDate){
   h+='<div class="g2"><div class="lab"><span>تاريخ الانتهاء <span class="sub">إذا امتد لأكثر من يوم</span></span><div id="fED"></div></div>'+(q4m?'':'<div class="lab"><span>التذكير المسبق</span><div id="fLead"></div></div>')+'</div></div>';
   h+='<div class="'+(q4m?"g2":"g3")+'"><label class="lab"><span>'+(q4m?"الدولة":"المكان")+' <span class="sub">اختياري</span></span><input class="inp" type="text" id="fPl" maxlength="150" value="'+esc(it.place||"")+'" placeholder="'+(q4m?"السعودية، إندونيسيا…":"مقر الشركة، عن بعد، الرياض…")+'"></label>'+(q4m?'':'<div class="lab"><span>الأولوية</span><div id="fPr"></div></div>')+'<div class="lab"><span>الحالة</span><div id="fSt"></div></div></div>';
   h+='<div class="lab"><span>المسؤولون <span class="sub">يصلهم إيميل فور الحفظ</span></span><div id="fOw"></div></div>';
+  if(!q4m)h+='<div class="q4box vbox"><div class="q4t"><b>إظهار أسماء المسؤولين لبعضهم؟</b><small>عند الإخفاء يصل كل مسؤول إيميل لا يظهر فيه إلا اسمه، كأنه المكلّف وحده. وتبقى الأسماء كلها ظاهرة لك هنا.</small></div><div class="seg2 q4seg" id="fVis"><button type="button" data-v="1" aria-pressed="'+(it.showOwners!==false)+'">👥 نعم، تظهر للجميع</button><button type="button" data-v="0" aria-pressed="'+(it.showOwners===false)+'">👤 لا، كلٌّ يرى اسمه فقط</button></div></div>';
   if(!q4m)h+='<div class="q4box"><div class="q4t"><b>تظهر في موقع مهام الربع الرابع؟</b><small>في الحالتين يصل المسؤولين إيميل الإسناد والتذكيرات اليومية والأسبوعية والتذكير المسبق.</small></div><div class="seg2 q4seg" id="fQ4"><button type="button" data-v="1" aria-pressed="'+(!!it.q4)+'">↗ نعم، تظهر</button><button type="button" data-v="0" aria-pressed="'+(!it.q4)+'">🔒 لا، خاصة بالتقويم</button></div></div>';
   h+='<label class="lab"><span>التفاصيل والتوجيهات <span class="sub">تظهر في الإيميل</span></span><textarea class="inp" id="fN" maxlength="2000" placeholder="المطلوب، المرفقات، ملاحظات للمسؤولين…">'+esc(it.notes||"")+'</textarea></label>';
   h+='<label class="notify"><input type="checkbox" id="fNt" checked><span class="sw"></span><span>إرسال إيميل للمسؤولين '+(ed?"بالتعديلات":"بالإسناد")+'<small>من نفس بريد نظام المهام وبنفس القالب</small></span></label>';
   h+='<div class="acts"><button class="btn gold" type="submit" id="fSave">'+(ed?"حفظ التعديلات":"حفظ وإرسال")+'</button><button class="btn" type="button" id="fCancel">إلغاء</button></div><div class="msg" id="fMsg" role="status"></div></form>';
   openModal(h);
 
-  var type=it.type,S={},q4=!!it.q4;
+  var type=it.type,S={},q4=!!it.q4,vis=it.showOwners!==false;
+  document.querySelectorAll("#fVis button").forEach(function(b){b.onclick=function(){vis=b.getAttribute("data-v")==="1";document.querySelectorAll("#fVis button").forEach(function(x){x.setAttribute("aria-pressed",x===b)})}});
   document.querySelectorAll("#fQ4 button").forEach(function(b){b.onclick=function(){q4=b.getAttribute("data-v")==="1";document.querySelectorAll("#fQ4 button").forEach(function(x){x.setAttribute("aria-pressed",x===b)})}});
   document.querySelectorAll("#fType button").forEach(function(b){b.onclick=function(){type=b.getAttribute("data-v");document.querySelectorAll("#fType button").forEach(function(x){x.setAttribute("aria-pressed",x===b)})}});
   function dur(){var s=S.st.value,e=S.et.value;$("fDur").textContent=s&&e&&(!S.ed.value||S.ed.value===S.sd.value)&&mins(e)>mins(s)?"· "+durTxt(mins(e)-mins(s)):""}
@@ -977,7 +983,7 @@ function openForm(it,preDate){
   $("fCancel").onclick=closeModal;
   $("ff").onsubmit=function(ev){
     ev.preventDefault();
-    var o={id:ed?it.id:"",qid:it.qid||"",title:$("fT").value.trim(),type:type,sd:S.sd.value,ed:S.ed.value||"",st:S.st.value,et:S.et.value,lead:q4m?"0":S.lead.value,place:$("fPl").value.trim(),cat:S.cat.value,owners:S.ow.value.slice(),priority:q4m?PRIOS[0].v:S.pr.value,status:S.status.value,notes:$("fN").value.trim(),q4:q4};
+    var o={id:ed?it.id:"",qid:it.qid||"",title:$("fT").value.trim(),type:type,sd:S.sd.value,ed:S.ed.value||"",st:S.st.value,et:S.et.value,lead:q4m?"0":S.lead.value,place:$("fPl").value.trim(),cat:S.cat.value,owners:S.ow.value.slice(),priority:q4m?PRIOS[0].v:S.pr.value,status:S.status.value,notes:$("fN").value.trim(),q4:q4,showOwners:vis};
     if(!o.title){msg("fMsg","اكتب عنوان المهمة.",1);$("fT").focus();return}
     if(!o.sd){msg("fMsg","اختر تاريخ البدء.",1);return}
     if(o.ed&&o.ed<o.sd){msg("fMsg","تاريخ الانتهاء قبل تاريخ البدء.",1);return}
@@ -1033,7 +1039,7 @@ function demoCall(action,x){
     db=window.__demo={items:[
       {id:"d1",title:"اجتماع مجلس الإدارة الشهري",type:"اجتماع",sd:D(0),ed:D(0),st:"09:00",et:"10:30",place:"قاعة الاجتماعات - المقر الرئيسي",owners:["د. مبارك آل زنان","د. الزبير فضل"],priority:"ذات أهمية",status:"لم تبدأ",cat:"الاجتماعات واللقاءات",notes:"مراجعة مؤشرات الربع الرابع واعتماد خطة 2027.",lead:"60",q4:true},
       {id:"d2",title:"مراجعة تقرير مشاريع إثيوبيا",type:"مهمة",sd:D(0),ed:D(0),st:"12:00",et:"13:00",place:"",owners:["م. أسامة جنيدي"],priority:"عاجلة جداً",status:"قيد التنفيذ",cat:"التقارير والتوثيق والإحصاءات",notes:"",lead:"30"},
-      {id:"d3",title:"استقبال وفد جامعة كينيا",type:"زيارة",sd:D(1),ed:D(1),st:"16:00",et:"18:00",place:"جدة",owners:["أ. يحيى القرشي","أ. إبراهيم الزهراني","أ. عثمان سيف"],priority:"ذات أهمية",status:"لم تبدأ",cat:"الوفود والفعاليات والضيافة",notes:"تجهيز الضيافة وعرض تعريفي عن المجموعة.",lead:"1440",q4:true},
+      {id:"d3",title:"استقبال وفد جامعة كينيا",type:"زيارة",sd:D(1),ed:D(1),st:"16:00",et:"18:00",place:"جدة",owners:["أ. يحيى القرشي","أ. إبراهيم الزهراني","أ. عثمان سيف"],showOwners:false,priority:"ذات أهمية",status:"لم تبدأ",cat:"الوفود والفعاليات والضيافة",notes:"تجهيز الضيافة وعرض تعريفي عن المجموعة.",lead:"1440",q4:true},
       {id:"d4",title:"متابعة اعتماد الحقائب التدريبية",type:"متابعة",sd:D(2),ed:D(2),st:"10:00",et:"10:30",place:"عن بعد",owners:["أ. أبوبكر بافضل","أ. أمينة عبدالوهاب"],priority:"اعتيادية",status:"لم تبدأ",cat:"المناهج والحقائب التدريبية",notes:"",lead:"60"},
       {id:"d5",title:"رحلة عمل إلى إندونيسيا",type:"سفر",sd:D(5),ed:D(8),st:"",et:"",place:"جاكرتا",owners:["د. الزبير فضل"],priority:"ذات أهمية",status:"لم تبدأ",cat:"المشاريع والبرامج الخارجية",notes:"",lead:"1440"},
       {id:"d6",title:"إطلاق هوية برنامج 2027",type:"مناسبة",sd:D(4),ed:D(4),st:"19:30",et:"21:00",place:"",owners:["أ. رحاب سعد"],priority:"اعتيادية",status:"لم تبدأ",cat:"التصميم والهوية والشهادات",notes:"",lead:"180"},
