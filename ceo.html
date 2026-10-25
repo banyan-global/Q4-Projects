@@ -337,25 +337,24 @@ textarea.inp{min-height:88px;resize:vertical;line-height:1.7}
 .q4seg{flex:none}
 .q4seg button{white-space:nowrap}
 .q4seg button[data-v="1"][aria-pressed="true"]{background:var(--cyan);color:#fff}
-.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 14px}
-@media (max-width:560px){.opts{grid-template-columns:1fr}}
-.opt{position:relative;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:14px;border:1px solid var(--line-soft);background:var(--tint);cursor:pointer;transition:border-color .15s,background .15s;min-width:0}
-.opt:hover{border-color:var(--line)}
-.opt .oi{width:30px;height:30px;font-size:14px}
-.opt .ot{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.4}
-.opt .ot b{font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:6px}
-.opt .ot small{font-size:12px;font-weight:600;color:var(--txt-3)}
-.opt.vis.on{border-color:color-mix(in srgb,var(--gold) 45%,transparent);background:color-mix(in srgb,var(--gold) 7%,var(--panel))}
-.opt.q4o.on{border-color:color-mix(in srgb,var(--cyan) 40%,transparent);background:color-mix(in srgb,var(--cyan) 6%,var(--panel))}
-.opt.q4o.on .ot small{color:var(--cyan)}
-.osw{flex:none;width:40px;height:23px;border-radius:999px;background:var(--line-soft);position:relative;transition:.2s}
-.osw::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.25);transition:.2s}
-.osw[aria-checked="true"]::after{inset-inline-start:20px}
-.vis .osw[aria-checked="true"]{background:#c9a86a}
-.q4o .osw[aria-checked="true"]{background:var(--cyan)}
-.osw:focus-visible,.tip:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.tip{position:static;flex:none;width:17px;height:17px;border-radius:50%;border:1px solid var(--line);color:var(--txt-3);font:italic 800 11px/1 Georgia,serif;display:inline-grid;place-items:center;cursor:help}
-.tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);inset-inline:6px;padding:9px 12px;border-radius:12px;background:var(--sel-bg);color:var(--sel-fg);font-family:var(--font);font-size:12px;font-weight:600;line-height:1.75;font-style:normal;text-align:start;white-space:normal;box-shadow:0 12px 28px rgba(10,20,40,.25);opacity:0;visibility:hidden;transform:translateY(4px);transition:.15s;z-index:30;pointer-events:none}
+.opts{position:relative;margin:0 0 14px;display:grid;grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr);align-items:center;padding:6px;border-radius:16px;background:linear-gradient(135deg,#1a3055,#132443);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 22px rgba(22,41,74,.16)}
+:root:not([data-theme="light"]) .opts{background:linear-gradient(135deg,#0f1f38,#0b1a30);border:1px solid var(--line)}
+.osep{height:30px;background:rgba(243,220,166,.22)}
+@media (max-width:560px){.opts{grid-template-columns:1fr}.osep{height:1px;margin:0 12px}}
+.opt{position:relative;display:flex;align-items:center;gap:11px;padding:8px 12px;border-radius:12px;cursor:pointer;min-width:0;transition:background .15s}
+.opt:hover{background:rgba(255,255,255,.05)}
+.opt .oic{flex:none;color:#f3dca6;opacity:.9}
+.opt .ot{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}
+.opt .ot b{font-size:13.5px;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px}
+.opt .ot small{font-size:12px;font-weight:600;color:#9fb2cc}
+.opt.on .ot small{color:#e3c485}
+.osw{flex:none;width:38px;height:22px;border-radius:999px;background:rgba(255,255,255,.14);position:relative;transition:.2s}
+.osw::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3);transition:.2s}
+.osw[aria-checked="true"]{background:linear-gradient(135deg,#f3dca6,#c9a86a)}
+.osw[aria-checked="true"]::after{inset-inline-start:19px}
+.osw:focus-visible,.tip:focus-visible{outline:2px solid #f3dca6;outline-offset:2px}
+.tip{position:static;flex:none;width:15px;height:15px;padding:0;border-radius:50%;border:1.3px solid rgba(243,220,166,.45);color:#f3dca6;font:italic 700 9.5px/1 Georgia,serif;display:inline-grid;place-items:center;cursor:help}
+.tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 10px);inset-inline:6px;padding:9px 12px;border-radius:12px;background:#0f1f38;color:#f3dca6;border:1px solid rgba(243,220,166,.3);font-family:var(--font);font-size:12px;font-weight:600;line-height:1.75;font-style:normal;text-align:start;white-space:normal;box-shadow:0 12px 28px rgba(10,20,40,.3);opacity:0;visibility:hidden;transform:translateY(4px);transition:.15s;z-index:30;pointer-events:none}
 .tip:hover::after,.tip:focus-visible::after,.tip.on::after{opacity:1;visibility:visible;transform:none}
 .b-pub{color:var(--cyan);border-color:color-mix(in srgb,var(--cyan) 45%,transparent);background:color-mix(in srgb,var(--cyan) 7%,transparent)}
 .notify{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--tint);border:1px solid var(--line-soft);font-size:14px;font-weight:700;cursor:pointer;position:relative}
@@ -973,8 +972,9 @@ function openForm(it,preDate){
   h+='<div class="'+(q4m?"g2":"g3")+'"><label class="lab"><span>'+(q4m?"الدولة":"المكان")+' <span class="sub">اختياري</span></span><input class="inp" type="text" id="fPl" maxlength="150" value="'+esc(it.place||"")+'" placeholder="'+(q4m?"السعودية، إندونيسيا…":"مقر الشركة، عن بعد، الرياض…")+'"></label>'+(q4m?'':'<div class="lab"><span>الأولوية</span><div id="fPr"></div></div>')+'<div class="lab"><span>الحالة</span><div id="fSt"></div></div></div>';
   h+='<div class="lab"><span>المسؤولون <span class="sub">يصلهم إيميل فور الحفظ</span></span><div id="fOw"></div></div>';
   if(!q4m)h+='<div class="opts">'+
-    '<div class="opt vis" id="fVis"><i class="oi">👥</i><span class="ot"><b>إظهار الأسماء للجميع <button type="button" class="tip" aria-label="معلومة" data-tip="عند الإيقاف يصل كل مسؤول إيميل لا يظهر فيه إلا اسمه، كأنه المكلّف وحده. وتبقى الأسماء كلها ظاهرة لك هنا.">i</button></b><small class="ost"></small></span><button type="button" class="osw" role="switch" aria-label="إظهار أسماء المسؤولين للجميع" data-on="يرى كل مسؤول زملاءه" data-off="كلٌّ يرى اسمه فقط"></button></div>'+
-    '<div class="opt q4o" id="fQ4"><i class="oi">↗</i><span class="ot"><b>في موقع الربع الرابع <button type="button" class="tip" aria-label="معلومة" data-tip="في الحالتين يصل المسؤولين إيميل الإسناد والتذكيرات اليومية والأسبوعية والتذكير المسبق.">i</button></b><small class="ost"></small></span><button type="button" class="osw" role="switch" aria-label="إظهار المهمة في موقع مهام الربع الرابع" data-on="تظهر في الموقع" data-off="خاصة بالتقويم فقط"></button></div>'+
+    '<div class="opt" id="fVis"><svg class="oic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span class="ot"><b>أسماء المسؤولين <button type="button" class="tip" aria-label="معلومة" data-tip="عند الإيقاف يصل كل مسؤول إيميل لا يظهر فيه إلا اسمه، كأنه المكلّف وحده. وتبقى الأسماء كلها ظاهرة لك هنا.">i</button></b><small class="ost"></small></span><button type="button" class="osw" role="switch" aria-label="إظهار أسماء المسؤولين للجميع" data-on="ظاهرة للجميع" data-off="كلٌّ يرى اسمه فقط"></button></div>'+
+    '<span class="osep"></span>'+
+    '<div class="opt" id="fQ4"><svg class="oic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="ot"><b>موقع الربع الرابع <button type="button" class="tip" aria-label="معلومة" data-tip="في الحالتين يصل المسؤولين إيميل الإسناد والتذكيرات اليومية والأسبوعية والتذكير المسبق.">i</button></b><small class="ost"></small></span><button type="button" class="osw" role="switch" aria-label="إظهار المهمة في موقع مهام الربع الرابع" data-on="تظهر في الموقع" data-off="خاصة بالتقويم"></button></div>'+
     '</div>';
   h+='<label class="lab"><span>التفاصيل والتوجيهات <span class="sub">تظهر في الإيميل</span></span><textarea class="inp" id="fN" maxlength="2000" placeholder="المطلوب، المرفقات، ملاحظات للمسؤولين…">'+esc(it.notes||"")+'</textarea></label>';
   h+='<label class="notify"><input type="checkbox" id="fNt" checked><span class="sw"></span><span>إرسال إيميل للمسؤولين '+(ed?"بالتعديلات":"بالإسناد")+'<small>من نفس بريد نظام المهام وبنفس القالب</small></span></label>';
