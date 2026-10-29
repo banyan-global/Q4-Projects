@@ -845,7 +845,7 @@ function renderSync(){
   else if(syncErr)h='<span class="dot err"></span><span>'+esc(syncErr)+'</span> <button class="lnk" id="retry" type="button">إعادة المحاولة</button>';
   else if(lastSync)h='<span class="dot"></span><span>متصل · آخر تحديث <span class="num">'+pad(lastSync.getHours())+":"+pad(lastSync.getMinutes())+'</span></span>';
   else h='<span class="dot off"></span><span>جارٍ التحميل…</span>';
-  h+=' <button type="button" class="fpill" id="q4Top" aria-pressed="'+showQ4+'" title="إظهار أو إخفاء مهام موقع الربع الرابع المطلوبة من الدكتور"><span class="sw"></span>عرض مهام الربع الرابع</button>';
+  h+=' <button type="button" class="fpill" id="q4Top" aria-pressed="'+showQ4+'" title="إظهار أو إخفاء مهام موقع الربع الرابع المطلوبة من الدكتور"><span class="sw"></span>عرض مهام الربع الرابع'+(linked.length?' <span class="num">('+linked.length+')</span>':'')+'</button>';
   el.innerHTML=h;
   if($("retry"))$("retry").onclick=function(){syncErr="";renderSync();pull()};
   $("q4Top").onclick=function(){setShowQ4(!showQ4)};
@@ -927,7 +927,7 @@ function initFilters(){
   $("pPrev").onclick=function(){page(-1)};$("pNext").onclick=function(){page(1)};
   $("pToday").onclick=function(){monthCur=null;weekCur=null;rCal()};
 }
-function setShowQ4(v){showQ4=!!v;$("ffQ4").setAttribute("aria-pressed",showQ4);lsSet("ceoq4",showQ4);render();toast(showQ4?"تظهر مهام الربع الرابع في التقويم":"أُخفيت مهام الربع الرابع")}
+function setShowQ4(v){showQ4=!!v;$("ffQ4").setAttribute("aria-pressed",showQ4);lsSet("ceoq4",showQ4);render();toast(showQ4?(linked.length?"ظهرت "+linked.length+" مهمة من موقع الربع الرابع تخص الدكتور":"لا توجد مهام في موقع الربع الرابع تخص الدكتور حالياً"):"أُخفيت مهام الربع الرابع")}
 function setMode(m){calMode=m;ssSet("ceomode",m);rCal()}
 function page(n){if(calMode==="month"){var c=monthCur||new Date();monthCur=new Date(c.getFullYear(),c.getMonth()+n,1)}else{weekCur=addD(weekCur||wkStart(new Date()),7*n)}rCal()}
 function hl(s){s=esc(s);if(!F.q)return s;var q=esc(F.q).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");return s.replace(new RegExp(q,"gi"),function(x){return "<mark>"+x+"</mark>"})}
