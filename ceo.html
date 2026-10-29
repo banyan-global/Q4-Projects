@@ -102,6 +102,7 @@ button:disabled{cursor:not-allowed}
 .b-urgent{color:#fff;background:#a32232;border-color:#a32232}
 .b-high{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 45%,transparent)}
 .b-q4{color:var(--cyan);border-color:color-mix(in srgb,var(--cyan) 45%,transparent)}
+.b-mine{color:var(--gold-2);border-color:color-mix(in srgb,var(--gold) 55%,transparent);background:var(--tint-gold)}
 
 /* ألوان أنواع المواعيد */
 .t-اجتماع{--tc:var(--violet)}.t-مهمة{--tc:var(--gold)}.t-موعد{--tc:var(--cyan)}.t-زيارة{--tc:var(--green)}
@@ -674,6 +675,9 @@ function passF(it){
 function calAll(){return all().filter(passF)}
 function dayItems(s,src){return (src||all()).filter(function(it){return onDay(it,s)})}
 function tcls(it){return it.src==="q4"?"t-q4":"t-"+(TYPES.indexOf(it.type)>=0?it.type:"مهمة")}
+var MINE_RE=/عبدالله الغامدي/;
+function isMine(it){return (it.owners||[]).some(function(n){return MINE_RE.test(n)})}
+var MINE_B='<span class="badge b-mine">👤 مسندة إليه</span>';
 function ownersTxt(it){return (it.owners||[]).join("، ")}
 function rank(n){return /^د\./.test(n)?0:/^م\./.test(n)?1:/^أ\./.test(n)?2:3}
 function sortNames(a){return a.sort(function(x,y){return rank(x)-rank(y)||x.localeCompare(y,"ar")})}
@@ -874,6 +878,7 @@ function evCard(it,opts){
   if(isLate(it))b+='<span class="badge b-late">متأخرة</span> ';
   else if(it.status!=="لم تبدأ")b+='<span class="badge '+(SCLS[it.status]||"b-todo")+'">'+esc(it.status)+'</span> ';
   if(it.priority===PRIOS[2].v)b+='<span class="badge b-urgent">'+PRIOS[2].v+'</span> ';
+  if(isMine(it))b+=MINE_B+' ';
   if(it.q4&&it.src!=="q4")b+='<span class="badge b-pub">↗ في الربع الرابع</span> ';
   return '<button type="button" class="'+cls+'" data-id="'+esc(it.id)+'"><span class="tm">'+tm+'</span><span class="bd"><span class="tt">'+esc(it.title)+'</span> '+b+'<span class="mt">'+meta+'</span></span></button>';
 }
@@ -998,6 +1003,7 @@ function openDetail(id){
   if(!ro)bd+='<span class="badge" style="color:var(--txt-2);border-color:var(--line-soft)">'+(TYPE_IC[it.type]||"")+' '+esc(it.type)+'</span>';
   if(it.priority&&it.priority!==PRIOS[0].v)bd+='<span class="badge '+(it.priority===PRIOS[2].v?"b-urgent":"b-high")+'">'+esc(it.priority)+'</span>';
   if(ro)bd+='<span class="badge b-q4">من نظام مهام الربع الرابع</span>';
+  if(isMine(it))bd+=MINE_B;
   var when=dLong(it.sd)+(it.ed&&it.ed!==it.sd?" حتى "+dLong(it.ed):"");
   var rows=[["الموعد",when],["الوقت",timeRange(it)],["الهجري",hijri(it.sd)],["المكان",it.place],["التصنيف",it.cat?(CAT_IC[it.cat]||"")+" "+it.cat:""],["المسؤولون",ownersTxt(it)],["التفاصيل",it.notes]];
   if(!ro&&it.showOwners===false&&it.owners.length)rows.push(["الإظهار","كل مسؤول يرى اسمه فقط في الإيميلات"]);
@@ -1161,7 +1167,7 @@ function demoCall(action,x){
       {id:"d7",title:"رفع ميزانية الربع القادم",type:"مهمة",sd:D(-3),ed:D(-2),st:"",et:"",place:"",owners:["د. مبارك آل زنان"],priority:"عاجلة جداً",status:"قيد التنفيذ",cat:"الشؤون الإدارية والمالية",notes:"",lead:"0"},
       {id:"d8",title:"لقاء مع شريك تمكين التعليم",type:"موعد",sd:D(-5),ed:D(-5),st:"11:00",et:"12:00",place:"",owners:["أ. علي الغامدي"],priority:"اعتيادية",status:"تم الإنجاز",cat:"التواصل والتنسيق",notes:"",lead:"60"},
       {id:"d9",title:"اجتماع فريق نمذجة المدارس",type:"اجتماع",sd:D(9),ed:D(9),st:"20:00",et:"22:00",place:"",owners:["أ. يحيى القرشي","أ. علي الغامدي"],priority:"اعتيادية",status:"لم تبدأ",cat:"الاجتماعات واللقاءات",notes:"",lead:"60"}
-    ],linked:[{id:"q1",qid:"d710964e",title:"التحقق من وضع المؤسسة في نظام SABH",sd:D(-10),ed:D(2),st:"08:00",et:"17:00",owners:[],status:"قيد التنفيذ",place:"",cat:""},{id:"q2",qid:"ccd32bba",title:"تحديث بيانات المؤسسة",sd:D(1),ed:D(1),st:"",et:"",owners:["م. أسامة جنيدي"],status:"لم تبدأ",place:"",cat:""}]};
+    ],linked:[{id:"q1",qid:"d710964e",title:"التحقق من وضع المؤسسة في نظام SABH",sd:D(-10),ed:D(2),st:"08:00",et:"17:00",owners:["د. عبدالله الغامدي"],status:"قيد التنفيذ",place:"",cat:""},{id:"q2",qid:"ccd32bba",title:"تحديث بيانات المؤسسة",sd:D(1),ed:D(1),st:"",et:"",owners:["م. أسامة جنيدي"],status:"لم تبدأ",place:"",cat:""}]};
   }
   var sent=0;
   if(action==="add"){x.item.id="d"+Date.now();db.items.push(x.item);sent=x.notify?x.item.owners.length:0}
@@ -1240,7 +1246,7 @@ function lRow(it){
   var sub=[it.cat,ownersTxt(it),it.place].filter(Boolean).join("، ");
   var pill=k==="stuck"&&isLate(it)?'<span class="badge b-late">متأخرة</span>':'<span class="badge '+(SCLS[it.status]||"b-todo")+'">'+esc(k==="doing"&&it.status==="لم تبدأ"?"بدأت":it.status)+'</span>';
   var urg=it.priority===PRIOS[2].v?'<span class="badge b-urgent">'+PRIOS[2].v+'</span>':it.priority===PRIOS[1].v?'<span class="badge b-high">'+PRIOS[1].v+'</span>':"";
-  return '<button type="button" class="lxrow '+k+'" data-id="'+esc(it.id)+'"><span class="lxdate"><b class="num">'+d.getDate()+'</b><span>'+esc(WD[d.getDay()])+'</span></span><span class="lxb"><span class="lxt">'+kt+(tl?'<span class="lxtm num">'+esc(tl)+'</span>':'')+lhl(it.title)+'</span>'+(sub?'<span class="lxd">'+lhl(sub)+'</span>':'')+'</span><span class="lxp">'+urg+pill+'</span></button>';
+  return '<button type="button" class="lxrow '+k+'" data-id="'+esc(it.id)+'"><span class="lxdate"><b class="num">'+d.getDate()+'</b><span>'+esc(WD[d.getDay()])+'</span></span><span class="lxb"><span class="lxt">'+kt+(tl?'<span class="lxtm num">'+esc(tl)+'</span>':'')+lhl(it.title)+'</span>'+(sub?'<span class="lxd">'+lhl(sub)+'</span>':'')+'</span><span class="lxp">'+(isMine(it)?MINE_B:'')+urg+pill+'</span></button>';
 }
 function rList(){
   if(lfDD.owner)lfDD.owner.refresh();if(lfDD.period)lfDD.period.refresh();
