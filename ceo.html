@@ -677,7 +677,7 @@ function dayItems(s,src){return (src||all()).filter(function(it){return onDay(it
 function tcls(it){return it.src==="q4"?"t-q4":"t-"+(TYPES.indexOf(it.type)>=0?it.type:"مهمة")}
 var MINE_RE=/عبدالله الغامدي/;
 function isMine(it){return (it.owners||[]).some(function(n){return MINE_RE.test(n)})}
-var MINE_B='<span class="badge b-mine">👤 مسندة إليه</span>';
+var MINE_B='<span class="badge b-mine">👤 مسندة لك</span>';
 function ownersTxt(it){return (it.owners||[]).join("، ")}
 function rank(n){return /^د\./.test(n)?0:/^م\./.test(n)?1:/^أ\./.test(n)?2:3}
 function sortNames(a){return a.sort(function(x,y){return rank(x)-rank(y)||x.localeCompare(y,"ar")})}
