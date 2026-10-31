@@ -281,6 +281,12 @@ mark{background:color-mix(in srgb,#c9a86a 35%,transparent);color:inherit;border-
 .cell .dn{font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:space-between}
 .cell.today .dn b{background:#16294a;color:#f3dca6;border-radius:8px;padding:0 7px}
 .cell .dn small{font-size:10.5px;color:var(--txt-3);font-weight:700}
+.cell .dn .dg{display:inline-flex;align-items:baseline;gap:6px;min-width:0}
+.cell .hd{font-size:11px;font-weight:700;color:var(--gold-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell .hd.m1{font-weight:900}
+.wday header{flex-wrap:wrap;row-gap:0}
+.wday header .hd{order:9;flex-basis:100%;font-size:11.5px;font-weight:700;color:var(--gold-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wday.today header .hd{color:#f3dca6;opacity:.85}
 .chip{display:block;font-size:12px;font-weight:700;line-height:1.35;border-radius:7px;padding:3px 6px;background:color-mix(in srgb,var(--tc) 14%,transparent);color:var(--txt);border-inline-start:3px solid var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chip.done{opacity:.55;text-decoration:line-through}
 .more{font-size:11.5px;font-weight:800;color:var(--gold-2)}
@@ -462,6 +468,7 @@ textarea.inp{min-height:88px;resize:vertical;line-height:1.7}
   .mgrid{gap:3px}
   .cell{min-height:64px;padding:4px;border-radius:10px}
   .cell .dn{font-size:13px}.cell .dn small{display:none}
+  .cell .dn .dg{flex-direction:column;gap:0;line-height:1.15}.cell .hd{font-size:9.5px}.cell .hd .hm{display:none}
   .chip{font-size:0;padding:0;height:6px;border-radius:3px;border:0;background:var(--tc)}
   .more{font-size:10px}
   .wdh{font-size:11px}
@@ -649,6 +656,9 @@ function dLabel(s){var d=pd(s);return d.getDate()+" "+MN[d.getMonth()]}
 function dLong(s){var d=pd(s);return WD[d.getDay()]+" "+d.getDate()+" "+MN[d.getMonth()]+" "+d.getFullYear()}
 var HIJ=null,HIJM=null;try{HIJ=new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura-nu-latn",{day:"numeric",month:"long",year:"numeric"});HIJM=new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura-nu-latn",{month:"long",year:"numeric"})}catch(e){}
 function hijri(s){try{return HIJ?HIJ.format(pd(s)).replace(/\s*هـ$/,"")+" هـ":""}catch(e){return ""}}
+var HIJD=null,HIJMN=null;try{HIJD=new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura-nu-latn",{day:"numeric"});HIJMN=new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura-nu-latn",{month:"long"})}catch(e){}
+function hDay(d){try{return HIJD?+HIJD.format(d).replace(/[^0-9]/g,""):0}catch(e){return 0}}
+function hMon(d){try{return HIJMN?HIJMN.format(d):""}catch(e){return ""}}
 function hijriMonths(a,b){try{if(!HIJM)return "";var x=HIJM.format(a).replace(/\s*هـ$/,""),y=HIJM.format(b).replace(/\s*هـ$/,"");return (x===y?x:x.replace(/ \d+$/,"")+" – "+y)+" هـ"}catch(e){return ""}}
 function t12(t){if(!t)return "";var p=t.split(":"),h=+p[0],m=p[1];var ap=h<12?"ص":"م";h=h%12||12;return h+":"+m+" "+ap}
 function timeRange(it){if(!it.st)return "طوال اليوم";return t12(it.st)+(it.et&&it.et!==it.st?" – "+t12(it.et):"")}
@@ -957,6 +967,7 @@ function rCal(){
   if(active&&!F.q){fc.hidden=false;fc.innerHTML='يُعرض <b class="num">'+A.length+'</b> من <span class="num">'+total+'</span> حسب الفلاتر'}else fc.hidden=true;
   if(calMode==="month")rMonth(A);else rWeek(A);
 }
+function hCell(d,first){var n=hDay(d);if(!n)return "";var m1=n===1||first;return '<span class="hd'+(m1?" m1":"")+'" title="'+esc(hijri(ds(d)))+'"><span class="num">'+n+'</span>'+(m1?'<span class="hm"> '+esc(hMon(d))+'</span>':"")+'</span>'}
 function rMonth(A){
   if(!monthCur){var n=new Date();monthCur=new Date(n.getFullYear(),n.getMonth(),1)}
   var y=monthCur.getFullYear(),m=monthCur.getMonth(),t=todayS();
@@ -965,7 +976,7 @@ function rMonth(A){
   var h='<div class="mgrid">'+WD_SAT.map(function(w,i){return '<div class="wdh'+(i===6?" fri":"")+'">'+w+'</div>'}).join("");
   for(var d=start;d<=end;d=addD(d,1)){
     var s=ds(d),L=dayItems(s,A),out=d.getMonth()!==m;
-    h+='<button type="button" class="cell'+(out?" out":"")+(s===t?" today":"")+'" data-day="'+s+'" aria-label="'+esc(dLong(s))+'، '+L.length+'"><span class="dn"><b class="num">'+d.getDate()+'</b>'+(L.length?'<small class="num">'+L.length+'</small>':"")+'</span>';
+    h+='<button type="button" class="cell'+(out?" out":"")+(s===t?" today":"")+'" data-day="'+s+'" aria-label="'+esc(dLong(s))+'، '+L.length+'"><span class="dn"><span class="dg"><b class="num">'+d.getDate()+'</b>'+hCell(d,d.getTime()===start.getTime())+'</span>'+(L.length?'<small class="num">'+L.length+'</small>':"")+'</span>';
     L.slice(0,3).forEach(function(it){var cont=it.ed&&it.ed!==it.sd&&s>it.sd;h+='<span class="chip '+tcls(it)+(it.status==="تم الإنجاز"?" done":"")+'">'+(cont?"↤ ":it.st?'<span class="num">'+esc(t12(it.st).replace(/ [صم]$/,""))+'</span> ':"")+esc(it.title)+'</span>'});
     if(L.length>3)h+='<span class="more">+'+(L.length-3)+' أخرى</span>';
     h+='</button>';
@@ -979,7 +990,7 @@ function rWeek(A){
   var h='<div class="wgrid">';
   for(var i=0;i<7;i++){
     var d=addD(weekCur,i),s=ds(d),L=dayItems(s,A);
-    h+='<div class="wday'+(s===t?" today":"")+'"><header><b class="num">'+d.getDate()+'</b><span>'+WD_SAT[i]+'</span><em>'+(s===t?"اليوم":(L.length?'<span class="num">'+L.length+'</span>':""))+'</em></header><div class="rows">';
+    h+='<div class="wday'+(s===t?" today":"")+'"><header><b class="num">'+d.getDate()+'</b><span>'+WD_SAT[i]+'</span>'+(hDay(d)?'<span class="hd"><span class="num">'+hDay(d)+'</span> '+esc(hMon(d))+'</span>':"")+'<em>'+(s===t?"اليوم":(L.length?'<span class="num">'+L.length+'</span>':""))+'</em></header><div class="rows">';
     L.forEach(function(it){h+='<button type="button" class="wrow '+tcls(it)+(it.status==="تم الإنجاز"?" done":"")+'" data-id="'+esc(it.id)+'"><div class="t num">'+esc(dayTime(it,s))+'</div><div class="n">'+hl(it.title)+'</div>'+(it.owners.length?'<div class="o">'+esc(ownersTxt(it))+'</div>':"")+(isLate(it)?'<span class="badge b-late" style="margin-top:4px">متأخرة</span>':"")+'</button>'});
     h+='</div><button class="wadd" type="button" data-add="1" data-date="'+s+'">＋ إضافة</button></div>';
   }
