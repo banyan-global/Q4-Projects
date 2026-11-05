@@ -453,6 +453,16 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 :root[data-theme="dark"] .cc.ck{--cc:var(--cyan)}:root[data-theme="dark"] .cc.tk{--cc:var(--gold-2)}
 .cc.s-stuck{--cc:var(--rose)}
 .cc.s-done{opacity:.55}.cc.s-done .cn{text-decoration:line-through}
+.cc.hastr{flex-wrap:wrap;row-gap:2px}
+.cc .ctr{flex:1 0 100%;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-weight:800;color:var(--gold-2);padding-inline-start:13px}
+.trb{display:inline-flex;align-items:center;gap:6px;margin-bottom:4px;padding:2px 10px 2px 8px;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--gold-2);background:var(--tint-gold);border:1px solid color-mix(in srgb,var(--gold) 35%,transparent)}
+.trb b{font-weight:800;color:var(--txt)}
+.trbox{display:flex;align-items:center;gap:12px;margin:4px 0 14px;padding:12px 16px;border-radius:14px;background:var(--tint-gold);border:1px solid color-mix(in srgb,var(--gold) 45%,transparent)}
+.trbox .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:linear-gradient(135deg,var(--gold-2),var(--gold));color:#0b0f17;flex:0 0 auto}
+.trbox span{display:block;font-size:12.5px;color:var(--txt-3);font-weight:700}
+.trbox b{display:block;font-size:18px;font-weight:800;color:var(--txt)}
+.tb td.trc{font-weight:800;color:var(--gold-2);white-space:nowrap}
+@media (max-width:640px){.cc .ctr{display:none}}
 .cmore{font-size:11.5px;font-weight:800;color:var(--gold-deep);padding:2px 6px}
 .clg{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft);font-size:12.5px;font-weight:700;color:var(--txt-3)}
 .clg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:6px}
@@ -894,11 +904,11 @@ function pill(it){
   if(it.late)return '<span class="chip r">متعثرة · تجاوزت الوقت</span>';
   return '<span class="chip '+STC[it.status]+'">'+ST[it.status]+'</span>';
 }
-function sub(it){var a=it.kind==="c"?[it.trainer?"المدرب: "+it.trainer:"",it.program,it.country,it.partner,it.trainees,it.mode]:[it.cat,it.a1,it.country,it.partner];return a.filter(Boolean).join("، ")}
+function sub(it){var a=it.kind==="c"?[it.program,it.country,it.partner,it.trainees,it.mode]:[it.cat,it.a1,it.country,it.partner];return a.filter(Boolean).join("، ")}
 function kindTag(it){return it.kind==="c"?'<span class="kt kc">دورة</span>':'<span class="kt kk">مهمة</span>'}
 function ring(p,size,sw,c1,c2,label,id){var r=(size-sw)/2,c=2*Math.PI*r;return '<span class="ring"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" style="stroke:var(--track)" stroke-width="'+sw+'"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="url(#'+id+')" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+(c*p/100).toFixed(1)+' '+c.toFixed(1)+'"'+(p?'':' stroke-opacity="0"')+'/></svg><span class="rv num"><b>'+p+'%</b><span>'+label+'</span></span></span>'}
 function secHead(n,title,sb,extra){return '<div class="sec-head">'+(n?'<span class="sn num">'+n+'</span>':'')+'<h2>'+title+'</h2>'+(sb?'<small class="num">'+sb+'</small>':'')+'<span class="line"></span>'+(extra||'')+'</div>'}
-function row(it){var p=parts(it.date),s=sub(it);return '<button class="row" data-open="'+esc(it.id)+'"><span class="date num"><b>'+p.d+'</b><span>'+wday(it.date)+'</span></span><span><span class="t">'+kindTag(it)+(timeLabel(it)?'<span class="tm num">'+timeLabel(it)+'</span>':'')+esc(it.title)+'</span>'+(s?'<span class="d">'+esc(s)+'</span>':'')+'</span>'+pill(it)+'</button>'}
+function row(it){var p=parts(it.date),s=sub(it);return '<button class="row" data-open="'+esc(it.id)+'"><span class="date num"><b>'+p.d+'</b><span>'+wday(it.date)+'</span></span><span>'+(it.kind==="c"&&it.trainer?'<span class="trb"><span aria-hidden="true">👤</span>المدرب: <b>'+esc(it.trainer)+'</b></span>':'')+'<span class="t">'+kindTag(it)+(timeLabel(it)?'<span class="tm num">'+timeLabel(it)+'</span>':'')+esc(it.title)+'</span>'+(s?'<span class="d">'+esc(s)+'</span>':'')+'</span>'+pill(it)+'</button>'}
 function pend(l){return l.filter(function(x){return !isDone(x)})}
 function listHtml(list,emptyText){return list.length?'<div class="list">'+list.map(row).join("")+'</div>':'<div class="empty">'+emptyText+'</div>'}
 var RC_DARK=[["#f3dca6","#c9a86a"],["#5fd9e6","#3cc0d4"],["#5fe0a0","#27a35e"]], RC_LIGHT=[["#d9b866","#8a6c2e"],["#19b3c4","#0b7886"],["#2fbf71","#146c3c"]], RC=RC_LIGHT;
@@ -950,7 +960,7 @@ function renderDash(){
 function dayPanel(ds,list,td){var moName=mName(parts(ds).m);
   var p=parts(ds), cs=list.filter(function(x){return x.kind==="c"}), ts=list.filter(function(x){return x.kind==="t"});
   var h='<div class="dayp'+(ds===td?" today":"")+(list.length?"":" none")+'"><header><span class="dn num">'+p.d+'</span><b>'+wday(ds)+'</b><span class="dm num">'+p.d+" "+moName+'</span>'+(ds===td?'<em>اليوم</em>':'')+'<span class="tag num">'+countLabel(list)+'</span></header>';
-  if(cs.length)h+='<div class="tblw"><table class="tb"><thead><tr><th>الدورة</th><th>المدرب</th><th>البرنامج</th><th>الدولة</th><th>الشريك</th><th>المتدربون</th><th>نوع التدريب</th><th>الإنجاز</th></tr></thead><tbody>'+cs.map(function(c){return '<tr data-open="'+esc(c.id)+'" tabindex="0"><td class="tt">'+esc(c.title)+'</td><td>'+esc(c.trainer||"—")+'</td><td>'+esc(c.program||"—")+'</td><td>'+esc(c.country||"—")+'</td><td>'+esc(c.partner||"—")+'</td><td>'+esc(c.trainees||"—")+'</td><td>'+(c.mode?'<span class="chip '+(c.mode==="حضوري"?"g":"c")+'">'+esc(c.mode)+'</span>':"—")+'</td><td>'+(isStale(c)?'<span class="chip m">'+esc(c.cstatus)+'</span> ':'')+pill(c)+'</td></tr>'}).join("")+'</tbody></table></div>';
+  if(cs.length)h+='<div class="tblw"><table class="tb"><thead><tr><th>الدورة</th><th>المدرب</th><th>البرنامج</th><th>الدولة</th><th>الشريك</th><th>المتدربون</th><th>نوع التدريب</th><th>الإنجاز</th></tr></thead><tbody>'+cs.map(function(c){return '<tr data-open="'+esc(c.id)+'" tabindex="0"><td class="tt">'+esc(c.title)+'</td><td class="trc">'+esc(c.trainer||"—")+'</td><td>'+esc(c.program||"—")+'</td><td>'+esc(c.country||"—")+'</td><td>'+esc(c.partner||"—")+'</td><td>'+esc(c.trainees||"—")+'</td><td>'+(c.mode?'<span class="chip '+(c.mode==="حضوري"?"g":"c")+'">'+esc(c.mode)+'</span>':"—")+'</td><td>'+(isStale(c)?'<span class="chip m">'+esc(c.cstatus)+'</span> ':'')+pill(c)+'</td></tr>'}).join("")+'</tbody></table></div>';
   if(ts.length)h+='<div class="tblw"><table class="tb"><thead><tr><th>الوقت</th><th>المهمة</th><th>التفصيل</th><th>الدولة</th><th>الشريك</th><th>المسؤول</th><th>الحالة</th></tr></thead><tbody>'+ts.map(function(t){return '<tr data-open="'+esc(t.id)+'" tabindex="0"><td class="num" style="white-space:nowrap">'+(timeLabel(t)||"—")+'</td><td class="tt">'+esc(t.title)+'</td><td class="dt">'+esc(t.details||"—")+'</td><td>'+esc(t.country||"—")+'</td><td>'+esc(t.partner||"—")+'</td><td>'+esc([t.a1,t.a2].filter(Boolean).join("، ")||"—")+'</td><td>'+pill(t)+'</td></tr>'}).join("")+'</tbody></table></div>';
   return h+'</div>';
 }
@@ -1031,7 +1041,7 @@ function renderCal(){
   if(active)h+='<div class="calnote">معروض حسب الفلاتر المختارة</div>';
   h+='<div class="calhd">'+["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"].map(function(w,i){return '<div class="cwd'+(i===6?" fri":"")+'"><span class="full">'+w+'</span><span class="short">'+"سحنثرخج"[i]+'</span></div>'}).join("")+'</div><div class="calg">';
   var MXL=2, MX=3;
-  function chip(x){var k=stKey(x);return '<button type="button" class="cc '+(x.kind==="c"?"ck":"tk")+' s-'+k+'" data-open="'+esc(x.id)+'" title="'+esc(x.title+(x.kind==="c"&&x.trainees?" ("+x.trainees+(x.mode?"، "+x.mode:"")+")":"")+(x.kind==="c"&&x.trainer?" — المدرب: "+x.trainer:""))+'"><i aria-hidden="true"></i>'+(x.kind==="t"&&x.start?'<span class="ct num">'+x.start+'</span>':'')+'<span class="cn">'+esc(x.title)+'</span>'+(x.kind==="c"&&x.trainees?'<span class="cg">'+esc(x.trainees)+'</span>':'')+'</button>'}
+  function chip(x){var k=stKey(x);return '<button type="button" class="cc '+(x.kind==="c"?"ck":"tk")+(x.kind==="c"&&x.trainer?" hastr":"")+' s-'+k+'" data-open="'+esc(x.id)+'" title="'+esc(x.title+(x.kind==="c"&&x.trainees?" ("+x.trainees+(x.mode?"، "+x.mode:"")+")":"")+(x.kind==="c"&&x.trainer?" — المدرب: "+x.trainer:""))+'"><i aria-hidden="true"></i>'+(x.kind==="t"&&x.start?'<span class="ct num">'+x.start+'</span>':'')+'<span class="cn">'+esc(x.title)+'</span>'+(x.kind==="c"&&x.trainees?'<span class="cg">'+esc(x.trainees)+'</span>':'')+(x.kind==="c"&&x.trainer?'<span class="ctr">👤 '+esc(x.trainer)+'</span>':'')+'</button>'}
   for(var ws=weekStart(first);ws<=last;ws=addDays(ws,7)){
     var we=addDays(ws,6), a=ws<first?first:ws, z=we>last?last:we;
     /* المهام الممتدة على أكثر من يوم: شريط واحد يمتد عبر أيامها بدل تكرارها في كل يوم */
@@ -1238,9 +1248,9 @@ function renderModal(){
   if(openId&&openId.indexOf("day:")===0){$("modal").innerHTML=dayModal(openId.slice(4));$("ov").hidden=false;return}
   var t=items.filter(function(x){return x.id===openId})[0];
   if(!t){$("ov").hidden=true;openId=null;return}
-  var h='<div class="acts">'+kindTag(t)+pill(t)+'</div><h3>'+esc(t.title)+'</h3><div class="meta">'+(t.kind==="t"?mi("البداية",wday(t.date)+"، "+longDate(t.date)+(t.start?" — "+t12(t.start):""))+mi("النهاية",wday(t.endDate||t.date)+"، "+longDate(t.endDate||t.date)+(t.end?" — "+t12(t.end):"")):mi("التاريخ",longDate(t.date))+mi("اليوم",wday(t.date)));
+  var h='<div class="acts">'+kindTag(t)+pill(t)+'</div><h3>'+esc(t.title)+'</h3>'+(t.kind==="c"&&t.trainer?'<div class="trbox"><span class="ti" aria-hidden="true">👤</span><div><span>المدرب</span><b>'+esc(t.trainer)+'</b></div></div>':'')+'<div class="meta">'+(t.kind==="t"?mi("البداية",wday(t.date)+"، "+longDate(t.date)+(t.start?" — "+t12(t.start):""))+mi("النهاية",wday(t.endDate||t.date)+"، "+longDate(t.endDate||t.date)+(t.end?" — "+t12(t.end):"")):mi("التاريخ",longDate(t.date))+mi("اليوم",wday(t.date)));
   if(t.kind==="c"){
-    h+=mi("المسؤول",t.a1)+mi("المدرب",t.trainer)+mi("البرنامج",t.program)+mi("الدولة",t.country)+mi("الشريك",t.partner)+mi("المتدربون",t.trainees)+mi("نوع التدريب",t.mode)+mi("الإنجاز",t.cstatus)+'</div>';
+    h+=mi("المسؤول",t.a1)+mi("البرنامج",t.program)+mi("الدولة",t.country)+mi("الشريك",t.partner)+mi("المتدربون",t.trainees)+mi("نوع التدريب",t.mode)+mi("الإنجاز",t.cstatus)+'</div>';
     if(isStale(t))h+='<div class="det" style="border-color:var(--rose);color:var(--rose);font-weight:700">انتهى موعد هذه الدورة وحالتها في الشيت ما زالت «'+esc(t.cstatus)+'». حدّث عمود «الإنجاز» في ورقة «مهام التدريب».</div>';
     h+='<div class="det">بيانات الدورة تأتي من ورقة «مهام التدريب» مباشرة، وتعديلها يكون من الشيت.</div>';
     h+='<div class="acts"><button class="btn" data-act="close" style="margin-inline-start:auto">إغلاق</button></div>';
