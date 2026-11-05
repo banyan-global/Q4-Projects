@@ -492,6 +492,11 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 .dd.cat .ddo[aria-selected="true"]{border-color:var(--gold)}
 .dd.cat .ddo[aria-selected="true"] .ci{background:var(--gold);border-color:var(--gold)}
 .dd.field.cat .ddm{max-height:420px}
+.dds{position:sticky;top:-6px;z-index:2;background:var(--panel);padding:2px 0 8px;margin-bottom:2px}
+.dds input{width:100%;padding:9px 12px;font-size:14px;border-radius:10px;border:1px solid var(--line);background:var(--tint);color:var(--txt)}
+.dds input:focus{outline:none;border-color:var(--gold);background:var(--panel)}
+.ddm .dde{padding:10px;text-align:center;font-size:13px;color:var(--txt-3)}
+.tr-name{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--gold-2)}
 @media (max-width:620px){.dd.cat .ddm{grid-template-columns:minmax(0,1fr)}.dd.field.cat .ddm{max-height:60vh}}
 
 .mother{display:flex;flex-direction:column;gap:6px;align-items:stretch;padding:6px 0 2px;margin-top:6px;border-top:1px solid var(--line-soft)}.mother input{flex:1;min-width:0;padding:9px 12px;font-size:14.5px}.mother .btn{padding:9px 14px;font-size:13.5px;flex:0 0 auto}
@@ -720,6 +725,7 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
       <select class="fsel" id="cStatus" aria-label="الحالة"><option value="open">غير المنجزة</option><option value="">كل الحالات</option><option value="todo">لم تبدأ</option><option value="doing">قيد التنفيذ</option><option value="stuck">متعثرة</option><option value="done">تم الإنجاز</option></select>
       <select class="fsel" id="cOwner" aria-label="المسؤول"></select>
       <select class="fsel" id="cCat" aria-label="التصنيف"></select>
+      <select class="fsel" id="cTrainer" aria-label="المدرب" data-search="ابحث عن مدرب…"></select>
       <button type="button" class="lnk" id="cClear" hidden>مسح</button>
     </div>
     <div id="calOut"></div>
@@ -733,6 +739,7 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
       <select class="fsel" id="lOwner" aria-label="المسؤول"></select>
       <select class="fsel" id="lProgram" aria-label="البرنامج"></select>
       <select class="fsel" id="lPartner" aria-label="الشريك"></select>
+      <select class="fsel" id="lTrainer" aria-label="المدرب" data-search="ابحث عن مدرب…"></select>
       <button type="button" class="lnk" id="lClear" hidden>مسح</button>
     </div>
     <div id="listOut"></div>
@@ -887,7 +894,7 @@ function pill(it){
   if(it.late)return '<span class="chip r">متعثرة · تجاوزت الوقت</span>';
   return '<span class="chip '+STC[it.status]+'">'+ST[it.status]+'</span>';
 }
-function sub(it){var a=it.kind==="c"?[it.program,it.country,it.partner,it.trainees,it.mode]:[it.cat,it.a1,it.country,it.partner];return a.filter(Boolean).join("، ")}
+function sub(it){var a=it.kind==="c"?[it.trainer?"المدرب: "+it.trainer:"",it.program,it.country,it.partner,it.trainees,it.mode]:[it.cat,it.a1,it.country,it.partner];return a.filter(Boolean).join("، ")}
 function kindTag(it){return it.kind==="c"?'<span class="kt kc">دورة</span>':'<span class="kt kk">مهمة</span>'}
 function ring(p,size,sw,c1,c2,label,id){var r=(size-sw)/2,c=2*Math.PI*r;return '<span class="ring"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" style="stroke:var(--track)" stroke-width="'+sw+'"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="url(#'+id+')" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+(c*p/100).toFixed(1)+' '+c.toFixed(1)+'"'+(p?'':' stroke-opacity="0"')+'/></svg><span class="rv num"><b>'+p+'%</b><span>'+label+'</span></span></span>'}
 function secHead(n,title,sb,extra){return '<div class="sec-head">'+(n?'<span class="sn num">'+n+'</span>':'')+'<h2>'+title+'</h2>'+(sb?'<small class="num">'+sb+'</small>':'')+'<span class="line"></span>'+(extra||'')+'</div>'}
@@ -931,7 +938,7 @@ function renderDash(){
     +'<div class="card"><div class="ch"><h3>⏳ حالة المهام</h3></div><div class="bars">'+bc("g",tc("done"),"تم الإنجاز")+bc("a",tc("doing"),"قيد التنفيذ")+bc("c",tc("todo"),"لم تبدأ")+bc("r",tc("stuck"),"متعثرة")+'</div></div>'
     +barsCard("◈ المهام حسب المسؤول","",(function(){var o={};ts.forEach(function(t){(t.owners.length?t.owners:["غير محدد"]).forEach(function(n){o[n]=(o[n]||0)+1})});return Object.keys(o).map(function(k){return [k,o[k]]})})())+'</div>';
   h+=secHead("","ملخص الدورات");
-  h+='<div class="grid3">'+barsCard("▦ حسب البرنامج","",groupCount(cs,"program"))+barsCard("✦ حسب الشريك","",groupCount(cs,"partner"))+barsCard("◈ حسب الدولة","",groupCount(cs,"country"))+barsCard("◷ حسب نوع التدريب","",groupCount(cs,"mode"))+barsCard("✦ حسب المتدربين","",groupCount(cs,"trainees"))+barsCard("▦ حسب الإنجاز","",groupCount(cs.map(function(c){return {s:c.cstatus||(isDone(c)?ST.done:ST.todo)}}),"s"))+'</div>';
+  h+='<div class="grid3">'+barsCard("▦ حسب البرنامج","",groupCount(cs,"program"))+barsCard("✦ حسب الشريك","",groupCount(cs,"partner"))+barsCard("◈ حسب الدولة","",groupCount(cs,"country"))+barsCard("◷ حسب نوع التدريب","",groupCount(cs,"mode"))+barsCard("✦ حسب المدرب",cs.filter(function(x){return x.trainer}).length+" من "+cs.length,groupCount(cs.filter(function(x){return x.trainer}),"trainer"))+barsCard("✦ حسب المتدربين","",groupCount(cs,"trainees"))+barsCard("▦ حسب الإنجاز","",groupCount(cs.map(function(c){return {s:c.cstatus||(isDone(c)?ST.done:ST.todo)}}),"s"))+'</div>';
   h+=secHead("","تقويم المهام","اليوم وهذا الأسبوع (من السبت إلى الجمعة)");
   h+='<div class="grid2"><div class="card"><div class="ch"><h3>✦ اليوم</h3><span class="tag">'+wday(td)+'</span></div>'+listHtml(pend(today),"لا دورات ولا مهام تحتاج متابعة اليوم.")+'</div><div class="card"><div class="ch"><h3>◈ هذا الأسبوع</h3><span class="tag num">'+rangeLabel(wkA,wkB)+'</span></div>'+listHtml(pend(next),"لا دورات ولا مهام تحتاج متابعة هذا الأسبوع.")+'</div></div>';
   h+='<div class="card"><div class="ch"><h3>◷ مهام مفتوحة تحتاج متابعة</h3><span class="tag num">'+plural(open.length,"مهمة","مهام")+'</span></div>'+listHtml(open,"لا توجد مهام مفتوحة.")+'</div>';
@@ -993,7 +1000,7 @@ function renderBrowse(){
 }
 
 /* ---------- التقويم الشهري ---------- */
-var calI=Math.max(0,ymIdx(todayIso().slice(0,7))), CSEL=["cKind","cStatus","cOwner","cCat"];
+var calI=Math.max(0,ymIdx(todayIso().slice(0,7))), CSEL=["cKind","cStatus","cOwner","cCat","cTrainer"];
 function hijri(ds,o){try{var p=parts(ds);return new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura-nu-latn",o).format(new Date(p.y,p.m-1,p.d,12)).replace(/\s*هـ$/,"")}catch(e){return ""}}
 function calFilter(it){
   var k=$("cKind").value,st=$("cStatus").value,ow=$("cOwner").value,ct=$("cCat").value,q=$("cq").value.trim().toLowerCase();
@@ -1002,15 +1009,16 @@ function calFilter(it){
   if(st&&st!=="open"&&stKey(it)!==st)return false;
   if(ow&&(it.owners||[]).indexOf(ow)<0)return false;
   if(ct&&it.cat!==ct)return false;
+  var tr=$("cTrainer").value;if(tr&&it.trainer!==tr)return false;
   if(q&&[it.title,it.details,it.cat,it.program,it.partner,it.country,it.a1,it.req,it.trainees,it.trainer].join(" ").toLowerCase().indexOf(q)<0)return false;
   return true;
 }
 function renderCal(){
   function keep(id,html){var el=$(id),v=el.value;el.innerHTML=html;el.value=v;if(el.value!==v)el.value=""}
   var ow={},ol=[];items.forEach(function(x){(x.owners||[]).forEach(function(n){if(!ow[n]){ow[n]=1;ol.push(n)}})});
-  keep("cOwner",opts(byRank(ol),"","كل المسؤولين"));keep("cCat",opts(CATS,"","كل التصنيفات"));CSEL.forEach(syncDD);
+  keep("cOwner",opts(byRank(ol),"","كل المسؤولين"));keep("cCat",opts(CATS,"","كل التصنيفات"));keep("cTrainer",opts(uniq("trainer"),"","كل المدربين"));CSEL.forEach(syncDD);
   var mo=YM[calI], calM=mo.m, first=mo.k+"-01", last=mo.k+"-"+pad(mo.days), td=todayIso(), tdI=ymIdx(td.slice(0,7));
-  var list=sorted(items).filter(calFilter), active=["cKind","cOwner","cCat"].filter(function(i){return $(i).value}).length+($("cStatus").value!=="open"?1:0)+($("cq").value.trim()?1:0);
+  var list=sorted(items).filter(calFilter), active=["cKind","cOwner","cCat","cTrainer"].filter(function(i){return $(i).value}).length+($("cStatus").value!=="open"?1:0)+($("cq").value.trim()?1:0);
   $("cClear").hidden=!active;
   var inM=list.filter(function(x){return inRange(x,first,last)}), curM=parts(td).m;
   function sn(n,l,c){return '<span class="cst '+c+'"><b class="num">'+n+'</b>'+l+'</span>'}
@@ -1023,7 +1031,7 @@ function renderCal(){
   if(active)h+='<div class="calnote">معروض حسب الفلاتر المختارة</div>';
   h+='<div class="calhd">'+["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"].map(function(w,i){return '<div class="cwd'+(i===6?" fri":"")+'"><span class="full">'+w+'</span><span class="short">'+"سحنثرخج"[i]+'</span></div>'}).join("")+'</div><div class="calg">';
   var MXL=2, MX=3;
-  function chip(x){var k=stKey(x);return '<button type="button" class="cc '+(x.kind==="c"?"ck":"tk")+' s-'+k+'" data-open="'+esc(x.id)+'" title="'+esc(x.title+(x.kind==="c"&&x.trainees?" ("+x.trainees+(x.mode?"، "+x.mode:"")+")":""))+'"><i aria-hidden="true"></i>'+(x.kind==="t"&&x.start?'<span class="ct num">'+x.start+'</span>':'')+'<span class="cn">'+esc(x.title)+'</span>'+(x.kind==="c"&&x.trainees?'<span class="cg">'+esc(x.trainees)+'</span>':'')+'</button>'}
+  function chip(x){var k=stKey(x);return '<button type="button" class="cc '+(x.kind==="c"?"ck":"tk")+' s-'+k+'" data-open="'+esc(x.id)+'" title="'+esc(x.title+(x.kind==="c"&&x.trainees?" ("+x.trainees+(x.mode?"، "+x.mode:"")+")":"")+(x.kind==="c"&&x.trainer?" — المدرب: "+x.trainer:""))+'"><i aria-hidden="true"></i>'+(x.kind==="t"&&x.start?'<span class="ct num">'+x.start+'</span>':'')+'<span class="cn">'+esc(x.title)+'</span>'+(x.kind==="c"&&x.trainees?'<span class="cg">'+esc(x.trainees)+'</span>':'')+'</button>'}
   for(var ws=weekStart(first);ws<=last;ws=addDays(ws,7)){
     var we=addDays(ws,6), a=ws<first?first:ws, z=we>last?last:we;
     /* المهام الممتدة على أكثر من يوم: شريط واحد يمتد عبر أيامها بدل تكرارها في كل يوم */
@@ -1056,7 +1064,7 @@ function dayModal(ds){
 /* ---------- قائمة المهام (صفحة مستقلة بفلاتر ومؤشرات) ---------- */
 function stKey(it){if(isDone(it))return "done";if(it.kind==="t")return ST[it.status]?it.status:"todo";return STKEY[it.cstatus]||"todo"}
 function statusName(it){return it.kind==="c"?(it.cstatus||(isDone(it)?ST.done:ST.todo)):ST[it.status]}
-var flt={kind:"",period:"",status:""}, FSEL=["lKind","lPeriod","lOwner","lProgram","lPartner"], lTab="doing";
+var flt={kind:"",period:"",status:""}, FSEL=["lKind","lPeriod","lOwner","lProgram","lPartner","lTrainer"], lTab="doing";
 /* قائمة منسدلة مخصصة فوق عنصر select: الـselect يبقى مصدر القيمة، والواجهة زر وقائمة منسقة */
 function syncDD(id){
   var sel=$(id), dd=sel.nextElementSibling;
@@ -1070,8 +1078,13 @@ function syncDD(id){
   if(isCat){dd.classList.add("cat");b.firstChild.innerHTML=sel.value?'<i class="ci" aria-hidden="true">'+catIc(sel.value)+'</i>'+esc(sel.value):'<i class="ci ph" aria-hidden="true">▤</i>اختر التصنيف'}
   else{b.firstChild.textContent=cur?cur.textContent:"";b.firstChild.setAttribute("data-ic",sel.dataset.ic||"◷");b.firstChild.setAttribute("data-v",sel.value)}
   b.classList.toggle("on",!!sel.value);
-  m.innerHTML=Array.prototype.filter.call(sel.options,function(o){return !(isCat&&!o.value)}).map(function(o){return '<button type="button" class="ddo'+(o.value==="__stale"?" warn":"")+'" role="option" aria-selected="'+(o.value===sel.value)+'" data-v="'+esc(o.value)+'">'+(isCat?'<i class="ci" aria-hidden="true">'+catIc(o.value)+'</i><span class="ct">'+esc(o.textContent)+'</span>':esc(o.textContent))+'</button>'}).join("");
+  m.innerHTML=(sel.dataset.search?'<div class="dds"><input type="search" placeholder="'+esc(sel.dataset.search)+'" aria-label="'+esc(sel.dataset.search)+'"></div>':'')+Array.prototype.filter.call(sel.options,function(o){return !(isCat&&!o.value)}).map(function(o){return '<button type="button" class="ddo'+(o.value==="__stale"?" warn":"")+'" role="option" aria-selected="'+(o.value===sel.value)+'" data-v="'+esc(o.value)+'">'+(isCat?'<i class="ci" aria-hidden="true">'+catIc(o.value)+'</i><span class="ct">'+esc(o.textContent)+'</span>':esc(o.textContent))+'</button>'}).join("");
 }
+/* بحث داخل القائمة المنسدلة (مثل قائمة المدربين) */
+function ddNorm(t){return String(t||"").toLowerCase().replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/\s+/g," ").trim()}
+function ddFilter(m,q){q=ddNorm(q);var n=0;Array.prototype.forEach.call(m.querySelectorAll(".ddo"),function(o){var ok=!q||ddNorm(o.textContent).indexOf(q)>=0;o.hidden=!ok;if(ok)n++});var e=m.querySelector(".dde");if(!n&&!e){e=document.createElement("div");e.className="dde";e.textContent="لا توجد نتائج";m.appendChild(e)}else if(n&&e)e.remove()}
+document.addEventListener("input",function(e){if(e.target.closest&&e.target.closest(".dds"))ddFilter(e.target.closest(".ddm"),e.target.value)});
+document.addEventListener("keydown",function(e){var b=e.target.closest&&e.target.closest(".dds");if(!b)return;if(e.key==="Enter"){e.preventDefault();var o=b.parentNode.querySelector(".ddo:not([hidden])");if(o)o.click()}});
 function closeDD(except){Array.prototype.forEach.call(document.querySelectorAll(".dd"),function(d){if(d!==except){d.lastChild.hidden=true;d.firstChild.setAttribute("aria-expanded","false")}})}
 function fillListFilters(){
   function keep(id,html){var el=$(id),v=el.value;el.innerHTML=html;el.value=v;if(el.value!==v)el.value=""}
@@ -1082,13 +1095,14 @@ function fillListFilters(){
   pe.innerHTML=ph;pe.value=pv;if(pe.value!==pv)pe.value="";
   keep("lProgram",opts(uniq("program"),"","كل البرامج"));
   keep("lPartner",opts(uniq("partner"),"","كل الشركاء"));
+  keep("lTrainer",opts(uniq("trainer"),"","كل المدربين"));
   FSEL.forEach(syncDD);
 }
 function renderList(){
   fillListFilters();
   var td=todayIso(),wkA=weekStart(td),wkB=addDays(wkA,6);
   flt={kind:$("lKind").value,period:$("lPeriod").value,status:""};
-  var q=$("lq").value.trim().toLowerCase(),ow=$("lOwner").value,pg=$("lProgram").value,pr=$("lPartner").value;
+  var q=$("lq").value.trim().toLowerCase(),ow=$("lOwner").value,pg=$("lProgram").value,pr=$("lPartner").value,trn=$("lTrainer").value;
   var list=sorted(items).filter(function(it){
     if(flt.kind&&it.kind!==flt.kind)return false;
     if(flt.period==="today"){if(!covers(it,td))return false}
@@ -1097,10 +1111,11 @@ function renderList(){
     if(ow&&(it.owners||[]).indexOf(ow)<0)return false;
     if(pg&&it.program!==pg)return false;
     if(pr&&it.partner!==pr)return false;
+    if(trn&&it.trainer!==trn)return false;
     if(q&&[it.title,it.details,it.cat,it.program,it.partner,it.country,it.a1,it.req,it.trainees,it.mode,it.trainer].join(" ").toLowerCase().indexOf(q)<0)return false;
     return true;
   });
-  var extra=[ow,pg,pr].filter(Boolean).length, active=extra+(q?1:0)+(flt.kind?1:0)+(flt.period?1:0)+(flt.status?1:0);
+  var extra=[ow,pg,pr,trn].filter(Boolean).length, active=extra+(q?1:0)+(flt.kind?1:0)+(flt.period?1:0)+(flt.status?1:0);
   $("lClear").hidden=!active;
   var cs=kc(list,"c"),ts=kc(list,"t"),dn=list.filter(isDone).length,sl=list.filter(isStale).length,p=pct(list);
   function st(n,l,c){return '<span class="ls"><b class="num" style="color:var(--'+c+')">'+n+'</b> '+l+'</span>'}
@@ -1292,24 +1307,24 @@ document.addEventListener("keydown",function(e){
   if(e.key==="Enter"&&e.target.matches&&e.target.matches(".cd[data-day]"))openItem("day:"+e.target.dataset.day);
 });
 ["fCountry","fReq"].forEach(function(id){$(id).addEventListener("change",function(){var o=$(id+"O");o.hidden=this.value!=="__o";if(!o.hidden)o.focus()})});
-["lq","lKind","lPeriod","lOwner","lProgram","lPartner"].forEach(function(id){$(id).addEventListener(id==="lq"?"input":"change",renderList)});
-["cq","cKind","cStatus","cOwner","cCat"].forEach(function(id){$(id).addEventListener(id==="cq"?"input":"change",renderCal)});
-$("cClear").addEventListener("click",function(){["cq","cKind","cOwner","cCat"].forEach(function(id){$(id).value=""});$("cStatus").value="open";renderCal()});
+["lq","lKind","lPeriod","lOwner","lProgram","lPartner","lTrainer"].forEach(function(id){$(id).addEventListener(id==="lq"?"input":"change",renderList)});
+["cq","cKind","cStatus","cOwner","cCat","cTrainer"].forEach(function(id){$(id).addEventListener(id==="cq"?"input":"change",renderCal)});
+$("cClear").addEventListener("click",function(){["cq","cKind","cOwner","cCat","cTrainer"].forEach(function(id){$(id).value=""});$("cStatus").value="open";renderCal()});
 document.addEventListener("click",function(e){
   var dd=e.target.closest(".dd");
   if(!dd){closeDD();return}
   var opt=e.target.closest(".ddo");
   if(opt){var sel=$(dd.dataset.for);sel.value=opt.dataset.v;closeDD();if(sel.dataset.field)syncDD(sel.id);sel.dispatchEvent(new Event("change"));dd.firstChild.focus();return}
-  if(e.target.closest(".ddb")){var m=dd.lastChild,open=m.hidden;closeDD(dd);m.hidden=!open;dd.firstChild.setAttribute("aria-expanded",String(open));if(open){m.classList.remove("up");var rb=dd.getBoundingClientRect(),mh=m.offsetHeight;if(window.innerHeight-rb.bottom<mh+16&&rb.top>mh+16)m.classList.add("up");var c=m.querySelector('[aria-selected="true"]')||m.firstChild;if(c)c.focus()}}
+  if(e.target.closest(".ddb")){var m=dd.lastChild,open=m.hidden;closeDD(dd);m.hidden=!open;dd.firstChild.setAttribute("aria-expanded",String(open));if(open){m.classList.remove("up");var rb=dd.getBoundingClientRect(),mh=m.offsetHeight;if(window.innerHeight-rb.bottom<mh+16&&rb.top>mh+16)m.classList.add("up");var si=m.querySelector(".dds input");if(si){si.value="";ddFilter(m,"");si.focus()}else{var c=m.querySelector('[aria-selected="true"]')||m.firstChild;if(c)c.focus()}}}
 });
 document.addEventListener("keydown",function(e){
   var dd=e.target.closest&&e.target.closest(".dd");if(!dd)return;
   if(e.key==="Escape"){closeDD();dd.firstChild.focus();return}
-  if(e.key==="ArrowDown"||e.key==="ArrowUp"){var o=Array.prototype.slice.call(dd.querySelectorAll(".ddo"));if(dd.lastChild.hidden)return;e.preventDefault();var i=o.indexOf(document.activeElement);i=e.key==="ArrowDown"?Math.min(o.length-1,i+1):Math.max(0,i-1);o[i].focus()}
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){var o=Array.prototype.slice.call(dd.querySelectorAll(".ddo:not([hidden])"));if(!o.length)return;if(dd.lastChild.hidden)return;e.preventDefault();var i=o.indexOf(document.activeElement);i=e.key==="ArrowDown"?Math.min(o.length-1,i+1):Math.max(0,i-1);o[i].focus()}
 });
 $("fStart").addEventListener("change",function(){var v=this.value;if(v&&!$("fEnd").value){var p=v.split(":"),h=+p[0]+1;if(h<24)setTime("fEnd",pad(h)+":"+p[1])}showDur()});
 $("listOut").addEventListener("click",function(e){var b=e.target.closest(".stab");if(b){lTab=b.dataset.tab;renderList()}});
-$("lClear").addEventListener("click",function(){["lq","lKind","lPeriod","lOwner","lProgram","lPartner"].forEach(function(id){$(id).value=""});renderList()});
+$("lClear").addEventListener("click",function(){["lq","lKind","lPeriod","lOwner","lProgram","lPartner","lTrainer"].forEach(function(id){$(id).value=""});renderList()});
 $("fOwnersList").addEventListener("change",ownersSum);
 $("fOwnersList").addEventListener("change",function(e){if(e.target.id==="fOwnerC"){var i=$("fOwnerO");i.hidden=!e.target.checked;if(!i.hidden)i.focus();ownersSum()}});
 $("fOwnersList").addEventListener("input",function(e){if(e.target.id==="fOwnerO")ownersSum()});
