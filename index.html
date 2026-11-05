@@ -1016,7 +1016,7 @@ function calFilter(it){
 function renderCal(){
   function keep(id,html){var el=$(id),v=el.value;el.innerHTML=html;el.value=v;if(el.value!==v)el.value=""}
   var ow={},ol=[];items.forEach(function(x){(x.owners||[]).forEach(function(n){if(!ow[n]){ow[n]=1;ol.push(n)}})});
-  keep("cOwner",opts(byRank(ol),"","كل المسؤولين"));keep("cCat",opts(CATS,"","كل التصنيفات"));keep("cTrainer",opts(uniq("trainer"),"","كل المدربين"));CSEL.forEach(syncDD);
+  keep("cOwner",opts(byRank(ol),"","كل المسؤولين"));keep("cCat",opts(CATS,"","كل التصنيفات"));keep("cTrainer",opts(byRank(uniq("trainer")),"","كل المدربين"));CSEL.forEach(syncDD);
   var mo=YM[calI], calM=mo.m, first=mo.k+"-01", last=mo.k+"-"+pad(mo.days), td=todayIso(), tdI=ymIdx(td.slice(0,7));
   var list=sorted(items).filter(calFilter), active=["cKind","cOwner","cCat","cTrainer"].filter(function(i){return $(i).value}).length+($("cStatus").value!=="open"?1:0)+($("cq").value.trim()?1:0);
   $("cClear").hidden=!active;
@@ -1095,7 +1095,7 @@ function fillListFilters(){
   pe.innerHTML=ph;pe.value=pv;if(pe.value!==pv)pe.value="";
   keep("lProgram",opts(uniq("program"),"","كل البرامج"));
   keep("lPartner",opts(uniq("partner"),"","كل الشركاء"));
-  keep("lTrainer",opts(uniq("trainer"),"","كل المدربين"));
+  keep("lTrainer",opts(byRank(uniq("trainer")),"","كل المدربين"));
   FSEL.forEach(syncDD);
 }
 function renderList(){
