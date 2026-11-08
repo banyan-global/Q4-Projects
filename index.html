@@ -452,6 +452,20 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 .cc.ck{--cc:#0b7886}.cc.tk{--cc:#b08d4c}
 :root[data-theme="dark"] .cc.ck{--cc:var(--cyan)}:root[data-theme="dark"] .cc.tk{--cc:var(--gold-2)}
 .cc.s-stuck{--cc:var(--rose)}
+/* شكل المهام في التقويم مثل تقويم الرئيس التنفيذي: شريط ملوّن بلون النوع، الوقت ثم العنوان */
+.cc{border-radius:7px;padding:4px 7px;background:color-mix(in srgb,var(--cc) 14%,transparent);border-inline-start:3px solid var(--cc)}
+.cc i{display:none}
+.cc .ct{color:var(--txt);font-weight:800}
+.cc:hover{background:color-mix(in srgb,var(--cc) 24%,transparent)}
+.ty-اجتماع,.tk.ty-اجتماع{--cc:#5b4bc4;--tc:#5b4bc4}.ty-مهمة,.tk.ty-مهمة{--cc:#b08d4c;--tc:#b08d4c}.ty-موعد,.tk.ty-موعد{--cc:#2f6db5;--tc:#2f6db5}.ty-زيارة,.tk.ty-زيارة{--cc:#146c3c;--tc:#146c3c}.ty-سفر,.tk.ty-سفر{--cc:#8a5f00;--tc:#8a5f00}.ty-مناسبة,.tk.ty-مناسبة{--cc:#a0368f;--tc:#a0368f}.ty-متابعة,.tk.ty-متابعة{--cc:#a32232;--tc:#a32232}
+:root[data-theme="dark"] .ty-اجتماع,:root[data-theme="dark"] .tk.ty-اجتماع{--cc:#a99bff;--tc:#a99bff}:root[data-theme="dark"] .ty-مهمة,:root[data-theme="dark"] .tk.ty-مهمة{--cc:#e3c48a;--tc:#e3c48a}:root[data-theme="dark"] .ty-موعد,:root[data-theme="dark"] .tk.ty-موعد{--cc:#8bb8ff;--tc:#8bb8ff}:root[data-theme="dark"] .ty-زيارة,:root[data-theme="dark"] .tk.ty-زيارة{--cc:#5fe0a0;--tc:#5fe0a0}:root[data-theme="dark"] .ty-سفر,:root[data-theme="dark"] .tk.ty-سفر{--cc:#ffd27a;--tc:#ffd27a}:root[data-theme="dark"] .ty-مناسبة,:root[data-theme="dark"] .tk.ty-مناسبة{--cc:#f29be0;--tc:#f29be0}:root[data-theme="dark"] .ty-متابعة,:root[data-theme="dark"] .tk.ty-متابعة{--cc:#ff8893;--tc:#ff8893}
+
+:root .cc.tk.s-stuck,:root .cev.tk.s-stuck{--cc:var(--rose)}
+.kt.ty{color:var(--tc);border-color:color-mix(in srgb,var(--tc) 45%,transparent);background:color-mix(in srgb,var(--tc) 10%,transparent)}
+.tseg{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tseg button{padding:8px 13px;border-radius:12px;border:1px solid var(--line-soft);font:inherit;font-size:13.5px;font-weight:800;color:var(--txt-2);background:var(--panel);cursor:pointer}
+.tseg button:hover{border-color:var(--line)}
+.tseg button[aria-pressed="true"]{background:color-mix(in srgb,var(--tc) 16%,var(--panel));color:var(--txt);border-color:var(--tc);box-shadow:inset 0 0 0 1px var(--tc)}
 .cc.s-done{opacity:.55}.cc.s-done .cn{text-decoration:line-through}
 .cc.hastr{flex-wrap:wrap;row-gap:2px}
 .cc .ctr{flex:1 0 100%;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-weight:800;color:var(--gold-2);padding-inline-start:13px}
@@ -466,7 +480,8 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 .cmore{font-size:11.5px;font-weight:800;color:var(--gold-deep);padding:2px 6px}
 .clg{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft);font-size:12.5px;font-weight:700;color:var(--txt-3)}
 .clg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:6px}
-.clg .ck{background:#0b7886}.clg .tk{background:#b08d4c}.clg .sk{background:var(--rose)}.clg .dk{background:var(--txt-3);opacity:.5}
+.clg .ck{background:#0b7886}.clg .tk{background:#b08d4c}.clg .sk{background:var(--rose)}
+.clg i.tk[class*="ty-"]{background:var(--cc)}.clg .dk{background:var(--txt-3);opacity:.5}
 .fab{position:fixed;left:24px;bottom:24px;width:60px;height:60px;border-radius:50%;border:0;background:linear-gradient(160deg,#d8b76a,#8a6c2e);color:#fff;font-size:32px;line-height:1;display:grid;place-items:center;box-shadow:0 14px 30px rgba(138,108,46,.4);cursor:pointer;z-index:60;transition:transform .18s}
 .fab:hover{transform:translateY(-3px) rotate(90deg)}
 @media (max-width:640px){.calc{padding:14px 8px}.calh{justify-content:center}.calt{text-align:center}.calt h3{font-size:22px}.calside{justify-content:center;width:100%}.calg{gap:3px}.cwd{font-size:11px;padding:7px 1px;border-radius:7px}.cwd .full{display:none}.cwd .short{display:inline}.cd{min-height:84px;padding:4px 3px;gap:3px;border-radius:8px}.cdh{flex-direction:column;align-items:flex-start;gap:2px}.cdh b{font-size:13px}.cdh em{display:none}.cdh .hd{margin:0;font-size:9.5px;height:16px;min-width:18px;padding:0 4px}.cc{font-size:10.5px;padding:3px 4px;gap:3px;border-radius:6px}.cc i,.cc .ct{display:none}.cmore{font-size:10px;padding:0 2px}.cmore .mo{display:none}.calhd,.cwk{gap:3px}.calg{gap:3px}.cwk{--gp:3px;--lh:17px}.cev{top:calc(40px + var(--ln) * var(--lh));height:14px;font-size:9.5px;padding:0 4px;border-radius:4px}.cev .cr{display:none}.cc .cg{display:none}.fab{width:52px;height:52px;font-size:28px;left:16px;bottom:16px}}
@@ -823,6 +838,7 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
         <form id="f" novalidate>
           <label for="fTitle">عنوان المهمة<input id="fTitle" maxlength="200" placeholder="عنوان قصير، مثال: رفع تقرير المقاولين"></label>
           <label for="fDetails"><span>وصف المهمة <span class="sub">اختياري</span></span><textarea id="fDetails" maxlength="1200" placeholder="التفاصيل والخطوات المطلوبة"></textarea></label>
+          <div class="lab"><span>النوع</span><div class="tseg" id="fType" role="group" aria-label="نوع المهمة"></div></div>
           <label for="fCat">تصنيف المهمة<select id="fCat" aria-label="تصنيف المهمة" data-field="cat"></select></label>
           <fieldset class="when"><legend><span class="wi" aria-hidden="true">▶</span>الموعد <span class="req">*</span></legend>
             <div class="trio">
@@ -947,12 +963,14 @@ function countLabel(list){var c=kc(list,"c"),t=kc(list,"t"),a=[];if(c)a.push(plu
 function build(){
   var seq=0;
   items=courses.filter(function(c){return inWin(c.date)&&c.title}).map(function(c){return {kind:"c",id:"c:"+c.id,date:c.date,title:c.title,program:c.program||"",country:c.country||"",partner:c.partner||"",trainees:c.trainees||"",mode:c.mode||"",trainer:String(c.trainer||"").trim(),cstatus:String(c.status||"").replace(/\s+/g," ").trim(),init:c.init||"",week:c.week||"",ord:++seq}})
-   .concat(tasks.filter(function(t){return inWin(t.date)&&t.title}).map(function(t){return {kind:"t",id:"t:"+t.id,rid:t.id,date:t.date,endDate:(inWin(t.endDate)&&t.endDate>=t.date?t.endDate:t.date),title:t.title,start:tm(t.start),end:tm(t.end),country:t.country||"",partner:t.partner||"",req:abbr(t.req),owners:owners(t),a1:owners(t).join("، "),a2:"",status:ST[t.status]?t.status:(STKEY[t.status]||"todo"),details:t.details||"",cat:t.cat||"",doneDate:t.doneDate||"",priority:PRIOS.indexOf(t.priority)>=0?t.priority:"اعتيادية",ord:++seq}}));
+   .concat(tasks.filter(function(t){return inWin(t.date)&&t.title}).map(function(t){return {kind:"t",id:"t:"+t.id,rid:t.id,date:t.date,endDate:(inWin(t.endDate)&&t.endDate>=t.date?t.endDate:t.date),title:t.title,start:tm(t.start),end:tm(t.end),country:t.country||"",partner:t.partner||"",req:abbr(t.req),owners:owners(t),a1:owners(t).join("، "),a2:"",status:ST[t.status]?t.status:(STKEY[t.status]||"todo"),details:t.details||"",cat:t.cat||"",doneDate:t.doneDate||"",priority:PRIOS.indexOf(t.priority)>=0?t.priority:"اعتيادية",type:TYPES.indexOf(t.type)>=0?t.type:"مهمة",ord:++seq}}));
   items.forEach(function(it){
     if(it.kind==="c"){it.owners=courseOwner?[courseOwner]:[];it.a1=courseOwner;return}
     if(it.status==="todo"&&(it.date+" "+(it.start||"00:00"))<=nowR()){it.status="doing";it.started=true}
     if(isLate(it)){it.late=true;it.status="stuck"}});
 }
+var TYPES=["اجتماع","مهمة","موعد","زيارة","سفر","مناسبة","متابعة"],TYPE_IC={"اجتماع":"◆","مهمة":"✦","موعد":"◷","زيارة":"⌂","سفر":"✈","مناسبة":"★","متابعة":"↻"};
+function tyCls(x){return x.kind==="t"?" ty-"+(x.type||"مهمة"):""}
 var PRIOS=["اعتيادية","ذات أهمية","عاجلة جداً"],P_URG="عاجلة جداً",P_HIGH="ذات أهمية";
 function prTag(it){return it.kind==="t"&&!isDone(it)&&it.priority===P_URG?'<span class="pr u">🔴 عاجلة جداً</span>':it.kind==="t"&&!isDone(it)&&it.priority===P_HIGH?'<span class="pr h">★ ذات أهمية</span>':""}
 function isUrg(it){return it.kind==="t"&&it.priority===P_URG&&!isDone(it)}
@@ -969,7 +987,7 @@ function pill(it){
   return '<span class="chip '+STC[it.status]+'">'+ST[it.status]+'</span>';
 }
 function sub(it){var a=it.kind==="c"?[it.program,it.country,it.partner,it.trainees,it.mode]:[it.cat,it.a1,it.country,it.partner];return a.filter(Boolean).join("، ")}
-function kindTag(it){return it.kind==="c"?'<span class="kt kc">دورة</span>':'<span class="kt kk">مهمة</span>'}
+function kindTag(it){return it.kind==="c"?'<span class="kt kc">دورة</span>':'<span class="kt ty'+tyCls(it)+'">'+(TYPE_IC[it.type]||"✦")+" "+esc(it.type||"مهمة")+'</span>'}
 function ring(p,size,sw,c1,c2,label,id){var r=(size-sw)/2,c=2*Math.PI*r;return '<span class="ring"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" style="stroke:var(--track)" stroke-width="'+sw+'"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="url(#'+id+')" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+(c*p/100).toFixed(1)+' '+c.toFixed(1)+'"'+(p?'':' stroke-opacity="0"')+'/></svg><span class="rv num"><b>'+p+'%</b><span>'+label+'</span></span></span>'}
 function secHead(n,title,sb,extra){return '<div class="sec-head">'+(n?'<span class="sn num">'+n+'</span>':'')+'<h2>'+title+'</h2>'+(sb?'<small class="num">'+sb+'</small>':'')+'<span class="line"></span>'+(extra||'')+'</div>'}
 function row(it){var p=parts(it.date),s=sub(it);return '<button class="row'+(isUrg(it)?" urg":"")+'" data-open="'+esc(it.id)+'"><span class="date num"><b>'+p.d+'</b><span>'+wday(it.date)+'</span></span><span>'+(it.kind==="c"&&it.trainer?'<span class="trb"><span aria-hidden="true">👤</span>المدرب: <b>'+esc(it.trainer)+'</b></span>':'')+'<span class="t">'+prTag(it)+kindTag(it)+(timeLabel(it)?'<span class="tm num">'+timeLabel(it)+'</span>':'')+esc(it.title)+'</span>'+(s?'<span class="d">'+esc(s)+'</span>':'')+'</span>'+pill(it)+'</button>'}
@@ -1105,7 +1123,7 @@ function renderCal(){
   if(active)h+='<div class="calnote">معروض حسب الفلاتر المختارة</div>';
   h+='<div class="calhd">'+["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"].map(function(w,i){return '<div class="cwd'+(i===6?" fri":"")+'"><span class="full">'+w+'</span><span class="short">'+"سحنثرخج"[i]+'</span></div>'}).join("")+'</div><div class="calg">';
   var MXL=2, MX=3;
-  function chip(x){var k=stKey(x);return '<button type="button" class="cc '+(x.kind==="c"?"ck":"tk")+(x.kind==="c"&&x.trainer?" hastr":"")+(isUrg(x)?" urg":"")+' s-'+k+'" data-open="'+esc(x.id)+'" title="'+esc(x.title+(x.kind==="c"&&x.trainees?" ("+x.trainees+(x.mode?"، "+x.mode:"")+")":"")+(x.kind==="c"&&x.trainer?" — المدرب: "+x.trainer:""))+'"><i aria-hidden="true"></i>'+(x.kind==="t"&&x.start?'<span class="ct num">'+x.start+'</span>':'')+'<span class="cn">'+esc(x.title)+'</span>'+(x.kind==="c"&&x.trainees?'<span class="cg">'+esc(x.trainees)+'</span>':'')+(x.kind==="c"&&x.trainer?'<span class="ctr">👤 '+esc(x.trainer)+'</span>':'')+'</button>'}
+  function chip(x){var k=stKey(x);return '<button type="button" class="cc '+(x.kind==="c"?"ck":"tk")+tyCls(x)+(x.kind==="c"&&x.trainer?" hastr":"")+(isUrg(x)?" urg":"")+' s-'+k+'" data-open="'+esc(x.id)+'" title="'+esc(x.title+(x.kind==="c"&&x.trainees?" ("+x.trainees+(x.mode?"، "+x.mode:"")+")":"")+(x.kind==="c"&&x.trainer?" — المدرب: "+x.trainer:""))+'"><i aria-hidden="true"></i>'+(x.kind==="t"&&x.start?'<span class="ct num">'+t12(x.start).replace(/ [صم]$/,"")+'</span>':'')+'<span class="cn">'+esc(x.title)+'</span>'+(x.kind==="c"&&x.trainees?'<span class="cg">'+esc(x.trainees)+'</span>':'')+(x.kind==="c"&&x.trainer?'<span class="ctr">👤 '+esc(x.trainer)+'</span>':'')+'</button>'}
   for(var ws=weekStart(first);ws<=last;ws=addDays(ws,7)){
     var we=addDays(ws,6), a=ws<first?first:ws, z=we>last?last:we;
     /* المهام الممتدة على أكثر من يوم: شريط واحد يمتد عبر أيامها بدل تكرارها في كل يوم */
@@ -1123,10 +1141,10 @@ function renderCal(){
       h+='</div>';
     }
     segs.filter(function(g){return g.lane>=0}).forEach(function(g){var k=stKey(g.x);
-      h+='<button type="button" class="cev tk s-'+k+(g.cs?" cs":"")+(g.ce?" ce":"")+'" data-open="'+esc(g.x.id)+'" style="--c0:'+g.c0+';--sp:'+g.sp+';--ln:'+g.lane+'" title="'+esc(g.x.title)+' ('+sd(g.x.date)+' – '+sd(g.x.endDate)+')"><span class="cn">'+esc(g.x.title)+'</span><span class="cr num">'+sd(g.x.date)+' ← '+sd(g.x.endDate)+'</span></button>'});
+      h+='<button type="button" class="cev tk'+tyCls(g.x)+' s-'+k+(g.cs?" cs":"")+(g.ce?" ce":"")+'" data-open="'+esc(g.x.id)+'" style="--c0:'+g.c0+';--sp:'+g.sp+';--ln:'+g.lane+'" title="'+esc(g.x.title)+' ('+sd(g.x.date)+' – '+sd(g.x.endDate)+')"><span class="cn">'+esc(g.x.title)+'</span><span class="cr num">'+sd(g.x.date)+' ← '+sd(g.x.endDate)+'</span></button>'});
     h+='</div>';
   }
-  h+='</div><div class="clg"><span><i class="ck"></i>دورة تدريبية</span><span><i class="tk"></i>مهمة</span><span><i class="sk"></i>متعثرة</span><span><i class="dk"></i>منجزة</span></div></div>';
+  h+='</div><div class="clg"><span><i class="ck"></i>دورة تدريبية</span>'+TYPES.map(function(t){return '<span><i class="tk ty-'+t+'"></i>'+t+'</span>'}).join("")+'<span><i class="sk"></i>متعثرة</span><span><i class="dk"></i>منجزة</span></div></div>';
   h+='<button type="button" class="fab" data-addday="'+(td>=first&&td<=last?td:first)+'" aria-label="إضافة مهمة" title="إضافة مهمة"><span aria-hidden="true">+</span></button>';
   $("calOut").innerHTML=h;
 }
@@ -1303,9 +1321,9 @@ function initForm(){
   $("fCode").value=lsGet("q4code")||"";
   syncForm();
 }
-function resetForm(){editId=null;$("fTitle").value="";$("fDetails").value="";setTime("fStart","");setTime("fEnd","");fillCat("");clrO();fillPeople();fillPlace();$("fStatus").value="doing";$("fPrio").value="اعتيادية";urgNote();setDate(todayIso());setEndDate(todayIso());syncForm();$("formTitle").textContent="مهمة جديدة";$("fSave").textContent="حفظ المهمة";$("fCancel").hidden=true}
+function resetForm(){editId=null;$("fTitle").value="";$("fDetails").value="";setTime("fStart","");setTime("fEnd","");fillCat("");clrO();fillPeople();fillPlace();$("fStatus").value="doing";$("fPrio").value="اعتيادية";urgNote();setType("مهمة");setDate(todayIso());setEndDate(todayIso());syncForm();$("formTitle").textContent="مهمة جديدة";$("fSave").textContent="حفظ المهمة";$("fCancel").hidden=true}
 function say(t,err){var m=$("fMsg");m.textContent=t;m.className="msg"+(err?" err":"")}
-function startEdit(t){editId=t.rid;$("fTitle").value=t.title;$("fDetails").value=t.details||"";setTime("fStart",t.start);setTime("fEnd",t.end);fillCat(t.cat);clrO();fillPeople(t.owners,t.req);fillPlace(t.country,t.partner);$("fStatus").value=t.status;$("fPrio").value=t.priority||"اعتيادية";urgNote();setDate(t.date);setEndDate(t.endDate||t.date);syncForm();
+function startEdit(t){editId=t.rid;$("fTitle").value=t.title;$("fDetails").value=t.details||"";setTime("fStart",t.start);setTime("fEnd",t.end);fillCat(t.cat);clrO();fillPeople(t.owners,t.req);fillPlace(t.country,t.partner);$("fStatus").value=t.status;$("fPrio").value=t.priority||"اعتيادية";urgNote();setType(t.type);setDate(t.date);setEndDate(t.endDate||t.date);syncForm();
   $("formTitle").textContent="تعديل المهمة";$("fSave").textContent="حفظ التعديل";$("fCancel").hidden=false;say("");go("entry");$("fTitle").focus()}
 function renderEntry(){$("codeWrap").hidden=!needsCode}
 
@@ -1363,7 +1381,7 @@ function renderModal(){
     h+='<div class="det">بيانات الدورة تأتي من ورقة «مهام التدريب» مباشرة، وتعديلها يكون من الشيت.</div>';
     h+='<div class="acts"><button class="btn" data-act="close" style="margin-inline-start:auto">إغلاق</button></div>';
   }else{
-    h+=mi("الأولوية",t.priority!=="اعتيادية"?t.priority:"")+mi("التصنيف",t.cat)+mi("الدولة",t.country)+mi("الشريك",t.partner)+mi("مقدم الطلب",t.req)+mi("المسؤولون",t.a1)+mi("تاريخ الإنجاز",t.doneDate&&inWin(t.doneDate)?longDate(t.doneDate):t.doneDate)+'</div>';
+    h+=mi("النوع",t.type)+mi("الأولوية",t.priority!=="اعتيادية"?t.priority:"")+mi("التصنيف",t.cat)+mi("الدولة",t.country)+mi("الشريك",t.partner)+mi("مقدم الطلب",t.req)+mi("المسؤولون",t.a1)+mi("تاريخ الإنجاز",t.doneDate&&inWin(t.doneDate)?longDate(t.doneDate):t.doneDate)+'</div>';
     if(t.late)h+='<div class="det" style="border-color:var(--rose);color:var(--rose);font-weight:700">انتهى الوقت المحدد لهذه المهمة ولم تُسجَّل منجزة، فتحوّلت تلقائياً إلى «متعثرة». حدّثها بـ«تم الإنجاز» أو عدّل موعدها.</div>';
     h+='<div><div class="lbl">تفصيل المهمة</div><div class="det">'+(t.details?esc(t.details):"لا توجد تفاصيل مضافة.")+'</div></div>';
     h+='<div><div class="lbl">الحالة</div><div class="seg">'+["todo","doing","done","stuck"].map(function(s){return '<button data-st="'+s+'" aria-pressed="'+(t.status===s)+'">'+ST[s]+'</button>'}).join("")+'</div></div>';
@@ -1473,6 +1491,9 @@ $("fDay").addEventListener("change",endFollow);
 $("fEMonth").addEventListener("change",function(){fillEDays(Math.min(+$("fEDay").value||1,28));showDur()});
 $("fEDay").addEventListener("change",showDur);
 $("fEnd").addEventListener("change",showDur);
+function setType(v){v=TYPES.indexOf(v)>=0?v:"مهمة";$("fType").dataset.v=v;Array.prototype.forEach.call($("fType").children,function(b){b.setAttribute("aria-pressed",String(b.dataset.v===v))})}
+$("fType").innerHTML=TYPES.map(function(t){return '<button type="button" class="ty-'+t+'" data-v="'+t+'" aria-pressed="false">'+TYPE_IC[t]+" "+t+'</button>'}).join("");
+$("fType").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setType(b.dataset.v)});
 function urgNote(){$("fUrgNote").hidden=$("fPrio").value!==P_URG}
 $("fPrio").addEventListener("change",urgNote);
 /* إذا صارت البداية بعد النهاية تُنقل النهاية لنفس يوم البداية */
@@ -1487,7 +1508,7 @@ $("f").addEventListener("submit",function(e){
   if(!en0){say("حدّد وقت الانتهاء.",true);return}
   var sd0=formDate(),ed0=formEndDate();
   if(ed0+" "+en0<=sd0+" "+st0){say("النهاية يجب أن تكون بعد البداية (التاريخ والوقت).",true);return}
-  var data={title:title,date:formDate(),endDate:formEndDate(),start:st0,end:en0,country:placeVal("fCountry"),partner:placeVal("fPartner"),req:placeVal("fReq"),a1:getOwners()[0]||"",a2:getOwners().slice(1).join("، "),status:$("fStatus").value,priority:$("fPrio").value,details:$("fDetails").value.trim(),cat:$("fCat").value};
+  var data={title:title,date:formDate(),endDate:formEndDate(),start:st0,end:en0,country:placeVal("fCountry"),partner:placeVal("fPartner"),req:placeVal("fReq"),a1:getOwners()[0]||"",a2:getOwners().slice(1).join("، "),status:$("fStatus").value,priority:$("fPrio").value,type:$("fType").dataset.v||"مهمة",details:$("fDetails").value.trim(),cat:$("fCat").value};
   if((data.status==="todo"||data.status==="doing")&&ed0+" "+en0<nowR()){say("انتهى الوقت المحدد لهذه المهمة. عدّل التاريخ أو وقت الانتهاء، أو اختر الحالة «تم الإنجاز» أو «متعثرة».",true);return}
   if(data.status==="done")data.doneDate=todayIso();
   var was=editId;if(was)data.id=was;
