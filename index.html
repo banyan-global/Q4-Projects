@@ -473,6 +473,66 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
 
 .when{border:1px solid var(--line);border-radius:16px;padding:12px 14px 14px;margin:0;background:var(--tint-gold);min-width:0}
 .when.end{background:var(--tint)}
+.duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:12px}
+@media (max-width:620px){.duo{grid-template-columns:minmax(0,1fr)}}
+.dd.dpk .ddb span::before{content:none}
+.dd.dpk .ddb{display:flex;align-items:center;gap:10px;text-align:start;padding:9px 12px}
+.dd.dpk .ddb>span{display:flex !important;align-items:center;gap:10px;min-width:0}
+.dd.dpk .dpi{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;font-style:normal;font-size:14px;color:var(--gold-2);background:var(--tint-gold);border:1px solid var(--line)}
+.dd.dpk .dpl{display:flex !important;flex-direction:column;align-items:flex-start;line-height:1.3;min-width:0}
+.dd.dpk .dpl b{font-weight:800;font-size:15px;color:var(--txt)}
+.dd.dpk .dpl small{font-size:12px;font-weight:700;color:var(--gold-2)}
+.dd.dpk .dpl.ph b{font-weight:600;color:var(--txt-3)}
+.dd.dpk .ddm.dpm{min-width:300px;max-height:none;padding:12px}
+.dph{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.dph b{font-weight:900;font-size:15px;text-align:center;line-height:1.3}.dph b small{display:block;font-size:11.5px;color:var(--gold-2);font-weight:700}
+.dpa{width:32px;height:32px;border-radius:10px;border:1px solid var(--line);background:var(--tint);color:var(--txt);font:inherit;font-size:18px;cursor:pointer}
+.dpa:disabled{opacity:.35;cursor:default}
+.dpg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.dpw{font-size:11px;font-weight:800;color:var(--txt-3);text-align:center;padding:4px 0}
+.dpd{height:36px;border-radius:9px;border:1px solid transparent;background:none;font:inherit;font-size:14px;font-weight:700;color:var(--txt);cursor:pointer}
+.dpd:hover:not(:disabled){background:var(--tint-gold);border-color:var(--line)}
+.dpd.out{color:var(--txt-3);opacity:.55}
+.dpd.today{border-color:var(--gold)}
+.dpd.inr{background:var(--tint-gold)}
+.dpd.sel{background:linear-gradient(135deg,var(--gold-2),var(--gold));color:#0b0f17;font-weight:900}
+.dpd:disabled{opacity:.25;cursor:default}
+.dpq{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft)}
+.dpq button{flex:1 1 auto;padding:7px 10px;border-radius:9px;border:1px solid var(--line);background:var(--tint);color:var(--txt-2);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+.dpq button:hover{border-color:var(--gold);color:var(--txt)}
+.dd[data-for="fPrio"] .ddb span[data-v="عاجلة جداً"]::before{color:#e5484d}
+.dd[data-for="fPrio"] .ddb span[data-v="ذات أهمية"]::before{color:#f0a500}
+.dd[data-for="fPrio"] .ddb span[data-v="اعتيادية"]::before{color:#3fb37f}
+.dd[data-for="fPrio"] .ddo{justify-content:flex-start;gap:10px}
+.dd[data-for="fPrio"] .ddo::before{content:"●";font-size:12px}
+.dd[data-for="fPrio"] .ddo[data-v="عاجلة جداً"]::before{color:#e5484d}
+.dd[data-for="fPrio"] .ddo[data-v="ذات أهمية"]::before{color:#f0a500}
+.dd[data-for="fPrio"] .ddo[data-v="اعتيادية"]::before{color:#3fb37f}
+.urgnote{margin-top:10px;padding:10px 14px;border-radius:12px;background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.45);color:var(--txt);font-size:13.5px;line-height:1.7}
+.urgnote b{display:block;color:#e5484d;font-weight:900}
+.pr{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:900;border-radius:8px;padding:1px 8px;margin-inline-end:8px;vertical-align:2px;border:1px solid}
+.pr.u{color:#fff;background:#d63d46;border-color:#d63d46;animation:prPulse 1.6s ease-in-out infinite}
+.pr.h{color:#b07800;background:rgba(240,165,0,.14);border-color:rgba(240,165,0,.5)}
+:root:not([data-theme="light"]) .pr.h{color:#ffd27a}
+@keyframes prPulse{0%,100%{box-shadow:0 0 0 0 rgba(214,61,70,.55)}50%{box-shadow:0 0 0 5px rgba(214,61,70,0)}}
+@media (prefers-reduced-motion:reduce){.pr.u,.urgbar .ub-ic{animation:none}}
+.row.urg{border-color:rgba(229,72,77,.55) !important;box-shadow:inset 4px 0 0 #e5484d}
+.cc.urg{box-shadow:inset 0 0 0 1.5px #e5484d}
+.cc.urg .cn::before{content:"🔴 ";font-size:9px;vertical-align:1px}
+.urgbar{max-width:1180px;margin:10px auto 0;padding:0 16px}
+.urgbar>div{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;border-radius:16px;background:linear-gradient(135deg,#a32232,#d63d46);color:#fff;box-shadow:0 10px 30px -12px rgba(163,34,50,.7)}
+.urgbar .ub-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.18);font-size:18px;flex:0 0 auto;animation:prPulse 1.6s ease-in-out infinite}
+.urgbar .ub-t{font-weight:900;font-size:15px}
+.urgbar .ub-l{display:flex;flex-wrap:wrap;gap:6px;flex:1 1 300px}
+.urgbar .ub-l button{border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.14);color:#fff;font:inherit;font-size:13px;font-weight:700;border-radius:999px;padding:4px 12px;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.urgbar .ub-l button:hover{background:rgba(255,255,255,.26)}
+.urgbox{display:flex;align-items:center;gap:12px;margin:4px 0 14px;padding:12px 16px;border-radius:14px;background:linear-gradient(135deg,#a32232,#d63d46);color:#fff}
+.urgbox .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:rgba(255,255,255,.2);flex:0 0 auto}
+.urgbox b{display:block;font-size:17px;font-weight:900}.urgbox span{display:block;font-size:13px;opacity:.92}
+.urgbox.h{background:rgba(240,165,0,.14);color:var(--txt);border:1px solid rgba(240,165,0,.5)}.urgbox.h .ti{background:rgba(240,165,0,.25)}
+.ualert h3{color:#e5484d}.ualert .ulist{display:flex;flex-direction:column;gap:8px;margin:12px 0 16px}
+.ualert .ulist button{display:block;width:100%;text-align:start;padding:10px 14px;border-radius:12px;border:1px solid rgba(229,72,77,.45);background:rgba(229,72,77,.08);color:var(--txt);font:inherit;cursor:pointer}
+.ualert .ulist button b{display:block;font-size:15px}.ualert .ulist button small{color:var(--txt-3);font-size:12.5px}
 .when legend{display:flex;align-items:center;gap:8px;padding:0 8px;font-weight:900;font-size:15px;color:var(--txt)}
 .when .wi{width:24px;height:24px;border-radius:7px;display:inline-grid;place-items:center;font-size:10px;background:var(--gold-deep);color:#fff}
 .when.end .wi{background:#16294a;color:#f3dca6}
@@ -723,6 +783,7 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
   <button data-go="cal"><span class="i">▦</span>التقويم</button>
 </nav></div>
 <div class="sync" id="sync" role="status"></div>
+<div class="urgbar" id="urgBar" hidden></div>
 
 <main>
   <section class="view" id="v-browse"></section>
@@ -763,20 +824,22 @@ input,select,textarea{padding:13px 14px;font-size:15.5px}
           <label for="fTitle">عنوان المهمة<input id="fTitle" maxlength="200" placeholder="عنوان قصير، مثال: رفع تقرير المقاولين"></label>
           <label for="fDetails"><span>وصف المهمة <span class="sub">اختياري</span></span><textarea id="fDetails" maxlength="1200" placeholder="التفاصيل والخطوات المطلوبة"></textarea></label>
           <label for="fCat">تصنيف المهمة<select id="fCat" aria-label="تصنيف المهمة" data-field="cat"></select></label>
-          <fieldset class="when"><legend><span class="wi" aria-hidden="true">▶</span>البداية <span class="req">*</span></legend>
+          <fieldset class="when"><legend><span class="wi" aria-hidden="true">▶</span>الموعد <span class="req">*</span></legend>
             <div class="trio">
-              <label for="fMonth">الشهر<select id="fMonth" data-field="1" data-ic="▦"></select></label>
-              <label for="fDay">اليوم<select id="fDay" data-field="1" data-ic="◉"></select></label>
-              <div class="lab"><span>الوقت</span><select id="fStart" aria-label="وقت البداية" data-field="1" data-ic="◷"></select></div>
+              <div class="lab"><span>تاريخ البدء <span class="req">*</span></span><div id="dpS"></div></div>
+              <div class="lab"><span>من <span class="req">*</span></span><select id="fStart" aria-label="وقت البداية" data-field="1" data-ic="◷"></select></div>
+              <div class="lab"><span>إلى <span class="req">*</span></span><select id="fEnd" aria-label="وقت النهاية" data-field="1" data-ic="◷"></select></div>
             </div>
-          </fieldset>
-          <fieldset class="when end"><legend><span class="wi" aria-hidden="true">■</span>النهاية <span class="req">*</span></legend>
-            <div class="trio">
-              <label for="fEMonth">الشهر<select id="fEMonth" data-field="1" data-ic="▦"></select></label>
-              <label for="fEDay">اليوم<select id="fEDay" data-field="1" data-ic="◉"></select></label>
-              <div class="lab"><span>الوقت</span><select id="fEnd" aria-label="وقت النهاية" data-field="1" data-ic="◷"></select></div>
+            <div class="duo">
+              <div class="lab"><span>تاريخ الانتهاء <span class="sub">إذا امتد لأكثر من يوم</span></span><div id="dpE"></div></div>
+              <div class="lab"><span>الأولوية</span><select id="fPrio" aria-label="الأولوية" data-field="1" data-ic="●"></select></div>
             </div>
             <div class="dur num" id="fDur"></div>
+            <div class="urgnote" id="fUrgNote" hidden><b>⚠ مهمة عاجلة جداً</b>ستظهر للمسؤولين بتنبيه أحمر في الموقع، ويصلهم إيميل بعنوان «🔴 عاجلة جداً».</div>
+            <div hidden aria-hidden="true">
+              <select id="fMonth" data-field="1"></select><select id="fDay" data-field="1"></select>
+              <select id="fEMonth" data-field="1"></select><select id="fEDay" data-field="1"></select>
+            </div>
           </fieldset>
           <div class="three">
             <label for="fCountry">الدولة<select id="fCountry" data-field="1" data-ic="◎"></select><input id="fCountryO" placeholder="اكتب الدولة" hidden></label>
@@ -886,12 +949,15 @@ function countLabel(list){var c=kc(list,"c"),t=kc(list,"t"),a=[];if(c)a.push(plu
 function build(){
   var seq=0;
   items=courses.filter(function(c){return inWin(c.date)&&c.title}).map(function(c){return {kind:"c",id:"c:"+c.id,date:c.date,title:c.title,program:c.program||"",country:c.country||"",partner:c.partner||"",trainees:c.trainees||"",mode:c.mode||"",trainer:String(c.trainer||"").trim(),cstatus:String(c.status||"").replace(/\s+/g," ").trim(),init:c.init||"",week:c.week||"",ord:++seq}})
-   .concat(tasks.filter(function(t){return inWin(t.date)&&t.title}).map(function(t){return {kind:"t",id:"t:"+t.id,rid:t.id,date:t.date,endDate:(inWin(t.endDate)&&t.endDate>=t.date?t.endDate:t.date),title:t.title,start:tm(t.start),end:tm(t.end),country:t.country||"",partner:t.partner||"",req:abbr(t.req),owners:owners(t),a1:owners(t).join("، "),a2:"",status:ST[t.status]?t.status:(STKEY[t.status]||"todo"),details:t.details||"",cat:t.cat||"",doneDate:t.doneDate||"",ord:++seq}}));
+   .concat(tasks.filter(function(t){return inWin(t.date)&&t.title}).map(function(t){return {kind:"t",id:"t:"+t.id,rid:t.id,date:t.date,endDate:(inWin(t.endDate)&&t.endDate>=t.date?t.endDate:t.date),title:t.title,start:tm(t.start),end:tm(t.end),country:t.country||"",partner:t.partner||"",req:abbr(t.req),owners:owners(t),a1:owners(t).join("، "),a2:"",status:ST[t.status]?t.status:(STKEY[t.status]||"todo"),details:t.details||"",cat:t.cat||"",doneDate:t.doneDate||"",priority:PRIOS.indexOf(t.priority)>=0?t.priority:"اعتيادية",ord:++seq}}));
   items.forEach(function(it){
     if(it.kind==="c"){it.owners=courseOwner?[courseOwner]:[];it.a1=courseOwner;return}
     if(it.status==="todo"&&(it.date+" "+(it.start||"00:00"))<=nowR()){it.status="doing";it.started=true}
     if(isLate(it)){it.late=true;it.status="stuck"}});
 }
+var PRIOS=["اعتيادية","ذات أهمية","عاجلة جداً"],P_URG="عاجلة جداً",P_HIGH="ذات أهمية";
+function prTag(it){return it.kind==="t"&&!isDone(it)&&it.priority===P_URG?'<span class="pr u">🔴 عاجلة جداً</span>':it.kind==="t"&&!isDone(it)&&it.priority===P_HIGH?'<span class="pr h">★ ذات أهمية</span>':""}
+function isUrg(it){return it.kind==="t"&&it.priority===P_URG&&!isDone(it)}
 function abbr(n){return String(n||"").trim().replace(/^(ال)?دكتورة?\s+/,"د. ").replace(/^(ال)?مهندسة?\s+/,"م. ").replace(/^(ال)?[أا]ستاذة?\s+/,"أ. ").replace(/^(ال)?شيخ\s+/,"ش. ")}
 function owners(t){return String([t.a1,t.a2].filter(Boolean).join("،")).split(/[،,]/).map(abbr).filter(Boolean)}
 function tm(v){var m=String(v||"").trim().match(/^(\d{1,2}):(\d{2})/);return m?pad(+m[1])+":"+m[2]:""}
@@ -908,7 +974,7 @@ function sub(it){var a=it.kind==="c"?[it.program,it.country,it.partner,it.traine
 function kindTag(it){return it.kind==="c"?'<span class="kt kc">دورة</span>':'<span class="kt kk">مهمة</span>'}
 function ring(p,size,sw,c1,c2,label,id){var r=(size-sw)/2,c=2*Math.PI*r;return '<span class="ring"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" style="stroke:var(--track)" stroke-width="'+sw+'"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="url(#'+id+')" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+(c*p/100).toFixed(1)+' '+c.toFixed(1)+'"'+(p?'':' stroke-opacity="0"')+'/></svg><span class="rv num"><b>'+p+'%</b><span>'+label+'</span></span></span>'}
 function secHead(n,title,sb,extra){return '<div class="sec-head">'+(n?'<span class="sn num">'+n+'</span>':'')+'<h2>'+title+'</h2>'+(sb?'<small class="num">'+sb+'</small>':'')+'<span class="line"></span>'+(extra||'')+'</div>'}
-function row(it){var p=parts(it.date),s=sub(it);return '<button class="row" data-open="'+esc(it.id)+'"><span class="date num"><b>'+p.d+'</b><span>'+wday(it.date)+'</span></span><span>'+(it.kind==="c"&&it.trainer?'<span class="trb"><span aria-hidden="true">👤</span>المدرب: <b>'+esc(it.trainer)+'</b></span>':'')+'<span class="t">'+kindTag(it)+(timeLabel(it)?'<span class="tm num">'+timeLabel(it)+'</span>':'')+esc(it.title)+'</span>'+(s?'<span class="d">'+esc(s)+'</span>':'')+'</span>'+pill(it)+'</button>'}
+function row(it){var p=parts(it.date),s=sub(it);return '<button class="row'+(isUrg(it)?" urg":"")+'" data-open="'+esc(it.id)+'"><span class="date num"><b>'+p.d+'</b><span>'+wday(it.date)+'</span></span><span>'+(it.kind==="c"&&it.trainer?'<span class="trb"><span aria-hidden="true">👤</span>المدرب: <b>'+esc(it.trainer)+'</b></span>':'')+'<span class="t">'+prTag(it)+kindTag(it)+(timeLabel(it)?'<span class="tm num">'+timeLabel(it)+'</span>':'')+esc(it.title)+'</span>'+(s?'<span class="d">'+esc(s)+'</span>':'')+'</span>'+pill(it)+'</button>'}
 function pend(l){return l.filter(function(x){return !isDone(x)})}
 function listHtml(list,emptyText){return list.length?'<div class="list">'+list.map(row).join("")+'</div>':'<div class="empty">'+emptyText+'</div>'}
 var RC_DARK=[["#f3dca6","#c9a86a"],["#5fd9e6","#3cc0d4"],["#5fe0a0","#27a35e"]], RC_LIGHT=[["#d9b866","#8a6c2e"],["#19b3c4","#0b7886"],["#2fbf71","#146c3c"]], RC=RC_LIGHT;
@@ -1041,7 +1107,7 @@ function renderCal(){
   if(active)h+='<div class="calnote">معروض حسب الفلاتر المختارة</div>';
   h+='<div class="calhd">'+["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"].map(function(w,i){return '<div class="cwd'+(i===6?" fri":"")+'"><span class="full">'+w+'</span><span class="short">'+"سحنثرخج"[i]+'</span></div>'}).join("")+'</div><div class="calg">';
   var MXL=2, MX=3;
-  function chip(x){var k=stKey(x);return '<button type="button" class="cc '+(x.kind==="c"?"ck":"tk")+(x.kind==="c"&&x.trainer?" hastr":"")+' s-'+k+'" data-open="'+esc(x.id)+'" title="'+esc(x.title+(x.kind==="c"&&x.trainees?" ("+x.trainees+(x.mode?"، "+x.mode:"")+")":"")+(x.kind==="c"&&x.trainer?" — المدرب: "+x.trainer:""))+'"><i aria-hidden="true"></i>'+(x.kind==="t"&&x.start?'<span class="ct num">'+x.start+'</span>':'')+'<span class="cn">'+esc(x.title)+'</span>'+(x.kind==="c"&&x.trainees?'<span class="cg">'+esc(x.trainees)+'</span>':'')+(x.kind==="c"&&x.trainer?'<span class="ctr">👤 '+esc(x.trainer)+'</span>':'')+'</button>'}
+  function chip(x){var k=stKey(x);return '<button type="button" class="cc '+(x.kind==="c"?"ck":"tk")+(x.kind==="c"&&x.trainer?" hastr":"")+(isUrg(x)?" urg":"")+' s-'+k+'" data-open="'+esc(x.id)+'" title="'+esc(x.title+(x.kind==="c"&&x.trainees?" ("+x.trainees+(x.mode?"، "+x.mode:"")+")":"")+(x.kind==="c"&&x.trainer?" — المدرب: "+x.trainer:""))+'"><i aria-hidden="true"></i>'+(x.kind==="t"&&x.start?'<span class="ct num">'+x.start+'</span>':'')+'<span class="cn">'+esc(x.title)+'</span>'+(x.kind==="c"&&x.trainees?'<span class="cg">'+esc(x.trainees)+'</span>':'')+(x.kind==="c"&&x.trainer?'<span class="ctr">👤 '+esc(x.trainer)+'</span>':'')+'</button>'}
   for(var ws=weekStart(first);ws<=last;ws=addDays(ws,7)){
     var we=addDays(ws,6), a=ws<first?first:ws, z=we>last?last:we;
     /* المهام الممتدة على أكثر من يوم: شريط واحد يمتد عبر أيامها بدل تكرارها في كل يوم */
@@ -1162,7 +1228,7 @@ function clrO(){if($("fOwnerC")){$("fOwnerC").checked=false;$("fOwnerO").value="
 function ownerTyped(){var c=$("fOwnerC"),i=$("fOwnerO");return c&&c.checked&&i?i.value.replace(/[،,]/g," ").replace(/\s+/g," ").trim():""}
 var CAT_IC={"التدريب والدورات":"🎓","المشاريع والبرامج الخارجية":"🌍","الشؤون الأكاديمية والاختبارات":"📝","حلقات القرآن والمتابعة التعليمية":"📖","المناهج والحقائب التدريبية":"📚","التصميم والهوية والشهادات":"🎨","التقنية والأنظمة والمنصات":"💻","التواصل والتنسيق":"📞","الاجتماعات واللقاءات":"👥","الوفود والفعاليات والضيافة":"🤝","الشؤون الإدارية والمالية":"💼","الخدمات والتشغيل والصيانة":"🛠️","التقارير والتوثيق والإحصاءات":"📊","الاستشارات":"💡","أخرى":"✦"};
 function catIc(c){return CAT_IC[c]||"◆"}
-var FORM_DD=["fMonth","fDay","fEMonth","fEDay","fCountry","fReq","fStatus"];
+var FORM_DD=["fCountry","fReq","fStatus","fPrio"];
 function syncForm(){FORM_DD.forEach(function(id){if($(id).options.length)syncDD(id)})}
 function fillCat(v){$("fCat").innerHTML=opts(CATS,v||"","اختر التصنيف");syncDD("fCat")}
 function getOwners(){var o=Array.prototype.map.call($("fOwnersList").querySelectorAll("input[value]:checked"),function(i){return i.value}),n=ownerTyped();if(n&&o.indexOf(n)<0)o.push(n);return o}
@@ -1179,9 +1245,50 @@ function fillDays(sel){fillDaysFor("fMonth","fDay",sel)}
 function fillEDays(sel){fillDaysFor("fEMonth","fEDay",sel)}
 function formDate(){return $("fMonth").value+"-"+pad(+$("fDay").value)}
 function formEndDate(){return $("fEMonth").value+"-"+pad(+$("fEDay").value)}
-function setEndDate(s){var k=s.slice(0,7),d=parts(s).d;if(!ymOf(k)){k=YM[0].k;d=1}$("fEMonth").value=k;fillEDays(d);syncDD("fEMonth");showDur()}
+function setEndDate(s){var k=s.slice(0,7),d=parts(s).d;if(!ymOf(k)){k=YM[0].k;d=1}$("fEMonth").value=k;fillEDays(d);showDur();paintDP()}
 function showDur(){var a=formDate(),b=formEndDate(),st=$("fStart").value,en=$("fEnd").value,el=$("fDur");if(!el)return;if(b<a){el.textContent="⚠ تاريخ النهاية قبل البداية";return}var n=Math.round((new Date(b)-new Date(a))/864e5);el.textContent=n?"المدة: "+plural(n+1,"يوم","أيام")+" (من "+wday(a)+" إلى "+wday(b)+")":(st&&en?"في نفس اليوم":"")}
-function setDate(s){var k=s.slice(0,7),d=parts(s).d;if(!ymOf(k)){k=YM[0].k;d=1}$("fMonth").value=k;fillDays(d)}
+function setDate(s){var k=s.slice(0,7),d=parts(s).d;if(!ymOf(k)){k=YM[0].k;d=1}$("fMonth").value=k;fillDays(d);paintDP()}
+/* منتقي التاريخ (مثل تقويم الرئيس التنفيذي): شهر كامل بالهجري، وأزرار سريعة */
+var DPS={},WD_SAT=["سبت","أحد","اثنين","ثلاثاء","أربعاء","خميس","جمعة"];
+function dpMin(){return YM[0].k+"-01"}function dpMax(){var l=YM[YM.length-1];return l.k+"-"+pad(l.days)}
+function longD(s){return wday(s)+" "+parts(s).d+" "+mName(parts(s).m)+" "+parts(s).y}
+function hijriM(y,m){try{var f=new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura-nu-latn",{month:"long",year:"numeric"}),a=f.format(new Date(y,m-1,1)).replace(/\s*هـ$/,""),b=f.format(new Date(y,m,0)).replace(/\s*هـ$/,"");return (a===b?a:a.replace(/ \d+$/,"")+" – "+b)+" هـ"}catch(e){return ""}}
+function makeDP(host,cfg){
+  var el=$(host);el.innerHTML='<div class="dd field dpk"><button type="button" class="ddb" aria-haspopup="dialog" aria-expanded="false" aria-label="'+esc(cfg.title)+'"><span></span></button><div class="ddm dpm" hidden></div></div>';
+  var dd=el.firstChild,b=dd.firstChild,m=dd.lastChild,st={view:null};
+  function build(){
+    var v=cfg.get();if(!st.view)st.view=v.slice(0,7);
+    var y=+st.view.slice(0,4),mo=+st.view.slice(5),first=st.view+"-01",mn=cfg.min(),mx=dpMax(),td=todayIso(),rs=cfg.rangeStart?cfg.rangeStart():"";
+    var prevOk=first>dpMin(),nextOk=st.view+"-31"<mx;
+    var h='<div class="dph"><button type="button" class="dpa" data-dm="-1" aria-label="الشهر السابق"'+(prevOk?"":" disabled")+'>›</button><b>'+mName(mo)+' <span class="num">'+y+'</span><small>'+esc(hijriM(y,mo))+'</small></b><button type="button" class="dpa" data-dm="1" aria-label="الشهر التالي"'+(nextOk?"":" disabled")+'>‹</button></div><div class="dpg">';
+    WD_SAT.forEach(function(w){h+='<span class="dpw">'+w+'</span>'});
+    var s0=weekStart(first);
+    for(var i=0;i<42;i++){var d=addDays(s0,i),out=d.slice(0,7)!==st.view,dis=d<mn||d>mx;
+      if(i===35&&out)break;
+      h+='<button type="button" class="dpd num'+(out?" out":"")+(d===td?" today":"")+(d===v&&!cfg.isEmpty()?" sel":"")+(rs&&!cfg.isEmpty()&&d>rs&&d<v?" inr":"")+'" data-dd="'+d+'"'+(dis?" disabled":"")+' aria-label="'+esc(longD(d))+'">'+parts(d).d+'</button>'}
+    h+='</div><div class="dpq">'+cfg.quick().map(function(q){return '<button type="button" data-dq="'+q[1]+'">'+q[0]+'</button>'}).join("")+'</div>';
+    m.innerHTML=h;
+  }
+  b.addEventListener("click",function(){if(m.hidden){st.view=null;build()}});
+  m.addEventListener("click",function(e){
+    e.stopPropagation();
+    var t=e.target.closest("button");if(!t||t.disabled)return;
+    if(t.dataset.dm){var y=+st.view.slice(0,4),mo=+st.view.slice(5)+ +t.dataset.dm;if(mo<1){mo=12;y--}if(mo>12){mo=1;y++}st.view=y+"-"+pad(mo);build();return}
+    var v=t.dataset.dd||(t.dataset.dq!==undefined?cfg.quickVal(t.dataset.dq):"");if(!v)return;
+    if(v<cfg.min())v=cfg.min();if(v>dpMax())v=dpMax();
+    cfg.set(v);closeDD();b.focus();
+  });
+  return {paint:function(){var v=cfg.get(),em=cfg.isEmpty();b.firstChild.innerHTML='<i class="dpi" aria-hidden="true">▦</i><span class="dpl'+(em?" ph":"")+'"><b class="num">'+esc(em?cfg.emptyLabel:longD(v))+'</b>'+(em?'':'<small class="num">'+esc(hijri(v,{day:"numeric",month:"long",year:"numeric"})+" هـ")+'</small>')+'</span>';b.classList.toggle("on",!em)}};
+}
+function initDP(){
+  DPS.s=makeDP("dpS",{title:"تاريخ البدء",get:formDate,isEmpty:function(){return false},min:function(){return dpMin()},
+    quick:function(){return [["اليوم","0"],["غداً","1"],["بعد أسبوع","7"]]},quickVal:function(n){return addDays(todayIso(),+n)},
+    set:function(v){setDate(v);endFollow()}});
+  DPS.e=makeDP("dpE",{title:"تاريخ الانتهاء",get:formEndDate,isEmpty:function(){return formEndDate()===formDate()},emptyLabel:"نفس اليوم",min:function(){return formDate()},rangeStart:formDate,
+    quick:function(){return [["نفس اليوم","0"],["بعد يوم","1"],["بعد يومين","2"],["بعد أسبوع","7"]]},quickVal:function(n){return addDays(formDate(),+n)},
+    set:function(v){setEndDate(v)}});
+}
+function paintDP(){if(DPS.s){DPS.s.paint();DPS.e.paint()}}
 /* قائمة الأوقات: كل ربع ساعة، تبدأ من 6 صباحاً، بصيغة 12 ساعة */
 function t12(v){var p=v.split(":"),h=+p[0];return ((h%12)||12)+":"+p[1]+" "+(h<12?"ص":"م")}
 function setTime(id,v){
@@ -1192,13 +1299,15 @@ function setTime(id,v){
 }
 function initForm(){
   $("fMonth").innerHTML=$("fEMonth").innerHTML=YM.map(function(mo){return '<option value="'+mo.k+'">'+mo.name+" "+mo.y+'</option>'}).join("");
+  $("fPrio").innerHTML=PRIOS.map(function(p){return '<option value="'+p+'">'+p+'</option>'}).join("");
+  initDP();
   $("fStatus").innerHTML=["todo","doing","done","stuck"].map(function(s){return '<option value="'+s+'">'+ST[s]+'</option>'}).join("");
   $("fCode").value=lsGet("q4code")||"";
   syncForm();
 }
-function resetForm(){editId=null;$("fTitle").value="";$("fDetails").value="";setTime("fStart","");setTime("fEnd","");fillCat("");clrO();fillPeople();fillPlace();$("fStatus").value="doing";setDate(todayIso());setEndDate(todayIso());syncForm();$("formTitle").textContent="مهمة جديدة";$("fSave").textContent="حفظ المهمة";$("fCancel").hidden=true}
+function resetForm(){editId=null;$("fTitle").value="";$("fDetails").value="";setTime("fStart","");setTime("fEnd","");fillCat("");clrO();fillPeople();fillPlace();$("fStatus").value="doing";$("fPrio").value="اعتيادية";urgNote();setDate(todayIso());setEndDate(todayIso());syncForm();$("formTitle").textContent="مهمة جديدة";$("fSave").textContent="حفظ المهمة";$("fCancel").hidden=true}
 function say(t,err){var m=$("fMsg");m.textContent=t;m.className="msg"+(err?" err":"")}
-function startEdit(t){editId=t.rid;$("fTitle").value=t.title;$("fDetails").value=t.details||"";setTime("fStart",t.start);setTime("fEnd",t.end);fillCat(t.cat);clrO();fillPeople(t.owners,t.req);fillPlace(t.country,t.partner);$("fStatus").value=t.status;setDate(t.date);setEndDate(t.endDate||t.date);syncForm();
+function startEdit(t){editId=t.rid;$("fTitle").value=t.title;$("fDetails").value=t.details||"";setTime("fStart",t.start);setTime("fEnd",t.end);fillCat(t.cat);clrO();fillPeople(t.owners,t.req);fillPlace(t.country,t.partner);$("fStatus").value=t.status;$("fPrio").value=t.priority||"اعتيادية";urgNote();setDate(t.date);setEndDate(t.endDate||t.date);syncForm();
   $("formTitle").textContent="تعديل المهمة";$("fSave").textContent="حفظ التعديل";$("fCancel").hidden=false;say("");go("entry");$("fTitle").focus()}
 function renderEntry(){$("codeWrap").hidden=!needsCode}
 
@@ -1245,17 +1354,18 @@ function send(action,task){
 /* ---------- نافذة التفاصيل ---------- */
 function mi(l,v){return v?'<div><span>'+l+'</span><b class="num">'+esc(v)+'</b></div>':''}
 function renderModal(){
+  if(openId==="urg"){$("modal").innerHTML=urgModal();$("ov").hidden=false;return}
   if(openId&&openId.indexOf("day:")===0){$("modal").innerHTML=dayModal(openId.slice(4));$("ov").hidden=false;return}
   var t=items.filter(function(x){return x.id===openId})[0];
   if(!t){$("ov").hidden=true;openId=null;return}
-  var h='<div class="acts">'+kindTag(t)+pill(t)+'</div><h3>'+esc(t.title)+'</h3>'+(t.kind==="c"&&t.trainer?'<div class="trbox"><span class="ti" aria-hidden="true">👤</span><div><span>المدرب</span><b>'+esc(t.trainer)+'</b></div></div>':'')+'<div class="meta">'+(t.kind==="t"?mi("البداية",wday(t.date)+"، "+longDate(t.date)+(t.start?" — "+t12(t.start):""))+mi("النهاية",wday(t.endDate||t.date)+"، "+longDate(t.endDate||t.date)+(t.end?" — "+t12(t.end):"")):mi("التاريخ",longDate(t.date))+mi("اليوم",wday(t.date)));
+  var h='<div class="acts">'+kindTag(t)+pill(t)+'</div><h3>'+esc(t.title)+'</h3>'+(isUrg(t)?'<div class="urgbox"><span class="ti" aria-hidden="true">⚠</span><div><b>مهمة عاجلة جداً</b><span>نرجو البدء بها فوراً وإعطاءها الأولوية على غيرها.</span></div></div>':t.kind==="t"&&!isDone(t)&&t.priority===P_HIGH?'<div class="urgbox h"><span class="ti" aria-hidden="true">★</span><div><b>مهمة ذات أهمية</b><span>نرجو إعطاءها عناية خاصة.</span></div></div>':'')+(t.kind==="c"&&t.trainer?'<div class="trbox"><span class="ti" aria-hidden="true">👤</span><div><span>المدرب</span><b>'+esc(t.trainer)+'</b></div></div>':'')+'<div class="meta">'+(t.kind==="t"?mi("البداية",wday(t.date)+"، "+longDate(t.date)+(t.start?" — "+t12(t.start):""))+mi("النهاية",wday(t.endDate||t.date)+"، "+longDate(t.endDate||t.date)+(t.end?" — "+t12(t.end):"")):mi("التاريخ",longDate(t.date))+mi("اليوم",wday(t.date)));
   if(t.kind==="c"){
     h+=mi("المسؤول",t.a1)+mi("البرنامج",t.program)+mi("الدولة",t.country)+mi("الشريك",t.partner)+mi("المتدربون",t.trainees)+mi("نوع التدريب",t.mode)+mi("الإنجاز",t.cstatus)+'</div>';
     if(isStale(t))h+='<div class="det" style="border-color:var(--rose);color:var(--rose);font-weight:700">انتهى موعد هذه الدورة وحالتها في الشيت ما زالت «'+esc(t.cstatus)+'». حدّث عمود «الإنجاز» في ورقة «مهام التدريب».</div>';
     h+='<div class="det">بيانات الدورة تأتي من ورقة «مهام التدريب» مباشرة، وتعديلها يكون من الشيت.</div>';
     h+='<div class="acts"><button class="btn" data-act="close" style="margin-inline-start:auto">إغلاق</button></div>';
   }else{
-    h+=mi("التصنيف",t.cat)+mi("الدولة",t.country)+mi("الشريك",t.partner)+mi("مقدم الطلب",t.req)+mi("المسؤولون",t.a1)+mi("تاريخ الإنجاز",t.doneDate&&inWin(t.doneDate)?longDate(t.doneDate):t.doneDate)+'</div>';
+    h+=mi("الأولوية",t.priority!=="اعتيادية"?t.priority:"")+mi("التصنيف",t.cat)+mi("الدولة",t.country)+mi("الشريك",t.partner)+mi("مقدم الطلب",t.req)+mi("المسؤولون",t.a1)+mi("تاريخ الإنجاز",t.doneDate&&inWin(t.doneDate)?longDate(t.doneDate):t.doneDate)+'</div>';
     if(t.late)h+='<div class="det" style="border-color:var(--rose);color:var(--rose);font-weight:700">انتهى الوقت المحدد لهذه المهمة ولم تُسجَّل منجزة، فتحوّلت تلقائياً إلى «متعثرة». حدّثها بـ«تم الإنجاز» أو عدّل موعدها.</div>';
     h+='<div><div class="lbl">تفصيل المهمة</div><div class="det">'+(t.details?esc(t.details):"لا توجد تفاصيل مضافة.")+'</div></div>';
     h+='<div><div class="lbl">الحالة</div><div class="seg">'+["todo","doing","done","stuck"].map(function(s){return '<button data-st="'+s+'" aria-pressed="'+(t.status===s)+'">'+ST[s]+'</button>'}).join("")+'</div></div>';
@@ -1265,7 +1375,7 @@ function renderModal(){
   }
   $("modal").innerHTML=h;$("ov").hidden=false;
 }
-function closeModal(){openId=null;confirmDel=false;modalErr="";$("ov").hidden=true}
+function closeModal(){if(openId==="urg")urgAck();openId=null;confirmDel=false;modalErr="";$("ov").hidden=true}
 
 /* يضع الرمز الذي يسبق عنوان البطاقة داخل مربع أيقونة */
 function decorate(){Array.prototype.forEach.call(document.querySelectorAll(".ch h3"),function(h){
@@ -1274,7 +1384,25 @@ function decorate(){Array.prototype.forEach.call(document.querySelectorAll(".ch 
   var sp=document.createElement("span");sp.className="ic";sp.setAttribute("aria-hidden","true");sp.textContent=m[1];
   n.nodeValue=n.nodeValue.slice(m[0].length);h.insertBefore(sp,n);
 })}
-function renderAll(){renderDash();renderCal();renderBrowse();renderList();renderEntry();decorate();if(openId)renderModal()}
+/* تنبيه المهام العاجلة جداً: شريط ثابت أعلى الصفحات + نافذة تظهر لكل مهمة عاجلة جديدة */
+function urgList(){return sorted(items.filter(isUrg))}
+function urgLine(t){return wday(t.date)+" "+sd(t.date)+(t.start?" · "+t12(t.start):"")+(t.a1?" · "+t.a1:"")}
+function renderUrg(){
+  var L=urgList(),el=$("urgBar");
+  if(!L.length){el.hidden=true;el.innerHTML="";return}
+  el.hidden=false;
+  el.innerHTML='<div role="alert"><span class="ub-ic" aria-hidden="true">⚠</span><span class="ub-t">مهام عاجلة جداً <span class="num">('+L.length+')</span></span><span class="ub-l">'+L.slice(0,4).map(function(t){return '<button type="button" data-open="'+esc(t.id)+'" title="'+esc(urgLine(t))+'">'+esc(t.title)+'</button>'}).join("")+(L.length>4?'<button type="button" data-urgall="1">+'+(L.length-4)+' أخرى</button>':'')+'</span></div>';
+  var seen=lsGet("q4urgSeen")||[],fresh=L.filter(function(t){return seen.indexOf(t.rid)<0});
+  if(fresh.length&&!openId&&loaded)openItem("urg");
+}
+function urgModal(){
+  var L=urgList();
+  return '<div class="ualert"><div class="urgbox"><span class="ti" aria-hidden="true">⚠</span><div><b>تنبيه: مهام عاجلة جداً</b><span>هذه المهام لها الأولوية القصوى، نرجو البدء بها فوراً.</span></div></div><div class="ulist">'+
+    L.map(function(t){return '<button type="button" data-open="'+esc(t.id)+'"><b>🔴 '+esc(t.title)+'</b><small class="num">'+esc(urgLine(t))+'</small></button>'}).join("")+
+    '</div><div class="acts"><button class="btn gold" type="button" data-urgack="1">اطلعت عليها</button></div></div>';
+}
+function urgAck(){lsSet("q4urgSeen",urgList().map(function(t){return t.rid}).concat(lsGet("q4urgSeen")||[]).slice(0,300))}
+function renderAll(){renderUrg();renderDash();renderCal();renderBrowse();renderList();renderEntry();decorate();if(openId)renderModal()}
 function go(v){
   view=v;["dash","cal","browse","list","entry"].forEach(function(k){$("v-"+k).hidden=k!==v});
   document.body.classList.toggle("compact",!(v==="browse"&&!selMonth));
@@ -1294,7 +1422,9 @@ document.addEventListener("click",function(e){
   if(b.dataset.go){if(b.dataset.go==="browse"){selMonth=null;selWeek=0;renderBrowse()}go(b.dataset.go);return}
   if(b.dataset.month!==undefined){selMonth=+b.dataset.month||null;selWeek=0;renderBrowse();go("browse");return}
   if(b.dataset.week!==undefined){selWeek=+b.dataset.week;renderBrowse();return}
-  if(b.dataset.open){openItem(b.dataset.open);return}
+  if(b.dataset.urgack){urgAck();closeModal();return}
+  if(b.dataset.urgall){openItem("urg");return}
+  if(b.dataset.open){if(openId==="urg")urgAck();openItem(b.dataset.open);return}
   var t=items.filter(function(x){return x.id===openId})[0];
   if(b.dataset.st&&t&&b.dataset.st==="todo"&&(t.date+" "+(t.start||"00:00"))<=nowR()){modalErr="بدأ وقت هذه المهمة، فحالتها «قيد التنفيذ» تلقائياً. لتأجيلها عدّل تاريخ البداية من «تعديل».";renderModal();return}
   if(b.dataset.st&&t&&t.late&&(b.dataset.st==="todo"||b.dataset.st==="doing")){modalErr="تجاوزت هذه المهمة وقتها، فتبقى «متعثرة». عدّل التاريخ أو وقت الانتهاء من «تعديل»، أو اختر «تم الإنجاز».";renderModal();return}
@@ -1345,6 +1475,8 @@ $("fDay").addEventListener("change",endFollow);
 $("fEMonth").addEventListener("change",function(){fillEDays(Math.min(+$("fEDay").value||1,28));showDur()});
 $("fEDay").addEventListener("change",showDur);
 $("fEnd").addEventListener("change",showDur);
+function urgNote(){$("fUrgNote").hidden=$("fPrio").value!==P_URG}
+$("fPrio").addEventListener("change",urgNote);
 /* إذا صارت البداية بعد النهاية تُنقل النهاية لنفس يوم البداية */
 function endFollow(){if(formEndDate()<formDate())setEndDate(formDate());showDur()}
 $("f").addEventListener("submit",function(e){
@@ -1357,7 +1489,7 @@ $("f").addEventListener("submit",function(e){
   if(!en0){say("حدّد وقت الانتهاء.",true);return}
   var sd0=formDate(),ed0=formEndDate();
   if(ed0+" "+en0<=sd0+" "+st0){say("النهاية يجب أن تكون بعد البداية (التاريخ والوقت).",true);return}
-  var data={title:title,date:formDate(),endDate:formEndDate(),start:st0,end:en0,country:placeVal("fCountry"),partner:placeVal("fPartner"),req:placeVal("fReq"),a1:getOwners()[0]||"",a2:getOwners().slice(1).join("، "),status:$("fStatus").value,details:$("fDetails").value.trim(),cat:$("fCat").value};
+  var data={title:title,date:formDate(),endDate:formEndDate(),start:st0,end:en0,country:placeVal("fCountry"),partner:placeVal("fPartner"),req:placeVal("fReq"),a1:getOwners()[0]||"",a2:getOwners().slice(1).join("، "),status:$("fStatus").value,priority:$("fPrio").value,details:$("fDetails").value.trim(),cat:$("fCat").value};
   if((data.status==="todo"||data.status==="doing")&&ed0+" "+en0<nowR()){say("انتهى الوقت المحدد لهذه المهمة. عدّل التاريخ أو وقت الانتهاء، أو اختر الحالة «تم الإنجاز» أو «متعثرة».",true);return}
   if(data.status==="done")data.doneDate=todayIso();
   var was=editId;if(was)data.id=was;
